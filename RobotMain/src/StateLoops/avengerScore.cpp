@@ -1,11 +1,8 @@
-
+#include "StateLoops/avengerScore.h"
 #include "Arduino.h"
 
 namespace StateLoops {
-
-
-    void loop(){
+    void AvengerScore::loop(){
 
     }
-
 }
