@@ -1,11 +1,8 @@
-
+#include "StateLoops/stoneCollect.h"
 #include "Arduino.h"
 
 namespace StateLoops {
-
-
-    void loop(){
+    void StoneCollect::loop(){
 
     }
-
 }

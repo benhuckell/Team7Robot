@@ -1,11 +1,8 @@
-
+#include "StateLoops/defendGauntlet.h"
 #include "Arduino.h"
 
 namespace StateLoops {
-
-
-    void loop(){
+    void DefendGauntlet::loop(){
 
     }
-
 }

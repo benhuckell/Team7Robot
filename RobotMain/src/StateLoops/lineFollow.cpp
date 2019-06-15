@@ -1,12 +1,16 @@
 #include "Arduino.h"
-#include "StateLoops/MainStates.h"
-#include <iostream>
+#include "StateLoops/lineFollow.h"
+
 
 namespace StateLoops {
     
     enum lineFollowStates{online,offline} lineFollowState;
     
     void LineFollow::loop(){
+
+        //qrd1.getValue()
+        
+        //motor1.value = 50;
         /*
         driveTrain.speed = 50
         driveTrain.direction = back
