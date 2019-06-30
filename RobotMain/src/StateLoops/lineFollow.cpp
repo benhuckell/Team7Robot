@@ -1,24 +1,20 @@
 #include "Arduino.h"
 #include "StateLoops/lineFollow.h"
-
+#include <Adafruit_SSD1306.h>
+#include "config.h"
 
 namespace StateLoops {
     
+
     enum lineFollowStates{online,offline} lineFollowState;
     
     void LineFollow::loop(){
-
-        //qrd1.getValue()
-        
-        //motor1.value = 50;
-        /*
-        driveTrain.speed = 50
-        driveTrain.direction = back
-        startPIDLoop()
-        driveTrain.setMotorSpeed()
-        */
+        //MainState::i()->setState(avengerCollecting);
+        display.println("Line Following");
+        //delay(1000);
+        return;
     }
-
+    
     void LineFollow::findIR() {
 
     }

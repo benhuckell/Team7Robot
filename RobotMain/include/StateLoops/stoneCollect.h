@@ -1,7 +1,9 @@
-#include "StateLoops/MainStates.h"
+#pragma once
+
+#include "StateLoops/State.h"
 
 namespace StateLoops {
-    class StoneCollect : public MainStates {
+    class StoneCollect : public State {
         public:
             void loop();
         private:
