@@ -46,7 +46,6 @@ bool postDetected = false;
 
 
 namespace StateLoops {
-    
 
     enum lineFollowStates{online,offline} lineFollowState;
     
