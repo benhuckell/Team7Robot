@@ -1,7 +1,10 @@
-#include "StateLoops/MainStates.h"
+#pragma once
+
+#include "Adafruit_SSD1306.h"
+#include "StateLoops/State.h"
 
 namespace StateLoops{
-    class LineFollow : public MainStates {
+    class LineFollow : public State {
         public:
             //LineFollow(Hardware::DriveTrain)
             void loop();
