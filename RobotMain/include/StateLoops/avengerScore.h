@@ -1,6 +1,9 @@
-#include "StateLoops/MainStates.h"
+#pragma once
+
+#include "StateLoops/State.h"
+
 namespace StateLoops {
-    class AvengerScore : public MainStates {
+    class AvengerScore : public State {
         public:
             void loop();
         private:

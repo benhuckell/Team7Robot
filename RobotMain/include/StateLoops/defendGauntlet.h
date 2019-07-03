@@ -1,7 +1,9 @@
-#include "StateLoops/MainStates.h"
+#pragma once
+
+#include "StateLoops/State.h"
 
 namespace StateLoops {
-    class DefendGauntlet : public MainStates {
+    class DefendGauntlet : public State {
         public:
             void loop();
         private:
