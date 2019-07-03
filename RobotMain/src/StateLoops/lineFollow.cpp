@@ -1,5 +1,7 @@
 #include "Arduino.h"
 #include "StateLoops/lineFollow.h"
+#include <Wire.h>
+#include <queue>
 
 
 namespace StateLoops {
