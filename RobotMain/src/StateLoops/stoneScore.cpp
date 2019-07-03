@@ -1,6 +1,6 @@
 #include "StateLoops/stoneScore.h"
 #include "Arduino.h"
-#include "config.h"
+#include "configGlobals.h"
 
 namespace StateLoops {
     enum stoneScoreStates{} stoneScoreState;

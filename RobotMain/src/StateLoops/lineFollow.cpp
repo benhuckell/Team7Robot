@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "StateLoops/lineFollow.h"
 #include <Adafruit_SSD1306.h>
-#include "config.h"
+#include "configGlobals.h"
 
 namespace StateLoops {
     

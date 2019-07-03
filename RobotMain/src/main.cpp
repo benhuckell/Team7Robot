@@ -7,7 +7,7 @@
 #include "StateLoops/lineFollow.h"
 #include "StateLoops/stoneCollect.h"
 #include "StateLoops/stoneScore.h"
-#include "config.h"
+#include "configGlobals.h"
 
 #define LINE_SENSOR_1 PA4
 #define LINE_SENSOR_2 PA5
@@ -84,10 +84,10 @@ void setup() {
       display.print(analogRead(LINE_SENSOR_1), DEC);
       display.print(" ");
       display.print(analogRead(LINE_SENSOR_2), DEC);
-      //display.print(" ");
-      //display.print(analogRead(LINE_SENSOR_3), DEC);
-      //display.print(" ");
-      //display.print(analogRead(LINE_SENSOR_4), DEC);
+      display.print(" ");
+      display.print(analogRead(LINE_SENSOR_3), DEC);
+      display.print(" ");
+      display.print(analogRead(LINE_SENSOR_4), DEC);
       //display.print((String)mainState);
       //delay(250);
       display.display();
