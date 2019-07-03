@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "StateLoops/lineFollow.h"
+#include "configGlobals.h"
 <<<<<<< HEAD
 #include <Wire.h>
 #include <queue>
@@ -44,9 +45,7 @@ const int ERROR_HISTORY_SIZE = 10; //max size of error queue
 const float POST_TAPE_WIDTH = 4;
 bool postDetected = false;
 =======
-#include <Adafruit_SSD1306.h>
-#include "configGlobals.h"
->>>>>>> 75cc3732e2d12debc6c8c0dca9018ac8c8d620d2
+
 
 namespace StateLoops {
     
