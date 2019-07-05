@@ -1,5 +1,4 @@
 #pragma once
-
 #include "StateLoops/State.h"
 
 namespace StateLoops {

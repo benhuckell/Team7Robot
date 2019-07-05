@@ -7,14 +7,12 @@ MainState::MainState():
 }
 
 MainState::MainState(const MainState& t){
-
 }
 
-MainState& MainState::operator=(const MainState& t){
-    
+MainState& MainState::operator=(const MainState& t){   
 }
 
-MainState* MainState::i(){
+MainState* MainState::instance()){
     if (myInstance == NULL){
         myInstance = new MainState(); 
         return myInstance;

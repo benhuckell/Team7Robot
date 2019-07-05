@@ -18,7 +18,7 @@ enum States{lineFollowing,avengerCollecting,avengerScoring,stoneCollecting,stone
 
 class MainState{
 public:
-    static MainState* i();
+    static MainState* instance();
 
     void setState(States newState);
     States getState();
