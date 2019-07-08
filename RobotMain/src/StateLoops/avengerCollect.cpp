@@ -7,7 +7,6 @@ namespace StateLoops {
     enum avengerCollectStates{} avengerCollectState;
 
     void AvengerCollect::loop(){
-        MainState::i()->setState(avengerScoring);
         //Main Code
         display.println("Avenger Collecting");
         delay(1000);

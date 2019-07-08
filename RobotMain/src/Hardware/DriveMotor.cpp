@@ -3,7 +3,5 @@
 #include "Arduino.h"
 
 namespace HWNameSpace {
-    DriveMotor(){
-    
-    }
+
 }

@@ -8,25 +8,39 @@
 #include "StateLoops/stoneCollect.h"
 #include "StateLoops/stoneScore.h"
 #include "configGlobals.h"
+#include "Arduino.h"
 
-#define LINE_SENSOR_1 PA4
-#define LINE_SENSOR_2 PA5
-#define LINE_SENSOR_3 PA6
-#define LINE_SENSOR_4 PA7
+#define CONTROL_POT_1 PA_4
+#define CONTROL_POT_2 PA_5
+#define PUSH_BUTTON_1 PB_4
+#define PUSH_BUTTON_2 PB_5
+#define TOGGLE_SWITCH PB_3
+
+#define SELECT_PIN_1 PB12
+#define SELECT_PIN_2 PB13
+#define SELECT_PIN_3 PB14
+#define MULTIPLEX_ANALOG_IN PA_6
 
 Adafruit_SSD1306 display(-1);
 
 void setup() {
+    int count = 0;
+
     MainState::i()->setState(lineFollowing);
 
-    //Read push button
-    pinMode(LINE_SENSOR_1,INPUT);
-    pinMode(LINE_SENSOR_2,INPUT);
-    pinMode(LINE_SENSOR_3,INPUT);
-    pinMode(LINE_SENSOR_4,INPUT);
+    //Set up inputs
+    pinMode(CONTROL_POT_1,INPUT);
+    pinMode(CONTROL_POT_2,INPUT);
+    pinMode(PUSH_BUTTON_1,INPUT_PULLDOWN);
+    pinMode(PUSH_BUTTON_2,INPUT_PULLDOWN);
+    pinMode(TOGGLE_SWITCH,INPUT_PULLDOWN);
 
-    //Define main states robot can have
-    
+    pinMode(SELECT_PIN_1,OUTPUT);
+    pinMode(SELECT_PIN_2,OUTPUT);
+    pinMode(SELECT_PIN_3,OUTPUT);
+
+    pinMode(MULTIPLEX_ANALOG_IN,INPUT);
+
     //Declare State Classes
     StateLoops::LineFollow lineFollow;
     StateLoops::AvengerCollect avengerCollect;
@@ -34,9 +48,6 @@ void setup() {
     StateLoops::StoneCollect stoneCollect;
     StateLoops::StoneScore stoneScore;
     StateLoops::DefendGauntlet defend;
-
-    //Hardware::QRD qrd1;
-    //Hardware::Motor leftMotor;
 
     display.begin(SSD1306_SWITCHCAPVCC,0x3C);
     display.clearDisplay();
@@ -46,19 +57,24 @@ void setup() {
     display.println("Working");
     display.display();
 
-    int count = 0;
-
     for(;;) {
       display.clearDisplay();
       display.setCursor(0,0);
 
-      //MainState::i()->getState().loop();
       switch(MainState::i()->getState()){
         case(lineFollowing):
           lineFollow.loop();
+          if(digitalRead(PUSH_BUTTON_1)){
+            delay(100);
+            MainState::i()->setState(avengerCollecting);
+          }
           break;
         case(avengerCollecting):
           avengerCollect.loop();
+          if(digitalRead(PUSH_BUTTON_1)){
+            delay(100);
+            MainState::i()->setState(avengerScoring);
+          }
           break;
         case(avengerScoring):
           avengerScore.loop();
@@ -75,23 +91,43 @@ void setup() {
         default:
           break;
       }
-      
+
       count++;
-      //int push_Button = digitalRead(PUSHBUTTON);
-      //display.println(push_Button == 1 ? "Button Not Pushed":"Button Pushed"); 
-      display.println("Main Looping");
+
       display.println(count);
-      display.print(analogRead(LINE_SENSOR_1), DEC);
+      // //display.print(analogRead(CONTROL_POT_1), DEC);
+      // //display.print(" ");
+      // display.print(analogRead(CONTROL_POT_2), DEC);
+      // display.print(" ");
+      // display.print(digitalRead(PUSH_BUTTON_1), DEC);
+      // display.print(" ");
+      // display.print(digitalRead(PUSH_BUTTON_2), DEC);
+      // display.print(" ");
+      // display.println(digitalRead(TOGGLE_SWITCH), DEC);
+
+      // Read from QRD sensors
+      int QRD_Out[4];
+      bool states[4][3] = {{LOW,LOW,LOW},{LOW,LOW,HIGH},{LOW,HIGH,LOW},{LOW,HIGH,HIGH}};
+
+      for(int i=0;i<4;i++){
+        digitalWrite(SELECT_PIN_1,states[i][0]);
+        digitalWrite(SELECT_PIN_2,states[i][1]);
+        digitalWrite(SELECT_PIN_3,states[i][2]);
+        QRD_Out[i] = analogRead(MULTIPLEX_ANALOG_IN); //read from first multiplexer
+      }
+
+      display.print(QRD_Out[0]);
+
       display.print(" ");
-      display.print(analogRead(LINE_SENSOR_2), DEC);
+      display.print(QRD_Out[1]);
       display.print(" ");
-      display.print(analogRead(LINE_SENSOR_3), DEC);
+      display.print(QRD_Out[2]);
       display.print(" ");
-      display.print(analogRead(LINE_SENSOR_4), DEC);
-      //display.print((String)mainState);
-      //delay(250);
+      display.print(QRD_Out[3]);
+
       display.display();
     }
 }
 
 void loop() {}
+
