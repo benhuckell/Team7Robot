@@ -48,9 +48,9 @@
  #include <util/delay.h>
 #endif
 
-#include <Adafruit_GFX.h>
-#include "Adafruit_SSD1306.h"
-#include "splash.h"
+#include "libs/Adafruit_GFX.h"
+#include "libs/Adafruit_SSD1306.h"
+#include "libs/splash.h"
 
 // SOME DEFINES AND STATIC VARIABLES USED INTERNALLY -----------------------
 
@@ -448,8 +448,8 @@ void Adafruit_SSD1306::ssd1306_command(uint8_t c) {
             proceeding.
     @note   MUST call this function before any drawing or updates!
 */
-boolean Adafruit_SSD1306::begin(uint8_t vcs, uint8_t addr, boolean reset,
-  boolean periphBegin) {
+bool Adafruit_SSD1306::begin(uint8_t vcs, uint8_t addr, bool reset,
+  bool periphBegin) {
 
   if((!buffer) && !(buffer = (uint8_t *)malloc(WIDTH * ((HEIGHT + 7) / 8))))
     return false;
@@ -652,7 +652,7 @@ void Adafruit_SSD1306::clearDisplay(void) {
 */
 void Adafruit_SSD1306::drawFastHLine(
   int16_t x, int16_t y, int16_t w, uint16_t color) {
-  boolean bSwap = false;
+  bool bSwap = false;
   switch(rotation) {
    case 1:
     // 90 degree rotation, swap x & y for rotation, then invert x
@@ -721,7 +721,7 @@ void Adafruit_SSD1306::drawFastHLineInternal(
 */
 void Adafruit_SSD1306::drawFastVLine(
   int16_t x, int16_t y, int16_t h, uint16_t color) {
-  boolean bSwap = false;
+  bool bSwap = false;
   switch(rotation) {
    case 1:
     // 90 degree rotation, swap x & y for rotation,
@@ -843,7 +843,7 @@ void Adafruit_SSD1306::drawFastVLineInternal(
     @note   Reads from buffer contents; may not reflect current contents of
             screen if display() has not been called.
 */
-boolean Adafruit_SSD1306::getPixel(int16_t x, int16_t y) {
+bool Adafruit_SSD1306::getPixel(int16_t x, int16_t y) {
   if((x >= 0) && (x < width()) && (y >= 0) && (y < height())) {
     // Pixel is in-bounds. Rotate coordinates if needed.
     switch(getRotation()) {
@@ -1069,7 +1069,7 @@ void Adafruit_SSD1306::stopscroll(void) {
             enabled, drawing BLACK (value 0) pixels will actually draw white,
             WHITE (value 1) will draw black.
 */
-void Adafruit_SSD1306::invertDisplay(boolean i) {
+void Adafruit_SSD1306::invertDisplay(bool i) {
   TRANSACTION_START
   ssd1306_command1(i ? SSD1306_INVERTDISPLAY : SSD1306_NORMALDISPLAY);
   TRANSACTION_END
@@ -1083,7 +1083,7 @@ void Adafruit_SSD1306::invertDisplay(boolean i) {
     @note   This has an immediate effect on the display, no need to call the
             display() function -- buffer contents are not changed.
 */
-void Adafruit_SSD1306::dim(boolean dim) {
+void Adafruit_SSD1306::dim(bool dim) {
   uint8_t contrast;
 
   if(dim) {

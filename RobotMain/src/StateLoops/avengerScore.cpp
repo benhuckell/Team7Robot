@@ -1,22 +1,20 @@
 #include "StateLoops/avengerScore.h"
-#include "Arduino.h"
-#include "configGlobals.h"
+#include "stateController.h"
 
-namespace StateLoops {
+using namespace StateLoops;
 
-    enum avengerScoreStates{} avengerScoreState;
+//enum avengerScoreStates{} avengerScoreState;
 
-    void AvengerScore::loop(){
-        MainState::i()->setState(stoneCollecting);
-        display.println("Avenger Scoring");
-        delay(1000);
-        return;
-    }
+void AvengerScore::loop(){
+    MainState::instance()->setState(stoneCollecting);
+    display.println("Avenger Scoring");
+    delay(1000);
+    return;
+}
 
-    void AvengerScore::goToBeacon() {
+void AvengerScore::goToBeacon() {
 
-    }
-    void AvengerScore::dumpAvengers() {
+}
+void AvengerScore::dumpAvengers() {
 
-    }
 }
