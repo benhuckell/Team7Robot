@@ -1,19 +1,20 @@
 #include "StateLoops/avengerCollect.h"
+#include "Arduino.h"
 #include "stateController.h"
 
-using namespace StateLoops;
+namespace StateLoops {
 
-enum avengerCollectStates{} avengerCollectState;
+    enum avengerCollectStates{} avengerCollectState;
 
-void AvengerCollect::loop(){
-    MainState::instance()->setState(avengerScoring);
-    //Main Code
-    display.println("Avenger Collecting");
-    delay(1000);
-    //State Change
-    return;
-}
+    void AvengerCollect::loop(){
+        //Main Code
+        display.println("Avenger Collecting");
+        delay(1000);
+        //State Change
+        return;
+    }
+    
+    void AvengerCollect::intakeAvengers() {
 
-void AvengerCollect::intakeAvengers() {
-
+    }
 }

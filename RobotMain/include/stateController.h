@@ -1,7 +1,7 @@
 #ifndef __CONFIGGLOBALSH__
 #define __CONFIGGLOBALSH__
 
-#include "libs/Adafruit_SSD1306.h"
+#include "Adafruit_SSD1306.h"
 #include "StateLoops/avengerCollect.h"
 #include "StateLoops/avengerScore.h"
 #include "StateLoops/defendGauntlet.h"
@@ -18,7 +18,7 @@ enum States{lineFollowing,avengerCollecting,avengerScoring,stoneCollecting,stone
 
 class MainState{
 public:
-    static MainState* instance();
+    static MainState* i();
 
     void setState(States newState);
     States getState();
@@ -26,7 +26,7 @@ public:
 private:
     MainState();
     MainState(const MainState&);
-    MainState& operator = (const MainState&);
+    MainState& operator=(const MainState&);
 
     static MainState* myInstance;
     States currentState;

@@ -2,7 +2,7 @@
 #define __HARDWAREINTERFACE__
 
 #include "Arduino.h"
-#include "libs/Adafruit_SSD1306.h"
+#include "Adafruit_SSD1306.h"
 #include "Hardware/DriveMotor.h"
 #include "Hardware/Encoder.h"
 #include "Hardware/QRD.h"
@@ -66,14 +66,15 @@ class HardwareInterface {
       int QRD_Maxims[NUM_QRD_SENSORS];
       int QRD_Mins[NUM_QRD_SENSORS];
       int QRD_Edge[NUM_QRD_SENSORS];
+      //HardwareInstance::instance()->readQRD(QRDId_1);
 
-      unsigned long previousMillis = 0;
-      unsigned long currentMillis = millis();
+      std::clock_t start;
+      float duration;
+
    private:
       HardwareInterface();
       HardwareInterface(const HardwareInterface&);
       HardwareInterface& operator=(const HardwareInterface&);
-      bool timer(int preset);
 
       static HardwareInterface* myInstance;
    };

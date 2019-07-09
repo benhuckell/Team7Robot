@@ -20,6 +20,7 @@ class Encoder {
         int speed;
         int rpm;
         int count;
+        int direction;
         const float WheelDiameter = 0.02; //metres
         const int ticksPerRotation = 90;
 

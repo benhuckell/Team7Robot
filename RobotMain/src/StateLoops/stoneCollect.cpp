@@ -1,4 +1,5 @@
 #include "StateLoops/stoneCollect.h"
+#include "Arduino.h"
 #include "stateController.h"
 
 namespace StateLoops {
@@ -6,7 +7,7 @@ namespace StateLoops {
     enum postNumbers{postOne, postTwo, postThree} postNumber;
     
     void StoneCollect::loop(){
-        MainState::instance()->setState(stoneScoring);
+        MainState::i()->setState(stoneScoring);
         display.println("Stone Collecting");
         delay(1000);
         return;
