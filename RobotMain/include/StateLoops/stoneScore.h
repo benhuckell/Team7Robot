@@ -5,13 +5,13 @@
 namespace StateLoops {
     class StoneScore : public State {
         public:
-            void loop();
+            static void loop();
         private:
             enum stoneScoreStates{} stoneScoreState;
             enum holeNumbers{holeOne,holeTwo,holeThree,holeFour,holeFive} holeNumber;
-            void goToGauntlet();
-            void findHole(enum holeNumbers);
-            void placeStone();
-            void returnToTape();
+            static void goToGauntlet();
+            static void findHole(enum holeNumbers);
+            static void placeStone();
+            static void returnToTape();
     };
 }

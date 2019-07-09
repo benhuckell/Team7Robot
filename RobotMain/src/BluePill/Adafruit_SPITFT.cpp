@@ -33,7 +33,7 @@
 
 #if !defined(__AVR_ATtiny85__) // Not for ATtiny, at all
 
-#include "Adafruit_SPITFT.h"
+#include "libs/Adafruit_SPITFT.h"
 
 #if defined(PORT_IOBUS)
 // On SAMD21, redefine digitalPinToPort() to use the slightly-faster
