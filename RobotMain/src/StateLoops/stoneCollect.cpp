@@ -1,6 +1,6 @@
 #include "StateLoops/stoneCollect.h"
 #include "Arduino.h"
-#include "configGlobals.h"
+#include "stateController.h"
 
 namespace StateLoops {
     enum stoneCollectStates{} stoneCollectState;

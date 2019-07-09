@@ -7,7 +7,7 @@
 #include "StateLoops/lineFollow.h"
 #include "StateLoops/stoneCollect.h"
 #include "StateLoops/stoneScore.h"
-#include "configGlobals.h"
+#include "stateController.h"
 #include "Arduino.h"
 
 #define CONTROL_POT_1 PA_4

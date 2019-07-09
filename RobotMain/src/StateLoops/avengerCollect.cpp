@@ -1,6 +1,6 @@
 #include "StateLoops/avengerCollect.h"
 #include "Arduino.h"
-#include "configGlobals.h"
+#include "stateController.h"
 
 namespace StateLoops {
 

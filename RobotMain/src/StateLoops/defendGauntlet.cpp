@@ -1,6 +1,6 @@
 #include "StateLoops/defendGauntlet.h"
 #include "Arduino.h"
-#include "configGlobals.h"
+#include "stateController.h"
 
 namespace StateLoops {
     void DefendGauntlet::loop(){

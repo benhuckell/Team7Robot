@@ -1,4 +1,4 @@
-#include "configGlobals.h"
+#include "stateController.h"
 
 MainState* MainState::myInstance = NULL;
 
