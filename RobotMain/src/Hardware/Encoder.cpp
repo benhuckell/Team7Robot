@@ -12,7 +12,6 @@ void Encoder::update_port_1() {
     }
     timeSinceLastPulse_1 = timeOfLastPulse_1 - millis();
     timeOfLastPulse_1 = millis();
-
     
     count++;
     float ticksPerSecond = 1/timeSinceLastPulse_1; 
@@ -34,7 +33,6 @@ void Encoder::update_port_2() {
     float rotationsPerSecond = ticksPerSecond/ticksPerRotation;
     rpm = rotationsPerSecond*60;
     speed = rotationsPerSecond*PI*WheelDiameter*direction;
-
 }
 
 int Encoder::getSpeed() {

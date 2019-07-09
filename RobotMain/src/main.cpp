@@ -8,6 +8,7 @@
 #include "StateLoops/stoneScore.h"
 #include "Hardware/HardwareInterface.h"
 #include "stateController.h"
+#include "stm32/HardwareTimer.h"
 
 #define INTERRUPTPIN PA_8
 
@@ -19,11 +20,13 @@ void interruptRoutine(){
 
 void setup() {
     MainState::instance()->setState(lineFollowing);
-
+    Timer1.setPeriod(100000);//microseconds
+    Timer1.attachInterrupt(interruptRoutine);
+    Timer1.resume();
     //Read push button
 
-    pinMode(INTERRUPTPIN,INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(INTERRUPTPIN),interruptRoutine,RISING);
+    //pinMode(INTERRUPTPIN,INPUT_PULLUP);
+    //attachInterrupt(digitalPinToInterrupt(INTERRUPTPIN),interruptRoutine,RISING);
 
     //Define main states robot can have
     
@@ -80,6 +83,15 @@ void setup() {
       //display.print((String)mainState);
       //delay(250);
       display.display();
+      Serial.println("----");
+      Serial.print("Timer base frequency:");
+      Serial.println(Timer1.getBaseFrequency());
+
+      Serial.print("Timer prescaler:");
+      Serial.println(Timer1.getPrescaleFactor());
+
+      Serial.print("Timer period:");
+      Serial.println(Timer1.getOverflow());
     }
 }
 
