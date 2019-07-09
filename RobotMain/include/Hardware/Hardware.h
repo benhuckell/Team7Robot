@@ -1,4 +1,0 @@
- namespace HWNameSpace {
-    class Hardware {
-    };
- }
