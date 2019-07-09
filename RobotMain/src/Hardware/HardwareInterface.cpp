@@ -1,7 +1,6 @@
 #include "Hardware/HardwareInterface.h"
 
 HardwareInterface* HardwareInterface::myInstance = NULL;
-
 HardwareInterface::HardwareInterface(){
     HardwareInterface::LMotor1 = new DriveMotor(LMOTOR_FORWARDS_1, LMOTOR_BACKWARDS_1);
     HardwareInterface::LMotor2 = new DriveMotor(LMOTOR_FORWARDS_2, LMOTOR_BACKWARDS_2);
@@ -26,8 +25,6 @@ HardwareInterface::HardwareInterface(){
     HardwareInterface::QRD_Array[1] = HardwareInterface::i()->qrd1;
     HardwareInterface::QRD_Array[2] = HardwareInterface::i()->qrd2;
     HardwareInterface::QRD_Array[3] = HardwareInterface::i()->qrd3;
-    
-    start = std::clock();
 }
 
 HardwareInterface* HardwareInterface::i(){

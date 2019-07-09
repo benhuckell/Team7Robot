@@ -7,6 +7,9 @@
 #include "Hardware/Encoder.h"
 #include "Hardware/QRD.h"
 #include "Hardware/ServoMotor.h"
+#include <ctime>
+#include <stdio.h>
+#include <time.h>
 
 #define LMOTOR_FORWARDS_1 PA_0 //motor ports
 #define LMOTOR_BACKWARDS_1 PA_1
@@ -67,9 +70,6 @@ class HardwareInterface {
       int QRD_Mins[NUM_QRD_SENSORS];
       int QRD_Edge[NUM_QRD_SENSORS];
       //HardwareInstance::instance()->readQRD(QRDId_1);
-
-      std::clock_t start;
-      float duration;
 
    private:
       HardwareInterface();

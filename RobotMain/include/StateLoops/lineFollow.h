@@ -9,7 +9,7 @@
 namespace StateLoops{
     class LineFollow : public State {
         public:
-            LineFollow(/*QRD QRD_Array[QRD::NUM_QRD_SENSORS]*/);
+            LineFollow();
             void loop();
             
         private:

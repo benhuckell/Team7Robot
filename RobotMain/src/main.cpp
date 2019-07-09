@@ -22,8 +22,8 @@ void setup() {
 
     //Read push button
 
-    pinMode(INTERRUPTPIN,INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(INTERRUPTPIN),interruptRoutine,RISING);
+    //pinMode(INTERRUPTPIN,INPUT_PULLUP);
+    //attachInterrupt(digitalPinToInterrupt(INTERRUPTPIN),interruptRoutine,RISING);
 
     //Define main states robot can have
     

@@ -1,8 +1,5 @@
 #pragma once
 #include "Arduino.h"
-//#include <chrono>
-//#include <ctime>
-//#include "sys/time.h"
 
 class Encoder {
     public:
