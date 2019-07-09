@@ -22,8 +22,8 @@ void setup() {
 
     //Read push button
 
-    //pinMode(INTERRUPTPIN,INPUT_PULLUP);
-    //attachInterrupt(digitalPinToInterrupt(INTERRUPTPIN),interruptRoutine,RISING);
+    pinMode(INTERRUPTPIN,INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(INTERRUPTPIN),interruptRoutine,RISING);
 
     //Define main states robot can have
     
@@ -44,7 +44,6 @@ void setup() {
     display.display();
 
     int count = 0;
-    
     for(;;) {
       display.clearDisplay();
       display.setCursor(0,0);
