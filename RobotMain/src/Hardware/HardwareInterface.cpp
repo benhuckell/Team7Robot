@@ -14,10 +14,10 @@ HardwareInterface::HardwareInterface(){
     HardwareInterface::LEncoder = new Encoder(LENCODER_1, LENCODER_2);
     HardwareInterface::REncoder = new Encoder(RENCODER_1, RENCODER_2);
 
-    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 200, 100);
-    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 100);
-    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 200, 100);
-    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 200, 100);
+    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 200, 50);
+    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 50);
+    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 200, 50);
+    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 200, 50);
     HardwareInterface::qrdLeft = new QRD(QRD_IN, 4, 200, 100);
     HardwareInterface::qrdRight = new QRD(QRD_IN, 5, 200, 100);
 
@@ -30,16 +30,8 @@ HardwareInterface::HardwareInterface(){
 }
 
 HardwareInterface* HardwareInterface::i(){
-    display.clearDisplay();
-    display.setCursor(0,0);
-    display.print("Hardware instantiation");
-    display.display();
     if(myInstance == NULL){
         myInstance = new HardwareInterface();
-        display.clearDisplay();
-        display.setCursor(0, 0);
-        display.print("HW instantiated");
-        display.display();
         return myInstance;
     }
     return myInstance;
@@ -47,14 +39,19 @@ HardwareInterface* HardwareInterface::i(){
 
 void HardwareInterface::update(){
     //update QRD values
+    display.clearDisplay();
+    display.setCursor(0, 0);
     for(int i = 0; i < NUM_QRD_SENSORS; i++){
         QRD_Array[i]->update();
         QRD_Vals[i] = QRD_Array[i]->getValue();
         QRD_Maxims[i] = QRD_Array[i]->getMax();
         QRD_Mins[i] = QRD_Array[i]->getMin();
         QRD_Edge[i] = QRD_Array[i]->getEdge();
+        display.print(QRD_Vals[i]);
+        display.print(" ");
     }
-
+    
+    display.display();
     //update Motor outputs
     LMotor1->update();
     LMotor2->update();

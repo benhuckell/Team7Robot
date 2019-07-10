@@ -96,7 +96,7 @@ void setup() {
 
       count++;
 
-      display.println(count);
+      //display.println(count);
       // //display.print(analogRead(CONTROL_POT_1), DEC);
       // //display.print(" ");
       // display.print(analogRead(CONTROL_POT_2), DEC);
@@ -108,24 +108,7 @@ void setup() {
       // display.println(digitalRead(TOGGLE_SWITCH), DEC);
 
       // Read from QRD sensors
-      int QRD_Out[4];
-      bool states[4][3] = {{LOW,LOW,LOW},{LOW,LOW,HIGH},{LOW,HIGH,LOW},{LOW,HIGH,HIGH}};
-
-      for(int i=0;i<4;i++){
-        digitalWrite(SELECT_PIN_1,states[i][0]);
-        digitalWrite(SELECT_PIN_2,states[i][1]);
-        digitalWrite(SELECT_PIN_3,states[i][2]);
-        QRD_Out[i] = analogRead(MULTIPLEX_ANALOG_IN); //read from first multiplexer
-      }
-
-      display.print(QRD_Out[0]);
-
-      display.print(" ");
-      display.print(QRD_Out[1]);
-      display.print(" ");
-      display.print(QRD_Out[2]);
-      display.print(" ");
-      display.println(QRD_Out[3]);
+      
 
       display.display();
     }

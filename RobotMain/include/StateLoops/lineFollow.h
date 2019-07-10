@@ -22,15 +22,15 @@ namespace StateLoops{
             void followTape(bool followRightEdge);
             void setMotorSpeeds();
 
-            int LSpeed;
-            int RSpeed;
+            int LSpeed = 50;
+            int RSpeed = 50;
             bool postDetected = false;
             bool lostLine = false;
             float I_sum = 0; //cummulative sum
             std::queue<float> errorHistory; //holds history of recorded line errors
             HardwareInterface* HI;
 
-            const int P_gain = 100; // K_p
+            const int P_gain = 50; // K_p
             const int I_gain = 0; // K_i
             const int D_gain = 0; // K_d
             static const int numSensors = 4;
