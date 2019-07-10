@@ -1,12 +1,11 @@
 #ifndef __HARDWAREINTERFACE__
 #define __HARDWAREINTERFACE__
 
-#include "Arduino.h"
-#include "Adafruit_SSD1306.h"
 #include "Hardware/DriveMotor.h"
 #include "Hardware/Encoder.h"
 #include "Hardware/QRD.h"
 #include "Hardware/ServoMotor.h"
+#include "stateController.h"
 
 #define LMOTOR_FORWARDS_1 PA_0 //motor ports
 #define LMOTOR_BACKWARDS_1 PA_1
@@ -33,14 +32,14 @@
 #define Select_1 PB_3
 #define Select_2 PB_4
 
-extern Adafruit_SSD1306 display;
-
 class HardwareInterface {
    public:
       void update();
 
       static HardwareInterface* i();      
       static const int NUM_QRD_SENSORS = 4; //number of light sensors
+
+      //extern Adafruit_SSD1306 display;
 
       DriveMotor* LMotor1;
       DriveMotor* LMotor2;
@@ -68,7 +67,9 @@ class HardwareInterface {
       int QRD_Edge[NUM_QRD_SENSORS];
       //HardwareInstance::instance()->readQRD(QRDId_1);
 
-      std::clock_t start;
+      unsigned long previousMillis = 0;
+      unsigned long currentMillis = millis();
+
       float duration;
 
    private:

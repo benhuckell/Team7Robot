@@ -9,7 +9,6 @@ namespace StateLoops {
     void AvengerCollect::loop(){
         //Main Code
         display.println("Avenger Collecting");
-        delay(1000);
         //State Change
         return;
     }

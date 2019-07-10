@@ -2,13 +2,7 @@
 #define __CONFIGGLOBALSH__
 
 #include "Adafruit_SSD1306.h"
-#include "StateLoops/avengerCollect.h"
-#include "StateLoops/avengerScore.h"
-#include "StateLoops/defendGauntlet.h"
-#include "StateLoops/lineFollow.h"
-#include "StateLoops/stoneCollect.h"
-#include "StateLoops/stoneScore.h"
-#include "StateLoops/State.h"
+#include "FreeMono9pt7b.h"
 
 extern Adafruit_SSD1306 display;
 

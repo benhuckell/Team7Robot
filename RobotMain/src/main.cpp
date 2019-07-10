@@ -8,6 +8,7 @@
 #include "StateLoops/stoneCollect.h"
 #include "StateLoops/stoneScore.h"
 #include "stateController.h"
+#include "Hardware/HardwareInterface.h"
 #include "Arduino.h"
 
 #define CONTROL_POT_1 PA_4
@@ -24,7 +25,16 @@
 Adafruit_SSD1306 display(-1);
 
 void setup() {
+    display.begin(SSD1306_SWITCHCAPVCC,0x3C);
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0,0);
+    display.println("Working");
+    display.display();
+
     int count = 0;
+    Serial.begin(9600);
 
     MainState::i()->setState(lineFollowing);
 
@@ -48,14 +58,6 @@ void setup() {
     StateLoops::StoneCollect stoneCollect;
     StateLoops::StoneScore stoneScore;
     StateLoops::DefendGauntlet defend;
-
-    display.begin(SSD1306_SWITCHCAPVCC,0x3C);
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0,0);
-    display.println("Working");
-    display.display();
 
     for(;;) {
       display.clearDisplay();
@@ -123,7 +125,7 @@ void setup() {
       display.print(" ");
       display.print(QRD_Out[2]);
       display.print(" ");
-      display.print(QRD_Out[3]);
+      display.println(QRD_Out[3]);
 
       display.display();
     }

@@ -1,5 +1,6 @@
 #include "Hardware/HardwareInterface.h"
 
+
 HardwareInterface* HardwareInterface::myInstance = NULL;
 
 HardwareInterface::HardwareInterface(){
@@ -11,7 +12,7 @@ HardwareInterface::HardwareInterface(){
     HardwareInterface::WinchMotor = new DriveMotor(WINCH_UP, WINCH_DOWN);
 
     HardwareInterface::LEncoder = new Encoder(LENCODER_1, LENCODER_2);
-    HardwareInterface::LEncoder = new Encoder(RENCODER_1, RENCODER_2);
+    HardwareInterface::REncoder = new Encoder(RENCODER_1, RENCODER_2);
 
     HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 200, 100);
     HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 100);
@@ -22,17 +23,23 @@ HardwareInterface::HardwareInterface(){
 
     HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 
-    HardwareInterface::QRD_Array[0] = HardwareInterface::i()->qrd0;
-    HardwareInterface::QRD_Array[1] = HardwareInterface::i()->qrd1;
-    HardwareInterface::QRD_Array[2] = HardwareInterface::i()->qrd2;
-    HardwareInterface::QRD_Array[3] = HardwareInterface::i()->qrd3;
-    
-    start = std::clock();
+    HardwareInterface::QRD_Array[0] = qrd0;
+    HardwareInterface::QRD_Array[1] = qrd1;
+    HardwareInterface::QRD_Array[2] = qrd2;
+    HardwareInterface::QRD_Array[3] = qrd3;
 }
 
 HardwareInterface* HardwareInterface::i(){
+    display.clearDisplay();
+    display.setCursor(0,0);
+    display.print("Hardware instantiation");
+    display.display();
     if(myInstance == NULL){
         myInstance = new HardwareInterface();
+        display.clearDisplay();
+        display.setCursor(0, 0);
+        display.print("HW instantiated");
+        display.display();
         return myInstance;
     }
     return myInstance;
@@ -59,4 +66,5 @@ void HardwareInterface::update(){
 
     //Update servo output
     clawMotor->update();
+    return;
 }
