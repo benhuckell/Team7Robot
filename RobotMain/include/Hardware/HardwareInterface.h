@@ -7,30 +7,26 @@
 #include "Hardware/QRD.h"
 #include "Hardware/ServoMotor.h"
 
-#define LMOTOR_FORWARDS_1 PA_0 //motor ports
-#define LMOTOR_BACKWARDS_1 PA_1
-#define LMOTOR_FORWARDS_2 PA_2
-#define LMOTOR_BACKWARDS_2 PA_3
-#define RMOTOR_FORWARDS_1 PA_4
-#define RMOTOR_BACKWARDS_1 PA_5
-#define RMOTOR_FORWARDS_2 PA_6
-#define RMOTOR_BACKWARDS_2 PA_7
-
+#define LMOTOR_FORWARDS PA_0 //motor ports
+#define LMOTOR_BACKWARDS PA_1
+#define RMOTOR_FORWARDS PA_2
+#define RMOTOR_BACKWARDS PA_3
+/*
 #define WINCH_UP PA_8 //winch inputs
 #define WINCH_DOWN PA_9
 
-#define LENCODER_1 PB_5 //encoder inputs
-#define LENCODER_2 PB_6
-#define RENCODER_1 PB_7
-#define RENCODER_2 PB_8
+#define LENCODER_1 PB5 //encoder inputs
+#define LENCODER_2 PB6
+#define RENCODER_1 PB7
+#define RENCODER_2 PB8
 
 #define CLAW_SERVO PA_10
+*/
+#define QRD_IN PA_6 //QRD read port
 
-#define QRD_IN PA_4 //QRD read port
-
-#define Select_0 PA_15 //mux selects
-#define Select_1 PB_3
-#define Select_2 PB_4
+#define Select_0 PB12 //mux selects
+#define Select_1 PB13
+#define Select_2 PB14
 
 class HardwareInterface {
    public:
@@ -39,10 +35,8 @@ class HardwareInterface {
       static HardwareInterface* i();      
       static const int NUM_QRD_SENSORS = 4; //number of light sensors
 
-      DriveMotor* LMotor1;
-      DriveMotor* LMotor2;
-      DriveMotor* RMotor1;
-      DriveMotor* RMotor2;
+      DriveMotor* LMotor;
+      DriveMotor* RMotor;
 
       DriveMotor* WinchMotor;
 
