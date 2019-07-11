@@ -1,9 +1,9 @@
 #pragma once
 #include "Arduino.h"
 
-#define Select_0 PA_15 //mux selects
-#define Select_1 PB_3
-#define Select_2 PB_4
+#define Select_0 PB12 //mux selects
+#define Select_1 PB13
+#define Select_2 PB14
 
 class QRD {
    public:

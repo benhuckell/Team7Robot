@@ -24,10 +24,6 @@
 */
 #define QRD_IN PA_6 //QRD read port
 
-#define Select_0 PB12 //mux selects
-#define Select_1 PB13
-#define Select_2 PB14
-
 class HardwareInterface {
    public:
       void update();
