@@ -47,11 +47,12 @@ HardwareInterface::HardwareInterface(){
 
     HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 
-    HardwareInterface::QRD_Array[0] = HardwareInterface::i()->qrd0;
-    HardwareInterface::QRD_Array[1] = HardwareInterface::i()->qrd1;
-    HardwareInterface::QRD_Array[2] = HardwareInterface::i()->qrd2;
-    HardwareInterface::QRD_Array[3] = HardwareInterface::i()->qrd3;
+    HardwareInterface::QRD_Array[0] = qrd0;
+    HardwareInterface::QRD_Array[1] = qrd1;
+    HardwareInterface::QRD_Array[2] = qrd2;
+    HardwareInterface::QRD_Array[3] = qrd3;
 }
+
 bool HardwareInterface::timer(int preset){
   unsigned long currentMillis = millis();
 

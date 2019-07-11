@@ -31,12 +31,12 @@ float LineFollow::getLinePositionError(bool followRightEdge)
     float edgeXPos = 0;
     if(followRightEdge){ 
             //Find right edge
-        for(i = numSensors-1; ((HI->QRD_Vals[i]-HI->QRD_Mins[i]) > HI->QRD_Edge[i]-HI->QRD_Mins[i]) && (i >= 0); i--)
+        for(i = numSensors-1; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i >= 0); i--)
         ;//intentionally blank for loop
         if(i == numSensors-1){ rightEdgeXVal = 0 + (numSensors-1)*0.5; } //handle case where line is directly below rightmost sensor
         else{
         //interpolate and subtract (numSensors-1)/2 to put a zero x value in the middle of the sensor array
-        rightEdgeXVal = i + ( (HI->QRD_Edge[i]-HI->QRD_Mins[i]) - (HI->QRD_Vals[i]-HI->QRD_Mins[i]) )/( (HI->QRD_Vals[i+1]-HI->QRD_Mins[i]) - (HI->QRD_Vals[i]-HI->QRD_Mins[i]) ) - (numSensors-1)*0.5;
+            rightEdgeXVal = i + (HI->QRD_Vals[i] - HI->QRD_Edge[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i+1]) - (numSensors-1)*0.5;
         }
         edgeXPos = rightEdgeXVal;
         target = 1;
@@ -44,12 +44,12 @@ float LineFollow::getLinePositionError(bool followRightEdge)
     else{
         //Find left edge
         int i;
-        for(i = 0; (HI->QRD_Vals[i] > HI->QRD_Edge[i]) && (i < numSensors); i++)
+        for(i = 0; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i < numSensors); i++)
         ;//intentionally empty for loop
         if(i == 0){ leftEdgeXVal = 0 - (numSensors-1)*0.5; } //handle case where line is directly below leftmost sensor
         else{
         //interpolate and subtract (numSensors-1)/2 to put a zero x value in the middle of the sensor array
-        leftEdgeXVal = i - (HI->QRD_Edge[i] - HI->QRD_Vals[i])/(HI->QRD_Vals[i-1] - HI->QRD_Vals[i]) - (numSensors-1)*0.5;
+            leftEdgeXVal = i - (HI->QRD_Vals[i] - HI->QRD_Edge[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i-1]) - (numSensors-1)*0.5;
         }
         edgeXPos = leftEdgeXVal;
         target = -1;
@@ -81,6 +81,21 @@ void LineFollow::followTape(bool followRightEdge){
 
     //adjust speed of both wheels to correct for error
     float speedAdj = P_gain*error + I_gain*I_sum + D_gain*D_error;
+
+    if (LSpeed + speedAdj > 100){
+        speedAdj = 100-LSpeed;
+    }
+    else if(LSpeed + speedAdj < 0){
+        speedAdj = 0-LSpeed;
+    }
+
+    if (RSpeed - speedAdj > 100){
+        speedAdj = 100-RSpeed;
+    }
+    else if (RSpeed - speedAdj < 0){
+        speedAdj = 0-RSpeed;
+    }
+
     LSpeed += speedAdj;
     RSpeed -= speedAdj;
     setMotorSpeeds();

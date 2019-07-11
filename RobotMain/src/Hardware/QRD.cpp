@@ -9,21 +9,18 @@ QRD::QRD(PinName QRD_port, int QRD_Index, int QRD_Max, int QRD_Min){
 
 void QRD::update() {
     //update value
-    digitalWrite(Select_0, QRD_Index & 1);
-    digitalWrite(Select_1, (QRD_Index&2)!=0);
-    digitalWrite(Select_2, (QRD_Index&4)!=0);
+    /*digitalWrite(Select_0, QRD_Index&1);
+    digitalWrite(Select_1, QRD_Index&2);
+    digitalWrite(Select_2, QRD_Index&4);
 
-    value = analogRead(QRD_port);
+    value = analogRead(QRD_port);*/
 
-    //find max/min/edge vals
-    if(value > QRD_Max){
-        QRD_Max = value;
-        QRD_Edge = (QRD_Max+QRD_Min)*0.5;
-    }
-    else if(value < QRD_Min){
-        QRD_Min = value;
-        QRD_Edge = (QRD_Max+QRD_Min)*0.5;
-    }
+    bool states[4][3] = {{LOW,LOW,LOW},{LOW,LOW,HIGH},{LOW,HIGH,LOW},{LOW,HIGH,HIGH}};
+
+    digitalWrite(Select_0,states[QRD_Index][0]);
+    digitalWrite(Select_1,states[QRD_Index][1]);
+    digitalWrite(Select_2,states[QRD_Index][2]);
+    value = analogRead(QRD_port); //read from first multiplexer
 }
 
 int QRD::getValue() {

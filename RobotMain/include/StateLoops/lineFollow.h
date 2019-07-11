@@ -2,7 +2,6 @@
 
 #include <Wire.h>
 #include <queue>
-#include "libs/Adafruit_SSD1306.h"
 #include "StateLoops/State.h"
 #include "Hardware/HardwareInterface.h"
 

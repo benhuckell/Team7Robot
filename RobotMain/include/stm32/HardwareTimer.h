@@ -91,9 +91,9 @@ private:
     void resumeChannel(int channel, int timChannel);
 
 };
-
+extern HardwareTimer Timer1;
 #ifdef TIM1
-    extern HardwareTimer Timer1;
+    
 #endif
 
 #ifdef TIM2

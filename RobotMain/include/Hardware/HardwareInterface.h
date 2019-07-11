@@ -2,7 +2,6 @@
 #define __HARDWAREINTERFACE__
 
 #include "Arduino.h"
-#include "libs/Adafruit_SSD1306.h"
 #include "Hardware/DriveMotor.h"
 #include "Hardware/Encoder.h"
 #include "Hardware/QRD.h"
@@ -32,8 +31,6 @@
 #define Select_0 PA_15 //mux selects
 #define Select_1 PB_3
 #define Select_2 PB_4
-
-extern Adafruit_SSD1306 display;
 
 class HardwareInterface {
    public:

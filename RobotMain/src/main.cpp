@@ -15,14 +15,19 @@
 Adafruit_SSD1306 display(-1);
 
 void interruptRoutine(){
-  HardwareInterface::i()->update();
+    HardwareInterface::i()->update();
 }
 
 void setup() {
+    /* HardwareTimer Timer2 = HardwareTimer()
+
+    Timer2.setPrescaleFactor(100);
+    Timer2.setOverflow(UINT16_MAX);
+    Timer2.setMode(1, TIMER_INPUT_CAPTURE_RISING);
     MainState::instance()->setState(lineFollowing);
-    Timer1.setPeriod(100000);//microseconds
-    Timer1.attachInterrupt(interruptRoutine);
-    Timer1.resume();
+    Timer2.setPeriod(100000);//microseconds
+    Timer2.attachInterrupt(interruptRoutine);
+    Timer2.resume();*/
     //Read push button
 
     //pinMode(INTERRUPTPIN,INPUT_PULLUP);
@@ -74,7 +79,7 @@ void setup() {
         default:
           break;
       }
-      
+      HardwareInterface::i()->update();
       count++;
       //int push_Button = digitalRead(PUSHBUTTON);
       //display.println(push_Button == 1 ? "Button Not Pushed":"Button Pushed"); 
@@ -83,15 +88,6 @@ void setup() {
       //display.print((String)mainState);
       //delay(250);
       display.display();
-      Serial.println("----");
-      Serial.print("Timer base frequency:");
-      Serial.println(Timer1.getBaseFrequency());
-
-      Serial.print("Timer prescaler:");
-      Serial.println(Timer1.getPrescaleFactor());
-
-      Serial.print("Timer period:");
-      Serial.println(Timer1.getOverflow());
     }
 }
 
