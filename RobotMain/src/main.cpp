@@ -13,9 +13,9 @@
 
 #define CONTROL_POT_1 PA_4
 #define CONTROL_POT_2 PA_5
-#define PUSH_BUTTON_1 PB_4
-#define PUSH_BUTTON_2 PB_5
-#define TOGGLE_SWITCH PB_3
+#define PUSH_BUTTON_1 PB4
+#define PUSH_BUTTON_2 PB5
+#define TOGGLE_SWITCH PB3
 
 #define SELECT_PIN_1 PB12
 #define SELECT_PIN_2 PB13
@@ -36,7 +36,7 @@ void setup() {
     int count = 0;
     Serial.begin(9600);
 
-    MainState::i()->setState(lineFollowing);
+    MainState::i()->setState(avengerCollecting);
 
     //Set up inputs
     pinMode(CONTROL_POT_1,INPUT);
@@ -66,17 +66,9 @@ void setup() {
       switch(MainState::i()->getState()){
         case(lineFollowing):
           lineFollow.loop();
-          if(digitalRead(PUSH_BUTTON_1)){
-            delay(100);
-            MainState::i()->setState(avengerCollecting);
-          }
           break;
         case(avengerCollecting):
           avengerCollect.loop();
-          if(digitalRead(PUSH_BUTTON_1)){
-            delay(100);
-            MainState::i()->setState(avengerScoring);
-          }
           break;
         case(avengerScoring):
           avengerScore.loop();
@@ -96,18 +88,37 @@ void setup() {
 
       count++;
 
-      //display.println(count);
-      // //display.print(analogRead(CONTROL_POT_1), DEC);
-      // //display.print(" ");
-      // display.print(analogRead(CONTROL_POT_2), DEC);
-      // display.print(" ");
-      // display.print(digitalRead(PUSH_BUTTON_1), DEC);
-      // display.print(" ");
-      // display.print(digitalRead(PUSH_BUTTON_2), DEC);
-      // display.print(" ");
-      // display.println(digitalRead(TOGGLE_SWITCH), DEC);
+      display.println(count);
+      display.print(analogRead(CONTROL_POT_1), DEC);
+      display.print(" ");
+      display.print(analogRead(CONTROL_POT_2), DEC);
+      display.print(" ");
+      display.print(digitalRead(PUSH_BUTTON_1), DEC);
+      display.print(" ");
+      display.print(digitalRead(PUSH_BUTTON_2), DEC);
+      display.print(" ");
+      display.println(digitalRead(TOGGLE_SWITCH), DEC);
 
       // Read from QRD sensors
+      int QRD_Out[4];
+      bool states[4][3] = {{LOW,LOW,LOW},{LOW,LOW,HIGH},{LOW,HIGH,LOW},{LOW,HIGH,HIGH}};
+
+      for(int i=0;i<4;i++){
+        digitalWrite(SELECT_PIN_1,states[i][0]);
+        digitalWrite(SELECT_PIN_2,states[i][1]);
+        digitalWrite(SELECT_PIN_3,states[i][2]);
+        QRD_Out[i] = analogRead(MULTIPLEX_ANALOG_IN); //read from first multiplexer
+      }
+
+      display.print(QRD_Out[0]);
+
+      display.print(" ");
+      display.print(QRD_Out[1]);
+      display.print(" ");
+      display.print(QRD_Out[2]);
+      display.print(" ");
+      display.print(QRD_Out[3]);
+
       
 
       display.display();
