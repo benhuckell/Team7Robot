@@ -20,15 +20,10 @@ void LineFollow::setMotorSpeeds(){
     HI->RMotor->setSpeed(RSpeed);
     HI->LMotor->setSpeed(LSpeed);
     
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0,0);
     display.println("Rspeed ");
     display.println(HI->RMotor->getSpeed());
     display.println("LSpeed ");
     display.println(HI->LMotor->getSpeed());
-    display.display();
 }
 
 // Returns the current amount of line following error
@@ -39,6 +34,17 @@ float LineFollow::getLinePositionError(bool followRightEdge)
     float rightEdgeXVal = 0;
     int i = 0;
     float edgeXPos = 0;
+
+    display.print(HI->QRD_Vals[0]);
+    display.print(" ");
+    display.print(HI->QRD_Vals[1]);
+    display.print(" ");
+    display.print(HI->QRD_Vals[2]);
+    display.print(" ");
+    display.println(HI->QRD_Vals[3]);
+    display.print(" ");
+    
+
     if(followRightEdge){ 
             //Find right edge
         for(i = numSensors-1; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i >= 0); i--)
@@ -105,13 +111,8 @@ void LineFollow::followTape(bool followRightEdge){
     else if (RSpeed - speedAdj < 0){
         speedAdj = 0-RSpeed;
     }
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0,0);
     display.print("speedAdj: ");
     display.println(speedAdj);
-    display.display();
     LSpeed += speedAdj;
     RSpeed -= speedAdj;
     setMotorSpeeds();

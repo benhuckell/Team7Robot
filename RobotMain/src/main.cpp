@@ -51,6 +51,8 @@ void setup() {
     display.println("Working");
     display.display();
 
+    MainState::instance()->setState(lineFollowing);
+
     int count = 0;
     for(;;) {
       display.clearDisplay();
