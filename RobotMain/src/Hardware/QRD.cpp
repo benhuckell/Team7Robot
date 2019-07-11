@@ -5,6 +5,7 @@ QRD::QRD(PinName QRD_port, int QRD_Index, int QRD_Max, int QRD_Min){
     QRD::QRD_Index = QRD_Index;
     QRD::QRD_Max = QRD_Max;
     QRD::QRD_Min = QRD_Min; 
+    QRD::QRD_Edge = (QRD_Max + QRD_Min)/2;
 }
 
 void QRD::update() {

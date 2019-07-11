@@ -20,15 +20,10 @@ void LineFollow::setMotorSpeeds(){
     HI->RMotor->setSpeed(RSpeed);
     HI->LMotor->setSpeed(LSpeed);
     
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0,0);
-    display.println("Rspeed ");
-    display.println(HI->RMotor->getSpeed());
-    display.println("LSpeed ");
-    display.println(HI->LMotor->getSpeed());
-    display.display();
+    // display.println("Rspeed ");
+    // display.println(HI->RMotor->getSpeed());
+    // display.println("LSpeed ");
+    // display.println(HI->LMotor->getSpeed());
 }
 
 // Returns the current amount of line following error
@@ -41,8 +36,17 @@ float LineFollow::getLinePositionError(bool followRightEdge)
     float edgeXPos = 0;
     if(followRightEdge){ 
             //Find right edge
-        for(i = numSensors-1; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i >= 0); i--)
-        ;//intentionally blank for loop
+        for(i = numSensors-1; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i >= 0); i--){
+            display.print("QRD ");
+            display.print(i);
+            display.print(" ");
+            display.println(HI->QRD_Vals[i]);
+            display.print("QRD Edge ");
+            display.print(i);
+            display.print(" ");
+            display.println(HI->QRD_Edge[i]);
+        }
+        //;//intentionally blank for loop
         if(i == numSensors-1){ rightEdgeXVal = 0 + (numSensors-1)*0.5; } //handle case where line is directly below rightmost sensor
         else{
         //interpolate and subtract (numSensors-1)/2 to put a zero x value in the middle of the sensor array
@@ -105,13 +109,10 @@ void LineFollow::followTape(bool followRightEdge){
     else if (RSpeed - speedAdj < 0){
         speedAdj = 0-RSpeed;
     }
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0,0);
-    display.print("speedAdj: ");
-    display.println(speedAdj);
-    display.display();
+    // display.clearDisplay();
+    // display.print("speedAdj: ");
+    // display.println(speedAdj);
+    
     LSpeed += speedAdj;
     RSpeed -= speedAdj;
     setMotorSpeeds();

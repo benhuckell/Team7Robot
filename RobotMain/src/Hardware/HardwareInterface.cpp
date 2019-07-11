@@ -41,7 +41,7 @@ HardwareInterface::HardwareInterface(){
     HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 200, 100);
     HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 100);
     HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 200, 100);
-    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 200, 100);
+    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 80, 50);
     HardwareInterface::qrdLeft = new QRD(QRD_IN, 4, 200, 100);
     HardwareInterface::qrdRight = new QRD(QRD_IN, 5, 200, 100);
 
@@ -56,7 +56,7 @@ HardwareInterface::HardwareInterface(){
 bool HardwareInterface::timer(int preset){
   unsigned long currentMillis = millis();
 
-  if(currentMillis - previousMillis >= preset ){
+  if(currentMillis - previousMillis >= preset){
     previousMillis = currentMillis;
     return true;
   }

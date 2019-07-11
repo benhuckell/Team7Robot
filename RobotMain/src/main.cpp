@@ -83,7 +83,7 @@ void setup() {
       count++;
       //int push_Button = digitalRead(PUSHBUTTON);
       //display.println(push_Button == 1 ? "Button Not Pushed":"Button Pushed"); 
-      display.println("Main Looping");
+      //display.println("Main Looping");
       display.println(count);
       //display.print((String)mainState);
       //delay(250);
