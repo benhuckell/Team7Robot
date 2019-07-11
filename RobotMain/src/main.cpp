@@ -8,22 +8,30 @@
 #include "StateLoops/stoneScore.h"
 #include "Hardware/HardwareInterface.h"
 #include "stateController.h"
+#include "stm32/HardwareTimer.h"
 
 #define INTERRUPTPIN PA_8
 
 Adafruit_SSD1306 display(-1);
 
 void interruptRoutine(){
-  HardwareInterface::i()->update();
+    HardwareInterface::i()->update();
 }
 
 void setup() {
-    MainState::instance()->setState(lineFollowing);
+    /* HardwareTimer Timer2 = HardwareTimer()
 
+    Timer2.setPrescaleFactor(100);
+    Timer2.setOverflow(UINT16_MAX);
+    Timer2.setMode(1, TIMER_INPUT_CAPTURE_RISING);
+    MainState::instance()->setState(lineFollowing);
+    Timer2.setPeriod(100000);//microseconds
+    Timer2.attachInterrupt(interruptRoutine);
+    Timer2.resume();*/
     //Read push button
 
-    pinMode(INTERRUPTPIN,INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(INTERRUPTPIN),interruptRoutine,RISING);
+    //pinMode(INTERRUPTPIN,INPUT_PULLUP);
+    //attachInterrupt(digitalPinToInterrupt(INTERRUPTPIN),interruptRoutine,RISING);
 
     //Define main states robot can have
     
@@ -71,7 +79,7 @@ void setup() {
         default:
           break;
       }
-      
+      HardwareInterface::i()->update();
       count++;
       //int push_Button = digitalRead(PUSHBUTTON);
       //display.println(push_Button == 1 ? "Button Not Pushed":"Button Pushed"); 
