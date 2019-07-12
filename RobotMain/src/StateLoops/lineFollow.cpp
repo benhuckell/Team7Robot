@@ -10,20 +10,26 @@ LineFollow::LineFollow(){
 }
 
 void LineFollow::loop(){
-    followTape(true);
+    int robotSpeed = 50;
+    followTape(robotSpeed, true);
     
 }
 
 //update the stored motor speed values
 void LineFollow::setMotorSpeeds(){
     
+    if(RSpeed < -100) { RSpeed = -100; }
+    else if(RSpeed > 100) { RSpeed = 100; }
+    if(LSpeed < -100) { LSpeed = -100; }
+    else if(LSpeed > 100) { LSpeed = 100; }
+
     HI->RMotor->setSpeed(RSpeed);
     HI->LMotor->setSpeed(LSpeed);
     
-    // display.println("Rspeed ");
-    // display.println(HI->RMotor->getSpeed());
-    // display.println("LSpeed ");
-    // display.println(HI->LMotor->getSpeed());
+    display.println("RSpeed ");
+    display.println(HI->RMotor->getSpeed());
+    display.println("LSpeed ");
+    display.println(HI->LMotor->getSpeed());
 }
 
 // Returns the current amount of line following error
@@ -34,33 +40,51 @@ float LineFollow::getLinePositionError(bool followRightEdge)
     float rightEdgeXVal = 0;
     int i = 0;
     float edgeXPos = 0;
-    
 
     if(followRightEdge){ 
-            //Find right edge
-        for(i = numSensors-1; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i >= 0); i--){
-        }
+        target = 0.5;
+        //Find right edge
+        for(i = numSensors-1; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i > 0); i--){}//intentionally empty for loop
+        
+        // display.print("i: ");
+        // display.println(i);
         //;//intentionally blank for loop
         if(i == numSensors-1){ rightEdgeXVal = 0 + (numSensors-1)*0.5; } //handle case where line is directly below rightmost sensor
+        else if(HI->QRD_Vals[i] > HI->QRD_Edge[i]){
+            //interpolate and subtract (numSensors-1)/2 to put a zero x value in the middle of the sensor array
+            rightEdgeXVal = (float)i + (float)(HI->QRD_Vals[i] - HI->QRD_Edge[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i+1]) - (float)(numSensors-1)*0.5;
+            // display.print("inter: ");
+            // display.println((float)(HI->QRD_Vals[i] - HI->QRD_Edge[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i+1]));
+        }
         else{
-        //interpolate and subtract (numSensors-1)/2 to put a zero x value in the middle of the sensor array
-            rightEdgeXVal = i + (HI->QRD_Vals[i] - HI->QRD_Edge[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i+1]) - (numSensors-1)*0.5;
+            rightEdgeXVal = errorHistory.back() + target; //get most recent value
         }
         edgeXPos = rightEdgeXVal;
-        target = 1;
+
+        // display.print(HI->QRD_Vals[0]);
+        // display.print(" ");
+        // display.print(HI->QRD_Vals[1]);
+        // display.print(" ");
+        // display.print(HI->QRD_Vals[2]);
+        // display.print(" ");
+        // display.print(HI->QRD_Vals[3]);
+        // display.println(" ");
     }
     else{
+        target = -0.5;
         //Find left edge
-        int i;
-        for(i = 0; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i < numSensors); i++)
-        ;//intentionally empty for loop
-        if(i == 0){ leftEdgeXVal = 0 - (numSensors-1)*0.5; } //handle case where line is directly below leftmost sensor
-        else{
+        for(i = 0; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i < numSensors); i++){}//intentionally empty for loop
+
+        if(i == 0){ leftEdgeXVal = 0 - (numSensors)*0.5; } //handle case where line is directly below leftmost sensor
+
+        else if(HI->QRD_Vals[i] > HI->QRD_Edge[i]){
         //interpolate and subtract (numSensors-1)/2 to put a zero x value in the middle of the sensor array
-            leftEdgeXVal = i - (HI->QRD_Vals[i] - HI->QRD_Edge[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i-1]) - (numSensors-1)*0.5;
+            leftEdgeXVal = (float)i - (float)(HI->QRD_Vals[i] - HI->QRD_Edge[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i-1]) - (float)(numSensors-1)*0.5;
+        }
+        else{
+            rightEdgeXVal = errorHistory.back() + target; //get most recent value
         }
         edgeXPos = leftEdgeXVal;
-        target = -1;
     }
     if((rightEdgeXVal - leftEdgeXVal) > POST_TAPE_WIDTH){
         postDetected = true;
@@ -69,8 +93,13 @@ float LineFollow::getLinePositionError(bool followRightEdge)
 }
 
 //runs a PID to follow the tape
-void LineFollow::followTape(bool followRightEdge){
+void LineFollow::followTape(int robotSpeed, bool followRightEdge){
+    display.clearDisplay();
     float error = getLinePositionError(followRightEdge); // get current error
+    
+    // display.print("error: ");
+    // display.println(error);
+
     if(postDetected){
         return;
     }
@@ -88,31 +117,27 @@ void LineFollow::followTape(bool followRightEdge){
     float D_error = (errorHistory.back() - errorHistory.front())/(ERROR_HISTORY_SIZE);
 
     //adjust speed of both wheels to correct for error
-    float speedAdj = P_gain*error + I_gain*I_sum + D_gain*D_error;
-
-    if (LSpeed + speedAdj > 100){
-        speedAdj = 100-LSpeed;
-    }
-    else if(LSpeed + speedAdj < -100){
-        speedAdj = 0-LSpeed;
-    }
-
-    if (RSpeed - speedAdj > 100){
-        speedAdj = 100-RSpeed;
-    }
-    else if (RSpeed - speedAdj < -100){
-        speedAdj = 0-RSpeed;
-    }
-     display.clearDisplay();
-     display.print("speedAdj: ");
-     display.println(speedAdj);
-     display.print("LSpeed: ");
-     display.println(LSpeed);
-     display.print("RSpeed: ");
-     display.println(RSpeed);
+    float speedAdj = 0;
+    speedAdj = P_gain*error + I_gain*I_sum + D_gain*D_error;
+    // display.print("Padj: ");
+    // display.println(P_gain*error);
     
-    LSpeed += speedAdj;
-    RSpeed -= speedAdj;
+    // display.print("Iadj: ");
+    // display.println(I_gain*I_sum);
+    
+    // display.print("Dadj: ");
+    // display.println(D_gain*D_error);
+    
+    
+    // display.print("speedAdj: ");
+    // display.println(speedAdj);
+    // display.print("LSpeed: ");
+    // display.println(LSpeed);
+    // display.print("RSpeed: ");
+    // display.println(RSpeed);
+
+    LSpeed = robotSpeed + speedAdj;
+    RSpeed = robotSpeed - speedAdj;
     setMotorSpeeds();
 }
 

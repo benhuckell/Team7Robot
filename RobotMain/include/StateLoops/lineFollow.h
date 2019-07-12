@@ -18,7 +18,7 @@ namespace StateLoops{
             void findPost();
             void findGauntlet();
             void findLine();
-            void followTape(bool followRightEdge);
+            void followTape(int robotSpeed, bool followRightEdge);
             void setMotorSpeeds();
 
             int LSpeed;

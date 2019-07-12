@@ -40,10 +40,10 @@ HardwareInterface::HardwareInterface(){
     attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt1,RISING);
     attachInterrupt(digitalPinToInterrupt(RENCODER_2),REncoderInterrupt2,RISING);
 */
-    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 200, 100);
-    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 100);
-    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 200, 100);
-    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 80, 50);
+    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 110, 50);
+    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 110, 50);
+    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 110, 50);
+    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 110, 50);
     HardwareInterface::qrdLeft = new QRD(QRD_IN, 4, 200, 100);
     HardwareInterface::qrdRight = new QRD(QRD_IN, 5, 200, 100);
 

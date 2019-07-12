@@ -7,25 +7,25 @@ QRD::QRD(PinName QRD_port, int QRD_Index, int QRD_Max, int QRD_Min){
     QRD::QRD_Min = QRD_Min; 
     QRD::QRD_Edge = (QRD_Max + QRD_Min)/2;
 
-    pinMode(PB12, OUTPUT);
-    pinMode(PB13, OUTPUT);
-    pinMode(PB14, OUTPUT);
+    pinMode(Select_0, OUTPUT);
+    pinMode(Select_1, OUTPUT);
+    pinMode(Select_2, OUTPUT);
 }
 
 void QRD::update() {
     //update value
-    digitalWrite(Select_0, QRD_Index&1);
+    /*digitalWrite(Select_0, QRD_Index&1);
     digitalWrite(Select_1, QRD_Index&2);
     digitalWrite(Select_2, QRD_Index&4);
 
-    value = analogRead(QRD_port);
+    value = analogRead(QRD_port); */
 
-    /* bool states[4][3] = {{LOW,LOW,LOW},{LOW,LOW,HIGH},{LOW,HIGH,LOW},{LOW,HIGH,HIGH}};
+    bool states[4][3] = {{LOW,LOW,LOW},{LOW,LOW,HIGH},{LOW,HIGH,LOW},{LOW,HIGH,HIGH}};
 
     digitalWrite(Select_0,states[QRD_Index][0]);
     digitalWrite(Select_1,states[QRD_Index][1]);
     digitalWrite(Select_2,states[QRD_Index][2]);
-    value = analogRead(QRD_port); */ //read from first multiplexer
+    value = analogRead(QRD_port); //read from first multiplexer
 }
 
 int QRD::getValue() {
