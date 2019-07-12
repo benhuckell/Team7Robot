@@ -6,6 +6,8 @@ DriveMotor::DriveMotor(PinName motor_port_forwards, PinName motor_port_backwards
 
     DriveMotor::T_PWM = 2000; //2000 clock pulses
     DriveMotor::PWM_FREQ = 100000; //100KHz 
+    pwm_start(DriveMotor::motor_port_forwards, PWM_FREQ, T_PWM, 0, 1);
+    pwm_start(DriveMotor::motor_port_backwards, PWM_FREQ, T_PWM, 0, 1);
 }
 
 void DriveMotor::update(){

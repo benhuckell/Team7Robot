@@ -34,28 +34,11 @@ float LineFollow::getLinePositionError(bool followRightEdge)
     float rightEdgeXVal = 0;
     int i = 0;
     float edgeXPos = 0;
-
-    display.print(HI->QRD_Vals[0]);
-    display.print(" ");
-    display.print(HI->QRD_Vals[1]);
-    display.print(" ");
-    display.print(HI->QRD_Vals[2]);
-    display.print(" ");
-    display.println(HI->QRD_Vals[3]);
-    display.print(" ");
     
 
     if(followRightEdge){ 
             //Find right edge
         for(i = numSensors-1; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i >= 0); i--){
-            display.print("QRD ");
-            display.print(i);
-            display.print(" ");
-            display.println(HI->QRD_Vals[i]);
-            display.print("QRD Edge ");
-            display.print(i);
-            display.print(" ");
-            display.println(HI->QRD_Edge[i]);
         }
         //;//intentionally blank for loop
         if(i == numSensors-1){ rightEdgeXVal = 0 + (numSensors-1)*0.5; } //handle case where line is directly below rightmost sensor
@@ -110,19 +93,23 @@ void LineFollow::followTape(bool followRightEdge){
     if (LSpeed + speedAdj > 100){
         speedAdj = 100-LSpeed;
     }
-    else if(LSpeed + speedAdj < 0){
+    else if(LSpeed + speedAdj < -100){
         speedAdj = 0-LSpeed;
     }
 
     if (RSpeed - speedAdj > 100){
         speedAdj = 100-RSpeed;
     }
-    else if (RSpeed - speedAdj < 0){
+    else if (RSpeed - speedAdj < -100){
         speedAdj = 0-RSpeed;
     }
-    // display.clearDisplay();
-    // display.print("speedAdj: ");
-    // display.println(speedAdj);
+     display.clearDisplay();
+     display.print("speedAdj: ");
+     display.println(speedAdj);
+     display.print("LSpeed: ");
+     display.println(LSpeed);
+     display.print("RSpeed: ");
+     display.println(RSpeed);
     
     LSpeed += speedAdj;
     RSpeed -= speedAdj;

@@ -60,7 +60,7 @@ class HardwareInterface {
       HardwareInterface();
       HardwareInterface(const HardwareInterface&);
       HardwareInterface& operator=(const HardwareInterface&);
-      bool timer(int preset);
+      bool timer(unsigned int preset);
 
       static HardwareInterface* myInstance;
    };

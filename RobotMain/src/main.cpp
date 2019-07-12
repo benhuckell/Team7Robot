@@ -86,7 +86,16 @@ void setup() {
       //int push_Button = digitalRead(PUSHBUTTON);
       //display.println(push_Button == 1 ? "Button Not Pushed":"Button Pushed"); 
       //display.println("Main Looping");
-      display.println(count);
+      /*
+      display.print(HardwareInterface::i()->QRD_Vals[0]);
+      display.print(" ");
+      display.print(HardwareInterface::i()->QRD_Vals[1]);
+      display.print(" ");
+      display.print(HardwareInterface::i()->QRD_Vals[2]); 
+      display.print(" ");
+      display.print(HardwareInterface::i()->QRD_Vals[3]);
+      display.print(" ");
+      */
       //display.print((String)mainState);
       //delay(250);
       display.display();

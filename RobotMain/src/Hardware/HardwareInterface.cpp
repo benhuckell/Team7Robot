@@ -19,6 +19,8 @@ void REncoderInterrupt2(){
 }
 
 HardwareInterface::HardwareInterface(){
+    Serial.begin(9600);
+
     HardwareInterface::LMotor = new DriveMotor(LMOTOR_FORWARDS, LMOTOR_BACKWARDS);
     HardwareInterface::RMotor = new DriveMotor(RMOTOR_FORWARDS, RMOTOR_BACKWARDS);
     LMotor->setSpeed(50);
@@ -53,7 +55,7 @@ HardwareInterface::HardwareInterface(){
     HardwareInterface::QRD_Array[3] = qrd3;
 }
 
-bool HardwareInterface::timer(int preset){
+bool HardwareInterface::timer(unsigned int preset){
   unsigned long currentMillis = millis();
 
   if(currentMillis - previousMillis >= preset){
