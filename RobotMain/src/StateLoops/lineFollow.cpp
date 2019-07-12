@@ -15,15 +15,16 @@ enum lineFollowStates{online,offline} lineFollowState;
 void LineFollow::loop(){
     HI->update();
     //display.println("Line following");
-    followTape(true);
+    //followTape(true);
+    RSpeed = 100;
+    LSpeed = 100;
+    setMotorSpeeds();
 }
 
 //update the stored motor speed values
 void LineFollow::setMotorSpeeds(){
-    HI->RMotor1->setSpeed(RSpeed);
-    HI->RMotor2->setSpeed(RSpeed);
-    HI->LMotor1->setSpeed(LSpeed);
-    HI->LMotor2->setSpeed(LSpeed);
+    HI->RMotor->setSpeed(RSpeed);
+    HI->LMotor->setSpeed(LSpeed);
 }
 
 // Returns the current amount of line following error
@@ -35,7 +36,7 @@ float LineFollow::getLinePositionError(bool followRightEdge)
     int i = 0;
     float edgeXPos = 0;
     if(followRightEdge){ 
-            //Find right edge
+        //Find right edge
         for(i = numSensors-1; ((HI->QRD_Vals[i]-HI->QRD_Mins[i]) > HI->QRD_Edge[i]-HI->QRD_Mins[i]) && (i >= 0); i--)
         ;//intentionally blank for loop
         if(i == numSensors-1){ rightEdgeXVal = 0 + (numSensors-1)*0.5; } //handle case where line is directly below rightmost sensor

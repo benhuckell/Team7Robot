@@ -17,13 +17,13 @@ void DriveMotor::update(){
     int t_pulse = DriveMotor::T_PWM * ( 1.0 - DriveMotor::speed/100);
     if(DriveMotor::speed >= 0){
         //fowards
-        pwm_start(DriveMotor::motor_port_forwards, PWM_FREQ, T_PWM, int(t_pulse), 0);
-        pwm_start(DriveMotor::motor_port_backwards, PWM_FREQ, T_PWM, 0, 0);
+        pwm_start(DriveMotor::motor_port_forwards, PWM_FREQ, T_PWM, int(t_pulse), 1);
+        pwm_start(DriveMotor::motor_port_backwards, PWM_FREQ, T_PWM, 0, 1);
     }
     else if(DriveMotor::speed < 0){
         //backwards
-        pwm_start(DriveMotor::motor_port_forwards, PWM_FREQ, T_PWM, 0, 0);
-        pwm_start(DriveMotor::motor_port_backwards, PWM_FREQ, T_PWM, int(t_pulse), 0);
+        pwm_start(DriveMotor::motor_port_forwards, PWM_FREQ, T_PWM, 0, 1);
+        pwm_start(DriveMotor::motor_port_backwards, PWM_FREQ, T_PWM, int(t_pulse), 1);
     }
 }
 

@@ -22,19 +22,20 @@
 #define SELECT_PIN_3 PB14
 #define MULTIPLEX_ANALOG_IN PA_6
 
+#define testMotor PA_1
+
 Adafruit_SSD1306 display(-1);
 
 void setup() {
     display.begin(SSD1306_SWITCHCAPVCC,0x3C);
     display.clearDisplay();
-    display.setTextSize(1);
+    display.setTextSize(0.5);
     display.setTextColor(WHITE);
     display.setCursor(0,0);
     display.println("Working");
     display.display();
 
     int count = 0;
-    Serial.begin(9600);
 
     MainState::i()->setState(avengerCollecting);
 
@@ -50,6 +51,7 @@ void setup() {
     pinMode(SELECT_PIN_3,OUTPUT);
 
     pinMode(MULTIPLEX_ANALOG_IN,INPUT);
+    pwm_start(testMotor,100000,500,0,1);
 
     //Declare State Classes
     StateLoops::LineFollow lineFollow;
@@ -110,16 +112,15 @@ void setup() {
         QRD_Out[i] = analogRead(MULTIPLEX_ANALOG_IN); //read from first multiplexer
       }
 
-      display.print(QRD_Out[0]);
+      pwm_start(testMotor,100000,500,400,0);
 
+      display.print(QRD_Out[0]);
       display.print(" ");
       display.print(QRD_Out[1]);
       display.print(" ");
       display.print(QRD_Out[2]);
       display.print(" ");
       display.print(QRD_Out[3]);
-
-      
 
       display.display();
     }
