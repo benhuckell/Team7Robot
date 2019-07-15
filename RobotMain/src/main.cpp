@@ -9,6 +9,7 @@
 #include "Hardware/HardwareInterface.h"
 #include "stateController.h"
 #include "stm32/HardwareTimer.h"
+#include <servo.h>
 
 #define INTERRUPTPIN PA_8
 
@@ -19,6 +20,8 @@ void interruptRoutine(){
 }
 
 void setup() {
+  Serial.begin(115200);
+  Serial.print("Hello World!");
     /* HardwareTimer Timer2 = HardwareTimer()
 
     Timer2.setPrescaleFactor(100);
@@ -58,7 +61,8 @@ void setup() {
       display.setCursor(0,0);
 
       //MainState::i()->getState().loop();
-      switch(MainState::instance()->getState()){
+      switch(MainState::instance()->getState())
+      {
         case(lineFollowing):
           lineFollow.loop();
           break;

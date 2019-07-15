@@ -20,18 +20,20 @@ void DriveMotor::update(){
     pwm_start(PA_0, 100000, 500, 250, 0);
     if(DriveMotor::speed > 100){
         DriveMotor::speed = 100;
+    } else if(DriveMotor::speed < -100){
+        DriveMotor::speed = -100;
     }
     //Left Motor
     int t_pulse = DriveMotor::T_PWM * ( 1.0 - DriveMotor::speed/100);
     if(DriveMotor::speed >= 0){
         //fowards
-        pwm_start(PA_2, PWM_FREQ, T_PWM, 250, 0);
-        pwm_start(PA_1, PWM_FREQ, T_PWM, 0, 0);
+        pwm_start(motor_port_forwards, PWM_FREQ, T_PWM, 250, 0);
+        pwm_start(motor_port_backwards, PWM_FREQ, T_PWM, 0, 0);
     }
     else if(DriveMotor::speed < 0){
         //backwards
-        pwm_start(PA_2, PWM_FREQ, T_PWM, 0, 0);
-        pwm_start(PA_1, PWM_FREQ, T_PWM, 250, 0);
+        pwm_start(motor_port_forwards, PWM_FREQ, T_PWM, 0, 0);
+        pwm_start(motor_port_backwards, PWM_FREQ, T_PWM, 250, 0);
     }
 }
 

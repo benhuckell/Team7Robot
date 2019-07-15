@@ -9,6 +9,7 @@ class ServoMotor {
       
    private:
       PinName motor_port;
-      int speed;
-      int position;
+      bool openClaw;
+      const int openAngle = 300;
+      const int closedAngle = 200;
 };
