@@ -26,6 +26,20 @@ void QRD::update() {
     digitalWrite(Select_1,states[QRD_Index][1]);
     digitalWrite(Select_2,states[QRD_Index][2]);
     value = analogRead(QRD_port); //read from first multiplexer
+
+    //set value to the average of the last 10 values.
+    valHistory.push(value);
+    if(valHistory.size() > VAL_HISTORY_SIZE){ // keep queue size at 10
+        valHistory.pop();
+    }
+    
+    valCopy = valHistory;
+    int sum = 0;
+    for(int i = 0; i < valHistory.size(); i++){
+        sum += valCopy.front();
+        valCopy.pop();
+    }
+    value = sum/valHistory.size();
 }
 
 int QRD::getValue() {

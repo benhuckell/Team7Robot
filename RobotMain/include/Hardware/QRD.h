@@ -1,5 +1,6 @@
 #pragma once
 #include "Arduino.h"
+#include <queue>
 
 #define Select_0 PB12 //mux selects
 #define Select_1 PB13
@@ -22,4 +23,7 @@ class QRD {
       int QRD_Max;
       int QRD_Min;
       int QRD_Edge;
+      std::queue<int> valHistory;
+      std::queue<int> valCopy;
+      const int VAL_HISTORY_SIZE = 10; 
 };
