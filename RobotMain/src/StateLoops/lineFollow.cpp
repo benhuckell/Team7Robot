@@ -11,8 +11,9 @@ LineFollow::LineFollow(){
 
 void LineFollow::loop(){
     int robotSpeed = 50;
+    display.println("Line Following");
     followTape(robotSpeed, true);
-    
+    return;
 }
 
 //update the stored motor speed values
@@ -26,9 +27,9 @@ void LineFollow::setMotorSpeeds(){
     HI->RMotor->setSpeed(RSpeed);
     HI->LMotor->setSpeed(LSpeed);
     
-    display.println("RSpeed ");
+    display.print("RSpeed: ");
     display.println(HI->RMotor->getSpeed());
-    display.println("LSpeed ");
+    display.print("LSpeed: ");
     display.println(HI->LMotor->getSpeed());
 }
 
@@ -61,14 +62,14 @@ float LineFollow::getLinePositionError(bool followRightEdge)
         }
         edgeXPos = rightEdgeXVal;
 
-        // display.print(HI->QRD_Vals[0]);
-        // display.print(" ");
-        // display.print(HI->QRD_Vals[1]);
-        // display.print(" ");
-        // display.print(HI->QRD_Vals[2]);
-        // display.print(" ");
-        // display.print(HI->QRD_Vals[3]);
-        // display.println(" ");
+        display.print(HI->QRD_Vals[0]);
+        display.print(" ");
+        display.print(HI->QRD_Vals[1]);
+        display.print(" ");
+        display.print(HI->QRD_Vals[2]);
+        display.print(" ");
+        display.print(HI->QRD_Vals[3]);
+        display.println(" ");
     }
     else{
         target = -0.5;

@@ -9,7 +9,6 @@ void AvengerCollect::loop(){
     MainState::instance()->setState(avengerScoring);
     //Main Code
     display.println("Avenger Collecting");
-    delay(1000);
     //State Change
     return;
 }

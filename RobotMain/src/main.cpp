@@ -12,16 +12,27 @@
 #include <servo.h>
 
 #define INTERRUPTPIN PA_8
+#define PUSH_BUTTON_1 PB4
+#define PUSH_BUTTON_2 PB5
+#define CONTROL_POT_1 PA_4
+#define CONTROL_POT_2 PA_5
+#define TOGGLE_SWITCH PB3
 
 Adafruit_SSD1306 display(-1);
 
-void interruptRoutine(){
-    HardwareInterface::i()->update();
-}
+// void interruptRoutine(){
+//     HardwareInterface::i()->update();
+// }
 
 void setup() {
   Serial.begin(115200);
+  delay(3000);
   Serial.print("Hello World!");
+
+  //Declare pin modes
+  pinMode(PUSH_BUTTON_1, INPUT_PULLDOWN);
+  pinMode(PUSH_BUTTON_2, INPUT_PULLDOWN);
+
     /* HardwareTimer Timer2 = HardwareTimer()
 
     Timer2.setPrescaleFactor(100);
@@ -38,27 +49,31 @@ void setup() {
 
     //Define main states robot can have
     
-    //Declare State Classes
-    LineFollow lineFollow;
-    AvengerCollect avengerCollect;
-    AvengerScore avengerScore;
-    StoneCollect stoneCollect;
-    StoneScore stoneScore;
-    DefendGauntlet defend;
+  //Declare State Classes
+  LineFollow lineFollow;
+  AvengerCollect avengerCollect;
+  AvengerScore avengerScore;
+  StoneCollect stoneCollect;
+  StoneScore stoneScore;
+  DefendGauntlet defend;
 
-    display.begin(SSD1306_SWITCHCAPVCC,0x3C);
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0,0);
-    display.println("Working");
-    display.display();
+  display.begin(SSD1306_SWITCHCAPVCC,0x3C);
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0,0);
+  display.println("Working");
+  display.display();
 
-    MainState::instance()->setState(lineFollowing);
-    int count = 0;
+  MainState::instance()->setState(lineFollowing);
+  // Serial.print(" state: ");
+  // Serial.print(MainState::instance()->getState());
+  int count = 0;
     for(;;) {
       display.clearDisplay();
       display.setCursor(0,0);
+
+
 
       //MainState::i()->getState().loop();
       switch(MainState::instance()->getState())
@@ -93,6 +108,16 @@ void setup() {
       //display.print((String)mainState);
       //delay(250);
       display.println(count);
+      display.print(digitalRead(PUSH_BUTTON_1));
+      display.print(" ");
+      display.print(digitalRead(PUSH_BUTTON_2));
+      display.print(" ");
+      display.print(digitalRead(TOGGLE_SWITCH));
+      display.print(" ");
+      display.print(analogRead(CONTROL_POT_1));
+      display.print(" ");
+      display.println(analogRead(CONTROL_POT_2));
+
       display.display();
     }
 }

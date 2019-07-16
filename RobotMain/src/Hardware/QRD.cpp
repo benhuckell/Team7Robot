@@ -28,7 +28,7 @@ void QRD::update() {
     value = analogRead(QRD_port); //read from first multiplexer
 
     //set value to the average of the last 10 values.
-    valHistory.push(value);
+    /*valHistory.push(value);
     if(valHistory.size() > VAL_HISTORY_SIZE){ // keep queue size at 10
         valHistory.pop();
     }
@@ -39,7 +39,7 @@ void QRD::update() {
         sum += valCopy.front();
         valCopy.pop();
     }
-    value = sum/valHistory.size();
+    value = sum/valHistory.size();*/
 }
 
 int QRD::getValue() {

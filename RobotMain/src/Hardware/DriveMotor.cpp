@@ -8,11 +8,12 @@ DriveMotor::DriveMotor(PinName forward, PinName back){
 
     T_PWM = 500; //500 clock pulses
     PWM_FREQ = 100000; //100KHz 
-    pwm_start(motor_port_forwards, PWM_FREQ, T_PWM, 0, 1);
-    pwm_start(motor_port_backwards, PWM_FREQ, T_PWM, 0, 1);
-
+    
     pinMode(motor_port_forwards, OUTPUT);
     pinMode(motor_port_backwards, OUTPUT);
+
+    pwm_start(motor_port_forwards, PWM_FREQ, T_PWM, 0, 1);
+    pwm_start(motor_port_backwards, PWM_FREQ, T_PWM, 0, 1);
 }
 
 void DriveMotor::update(){
@@ -30,13 +31,13 @@ void DriveMotor::update(){
     Serial.print(" ");
     if(DriveMotor::speed >= 0){
         //fowards
-        pwm_start(motor_port_forwards, PWM_FREQ, T_PWM, t_pulse, 0);
+        pwm_start(motor_port_forwards, PWM_FREQ, T_PWM, t_pulse/3, 0);
         pwm_start(motor_port_backwards, PWM_FREQ, T_PWM, 0, 0);
     }
     else if(DriveMotor::speed < 0){
         //backwards
         pwm_start(motor_port_forwards, PWM_FREQ, T_PWM, 0, 0);
-        pwm_start(motor_port_backwards, PWM_FREQ, T_PWM, t_pulse, 0);
+        pwm_start(motor_port_backwards, PWM_FREQ, T_PWM, t_pulse/3, 0);
         Serial.print("ertyuio");
     }
 }
