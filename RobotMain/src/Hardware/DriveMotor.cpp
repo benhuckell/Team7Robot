@@ -16,24 +16,28 @@ DriveMotor::DriveMotor(PinName forward, PinName back){
 }
 
 void DriveMotor::update(){
-    //limit power to 100
-    pwm_start(PA_0, 100000, 500, 250, 0);
+    //limit power to |100|
+    //pwm_start(PA_2, 100000, 500, 250, 0);
     if(DriveMotor::speed > 100){
         DriveMotor::speed = 100;
     } else if(DriveMotor::speed < -100){
         DriveMotor::speed = -100;
     }
-    //Left Motor
-    int t_pulse = DriveMotor::T_PWM * ( 1.0 - DriveMotor::speed/100);
+    Serial.print(speed);
+    Serial.print(" ");
+    float t_pulse = DriveMotor::T_PWM * (float)DriveMotor::speed/100.0;
+    Serial.print(t_pulse);
+    Serial.print(" ");
     if(DriveMotor::speed >= 0){
         //fowards
-        pwm_start(motor_port_forwards, PWM_FREQ, T_PWM, 250, 0);
+        pwm_start(motor_port_forwards, PWM_FREQ, T_PWM, t_pulse, 0);
         pwm_start(motor_port_backwards, PWM_FREQ, T_PWM, 0, 0);
     }
     else if(DriveMotor::speed < 0){
         //backwards
         pwm_start(motor_port_forwards, PWM_FREQ, T_PWM, 0, 0);
-        pwm_start(motor_port_backwards, PWM_FREQ, T_PWM, 250, 0);
+        pwm_start(motor_port_backwards, PWM_FREQ, T_PWM, t_pulse, 0);
+        Serial.print("ertyuio");
     }
 }
 
