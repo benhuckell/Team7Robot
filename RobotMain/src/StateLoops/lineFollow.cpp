@@ -25,9 +25,33 @@ void LineFollow::setMotorSpeeds(){
     else if(LSpeed > 100) { LSpeed = 100; }
 
     HI->RMotor->setSpeed(RSpeed);
-    HI->LMotor->setSpeed(LSpeed);
+    HI->LMotor->setSpeed(LSpeed/straightLineCorrectionFactor);
 }
 
+float LineFollow::getWeightedError(){
+    float positionVector[numSensors] = { -7.3, -1.25, 1.25, 7.3 };
+    float sum = 0;
+    bool onBlack = false;
+    for(int i = 0; i < numSensors; i++){
+        sum += HI->QRD_Vals[i]*positionVector[i];
+        if (HI->QRD_Vals[i] > 0.5){
+            onBlack = true;
+        }
+    }
+
+    if(onBlack){
+        return sum;
+    }
+    else {
+        if(errorHistory.back() > 0){
+            return positionVector[numSensors-1];
+        }
+        else{
+            return positionVector[0];
+        }
+    }
+}
+ 
 // Returns the current amount of line following error
 float LineFollow::getLinePositionError(bool followRightEdge)
 {

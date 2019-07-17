@@ -20,6 +20,7 @@ namespace StateLoops{
             void findLine();
             void followTape(int robotSpeed, bool followRightEdge);
             void setMotorSpeeds();
+            float getWeightedError();
 
             int LSpeed;
             int RSpeed;
@@ -36,5 +37,6 @@ namespace StateLoops{
             const float maxISum = 2; //max sum to avoid integral windup
             const unsigned int ERROR_HISTORY_SIZE = 2; //max size of error queue
             const float POST_TAPE_WIDTH = 4; //sensors per post tape width
+            const float straightLineCorrectionFactor = 1.05;
     };
 }
