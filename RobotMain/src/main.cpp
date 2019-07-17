@@ -6,16 +6,13 @@
 #include "StateLoops/lineFollow.h"
 #include "StateLoops/stoneCollect.h"
 #include "StateLoops/stoneScore.h"
+#include "StateLoops/debugging.h"
 #include "Hardware/HardwareInterface.h"
 #include "stateController.h"
 #include "stm32/HardwareTimer.h"
 #include <servo.h>
 
 #define INTERRUPTPIN PA_8
-#define PUSH_BUTTON_1 PB4
-#define PUSH_BUTTON_2 PB5
-#define CONTROL_POT_1 PA_4
-#define CONTROL_POT_2 PA_5
 #define TOGGLE_SWITCH PB3
 
 Adafruit_SSD1306 display(-1);
@@ -27,11 +24,7 @@ Adafruit_SSD1306 display(-1);
 void setup() {
   Serial.begin(115200);
   delay(3000);
-  Serial.print("Hello World!");
 
-  //Declare pin modes
-  pinMode(PUSH_BUTTON_1, INPUT_PULLDOWN);
-  pinMode(PUSH_BUTTON_2, INPUT_PULLDOWN);
 
     /* HardwareTimer Timer2 = HardwareTimer()
 
@@ -56,6 +49,7 @@ void setup() {
   StoneCollect stoneCollect;
   StoneScore stoneScore;
   DefendGauntlet defend;
+  Debugging debug;
 
   display.begin(SSD1306_SWITCHCAPVCC,0x3C);
   display.clearDisplay();
@@ -70,10 +64,17 @@ void setup() {
   // Serial.print(MainState::instance()->getState());
   int count = 0;
     for(;;) {
-      display.clearDisplay();
-      display.setCursor(0,0);
 
-
+      if(digitalRead(TOGGLE_SWITCH)){
+        MainState::instance()->setState(debugging);
+      }
+      else if(digitalRead(TOGGLE_SWITCH) == 0 && MainState::instance()->getState()==debugging){
+        display.clearDisplay();
+        display.setCursor(0,0);
+        display.println("Line Following");
+        display.display();
+        MainState::instance()->setState(lineFollowing);
+      }
 
       //MainState::i()->getState().loop();
       switch(MainState::instance()->getState())
@@ -96,6 +97,9 @@ void setup() {
         case(defending):
           defend.loop();
           break;
+        case(debugging):
+          debug.loop();
+          break;
         default:
           break;
       }
@@ -107,18 +111,7 @@ void setup() {
       
       //display.print((String)mainState);
       //delay(250);
-      display.println(count);
-      display.print(digitalRead(PUSH_BUTTON_1));
-      display.print(" ");
-      display.print(digitalRead(PUSH_BUTTON_2));
-      display.print(" ");
-      display.print(digitalRead(TOGGLE_SWITCH));
-      display.print(" ");
-      display.print(analogRead(CONTROL_POT_1));
-      display.print(" ");
-      display.println(analogRead(CONTROL_POT_2));
 
-      display.display();
     }
 }
 

@@ -8,21 +8,21 @@
 
 class QRD {
    public:
-      QRD(PinName QRD_port, int QRD_Index, int QRD_Max, int QRD_Min);
+      QRD(PinName QRD_port, int QRD_Index, int QRD_Thresh, int QRD_Min, int QRD_Max);
       void update(); //updates value,max,min
 
       int getValue();
-      int getMax();
+      int getThresh();
       int getMin();
-      int getEdge();
+      int getMax();
 
    private:
       int QRD_Index;
       PinName QRD_port;
       int value;
+      int QRD_Thresh;
       int QRD_Max;
       int QRD_Min;
-      int QRD_Edge;
       std::queue<int> valHistory;
       std::queue<int> valCopy;
       const int VAL_HISTORY_SIZE = 10; 

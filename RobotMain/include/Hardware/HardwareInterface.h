@@ -11,6 +11,12 @@
 #define LMOTOR_BACKWARDS PA_1
 #define RMOTOR_FORWARDS PA_2
 #define RMOTOR_BACKWARDS PA_3
+
+#define PUSH_BUTTON_1 PB4
+#define PUSH_BUTTON_2 PB5
+#define CONTROL_POT_1 PA_4
+#define CONTROL_POT_2 PA_5
+
 /*
 #define WINCH_UP PA_8 //winch inputs
 #define WINCH_DOWN PA_9
@@ -49,10 +55,10 @@ class HardwareInterface {
       ServoMotor* clawMotor;
 
       QRD* QRD_Array[NUM_QRD_SENSORS];
-      int QRD_Vals[NUM_QRD_SENSORS];
-      int QRD_Maxims[NUM_QRD_SENSORS];
-      int QRD_Mins[NUM_QRD_SENSORS];
-      int QRD_Edge[NUM_QRD_SENSORS];
+      float QRD_Vals[NUM_QRD_SENSORS];
+      int QRD_Thresh[NUM_QRD_SENSORS];
+      int QRD_Max[NUM_QRD_SENSORS];
+      int QRD_Min[NUM_QRD_SENSORS];
 
       unsigned long previousMillis = 0;
       unsigned long currentMillis = millis();
