@@ -14,6 +14,7 @@ namespace StateLoops{
         private:
             enum lineFollowStates{online,offline} lineFollowState;
             float getLinePositionError(bool followRightEdge);
+            float getWeightedError();
             void findIR();
             void findPost();
             void findGauntlet();
@@ -29,12 +30,13 @@ namespace StateLoops{
             std::queue<float> errorHistory; //holds history of recorded line errors
             HardwareInterface* HI;
 
-            const int P_gain = 25; // K_p
-            const int I_gain = 0; // K_i
-            const int D_gain = 0; // K_d
+            int P_gain = 0; // K_p
+            int I_gain = 0; // K_i
+            int D_gain = 0; // K_d
             static const int numSensors = 4;
             const float maxISum = 2; //max sum to avoid integral windup
-            const unsigned int ERROR_HISTORY_SIZE = 10; //max size of error queue
+            const unsigned int ERROR_HISTORY_SIZE = 2; //max size of error queue
             const float POST_TAPE_WIDTH = 4; //sensors per post tape width
+            const float straightLineCorrectionFactor = 1.05;
     };
 }

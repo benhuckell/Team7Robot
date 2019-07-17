@@ -40,12 +40,12 @@ HardwareInterface::HardwareInterface(){
     attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt1,RISING);
     attachInterrupt(digitalPinToInterrupt(RENCODER_2),REncoderInterrupt2,RISING);
 */
-    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 110, 50);
-    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 110, 50);
-    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 110, 50);
-    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 110, 50);
-    HardwareInterface::qrdLeft = new QRD(QRD_IN, 4, 200, 100);
-    HardwareInterface::qrdRight = new QRD(QRD_IN, 5, 200, 100);
+    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 100, 60, 363);
+    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 100, 63, 371);
+    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 100, 62, 398);
+    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 100, 62, 313);
+    HardwareInterface::qrdLeft = new QRD(QRD_IN, 4, 100, 50, 200);
+    HardwareInterface::qrdRight = new QRD(QRD_IN, 5, 100, 50, 200);
 
     //HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 
@@ -78,10 +78,11 @@ void HardwareInterface::update(){
     //update QRD values
     for(int i = 0; i < NUM_QRD_SENSORS; i++){
         QRD_Array[i]->update();
-        QRD_Vals[i] = QRD_Array[i]->getValue();
-        QRD_Maxims[i] = QRD_Array[i]->getMax();
-        QRD_Mins[i] = QRD_Array[i]->getMin();
-        QRD_Edge[i] = QRD_Array[i]->getEdge();
+        //QRD_Vals[i] = QRD_Array[i]->getValue();
+        QRD_Thresh[i] = QRD_Array[i]->getThresh();
+        QRD_Max[i] = QRD_Array[i]->getMax();
+        QRD_Min[i] = QRD_Array[i]->getMin();
+        QRD_Vals[i] = float(QRD_Array[i]->getValue() - QRD_Min[i])/float(QRD_Max[i] - QRD_Min[i]);
     }
 
     //update Motor outputs

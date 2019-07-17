@@ -5,7 +5,7 @@
 
 extern Adafruit_SSD1306 display;
 
-enum States{lineFollowing,avengerCollecting,avengerScoring,stoneCollecting,stoneScoring,defending};
+enum States{lineFollowing,avengerCollecting,avengerScoring,stoneCollecting,stoneScoring,defending,debugging};
 
 class MainState{
 public:
