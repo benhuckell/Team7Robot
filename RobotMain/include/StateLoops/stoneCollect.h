@@ -6,6 +6,7 @@ namespace StateLoops {
     class StoneCollect : public State {
         public:
             void loop();
+            StoneCollect();
         private:
             enum stoneCollectStates{} stoneCollectState;
             enum postNumbers{postOne, postTwo, postThree} postNumber;
@@ -13,5 +14,6 @@ namespace StateLoops {
             void raiseIntake(enum postNumbers);
             void intakeStone();
             void returnToTape();
+            HardwareInterface* HI;
     };
 }

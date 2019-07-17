@@ -6,6 +6,7 @@ namespace StateLoops {
     class StoneScore : public State {
         public:
             static void loop();
+            StoneScore();
         private:
             enum stoneScoreStates{} stoneScoreState;
             enum holeNumbers{holeOne,holeTwo,holeThree,holeFour,holeFive} holeNumber;
@@ -13,5 +14,6 @@ namespace StateLoops {
             static void findHole(enum holeNumbers);
             static void placeStone();
             static void returnToTape();
+            HardwareInterface* HI;
     };
 }

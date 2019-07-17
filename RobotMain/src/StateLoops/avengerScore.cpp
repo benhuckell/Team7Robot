@@ -5,6 +5,10 @@ using namespace StateLoops;
 
 //enum avengerScoreStates{} avengerScoreState;
 
+AvengerScore::AvengerScore(){
+    AvengerScore::HI = HardwareInterface::i();
+}
+
 void AvengerScore::loop(){
     MainState::instance()->setState(stoneCollecting);
     display.println("Avenger Scoring");

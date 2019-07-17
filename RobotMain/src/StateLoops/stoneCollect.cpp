@@ -5,6 +5,10 @@ namespace StateLoops {
     enum stoneCollectStates{} stoneCollectState;
     enum postNumbers{postOne, postTwo, postThree} postNumber;
     
+    StoneCollect::StoneCollect(){
+        StoneCollect::HI = HardwareInterface::i();
+    }
+
     void StoneCollect::loop(){
         display.println("Stone Collecting");
     }
@@ -22,6 +26,6 @@ namespace StateLoops {
     }
     
     void StoneCollect::returnToTape() {
-
+        MainState::instance()->setState(lineFollowing);
     }
 }

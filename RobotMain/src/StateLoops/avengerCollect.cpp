@@ -5,6 +5,10 @@ using namespace StateLoops;
 
 enum avengerCollectStates{} avengerCollectState;
 
+AvengerCollect::AvengerCollect(){
+    AvengerCollect::HI = HardwareInterface::i();
+}
+
 void AvengerCollect::loop(){
     MainState::instance()->setState(avengerScoring);
     //Main Code

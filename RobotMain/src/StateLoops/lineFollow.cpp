@@ -26,24 +26,17 @@ void LineFollow::setMotorSpeeds(){
 
     HI->RMotor->setSpeed(RSpeed);
     HI->LMotor->setSpeed(LSpeed);
-    
-    display.print("RSpeed: ");
-    display.println(HI->RMotor->getSpeed());
-    display.print("LSpeed: ");
-    display.println(HI->LMotor->getSpeed());
 }
 
 // Returns the current amount of line following error
 float LineFollow::getLinePositionError(bool followRightEdge)
 {
-    float target;
     float leftEdgeXVal = 0;
     float rightEdgeXVal = 0;
     int i = 0;
     float edgeXPos = 0;
 
     if(followRightEdge){ 
-        target = 0.5;
         //Find right edge
         for(i = numSensors-1; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i > 0); i--){}//intentionally empty for loop
         
@@ -58,21 +51,11 @@ float LineFollow::getLinePositionError(bool followRightEdge)
             // display.println((float)(HI->QRD_Vals[i] - HI->QRD_Edge[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i+1]));
         }
         else{
-            rightEdgeXVal = errorHistory.back() + target; //get most recent value
+            rightEdgeXVal = errorHistory.back(); //get most recent value
         }
         edgeXPos = rightEdgeXVal;
-
-        display.print(HI->QRD_Vals[0]);
-        display.print(" ");
-        display.print(HI->QRD_Vals[1]);
-        display.print(" ");
-        display.print(HI->QRD_Vals[2]);
-        display.print(" ");
-        display.print(HI->QRD_Vals[3]);
-        display.println(" ");
     }
     else{
-        target = -0.5;
         //Find left edge
         for(i = 0; (HI->QRD_Vals[i] < HI->QRD_Edge[i]) && (i < numSensors); i++){}//intentionally empty for loop
 
@@ -83,14 +66,14 @@ float LineFollow::getLinePositionError(bool followRightEdge)
             leftEdgeXVal = (float)i - (float)(HI->QRD_Vals[i] - HI->QRD_Edge[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i-1]) - (float)(numSensors-1)*0.5;
         }
         else{
-            rightEdgeXVal = errorHistory.back() + target; //get most recent value
+            rightEdgeXVal = errorHistory.back(); //get most recent value
         }
         edgeXPos = leftEdgeXVal;
     }
     if((rightEdgeXVal - leftEdgeXVal) > POST_TAPE_WIDTH){
         postDetected = true;
     }
-    return edgeXPos - target;
+    return edgeXPos;
 }
 
 //runs a PID to follow the tape

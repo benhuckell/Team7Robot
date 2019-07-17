@@ -5,11 +5,12 @@ using namespace StateLoops;
 enum stoneScoreStates{} stoneScoreState;
 enum holeNumbers{holeOne,holeTwo,holeThree,holeFour,holeFive} holeNumber;
 
+StoneScore::StoneScore(){
+    StoneScore::HI = HardwareInterface::i();
+}
+
 void StoneScore::loop(){
-    MainState::instance()->setState(defending);
     display.println("Stone Scoring");
-    delay(1000);
-    return;
 }
 
 void StoneScore::goToGauntlet() {
@@ -25,5 +26,5 @@ void StoneScore::placeStone() {
 }
 
 void StoneScore::returnToTape() {
-
+    MainState::instance()->setState(lineFollowing);
 }
