@@ -14,6 +14,7 @@ namespace StateLoops{
         private:
             enum lineFollowStates{online,offline} lineFollowState;
             float getLinePositionError(bool followRightEdge);
+            float getWeightedError();
             void findIR();
             void findPost();
             void findGauntlet();
