@@ -22,9 +22,7 @@ void LineFollow::setMotorSpeeds(){
     else if(RSpeed > 100) { RSpeed = 100; }
     if(LSpeed < -100) { LSpeed = -100; }
     else if(LSpeed > 100) { LSpeed = 100; }
-
-    Serial.print(RSpeed);
-    Serial.print(LSpeed);
+    
     HI->RMotor->setSpeed(RSpeed);
     HI->LMotor->setSpeed(LSpeed/straightLineCorrectionFactor);
 }
