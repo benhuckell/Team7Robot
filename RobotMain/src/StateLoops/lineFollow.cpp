@@ -12,12 +12,26 @@ LineFollow::LineFollow(){
 void LineFollow::loop(){
     int robotSpeed = 35;
     followTape(robotSpeed, true);
+
+    //bump detection
+    if(HI->robotWasBumped() && !climbedRamp){
+        climbedRamp = true;
+        robotSpeed = -10;
+        setMotorSpeeds();
+        HI->update();
+        delay(500);
+        turn180Degrees();
+        robotSpeed = 35;
+    } else if(HI->robotHitPost()){
+        robotSpeed = 0;
+        MainState::instance()->setState(stoneCollecting);
+    }
+
     return;
 }
 
 //update the stored motor speed values
 void LineFollow::setMotorSpeeds(){
-    
     if(RSpeed < -100) { RSpeed = -100; }
     else if(RSpeed > 100) { RSpeed = 100; }
     if(LSpeed < -100) { LSpeed = -100; }
@@ -40,8 +54,7 @@ float LineFollow::getWeightedError(){
 
     if(onBlack){
         return sum;
-    }
-    else {
+    } else {
         if(errorHistory.back() > 0){
             return positionVector[numSensors-1];
         }
@@ -167,4 +180,25 @@ void LineFollow::findGauntlet() {
 
 void LineFollow::findLine() {
 
+}
+
+void LineFollow::turn180Degrees(){
+    int start = millis();
+    while(!detectLine()){
+        LSpeed = 20;
+        RSpeed = -20;
+        setMotorSpeeds();
+        if(millis() - start > 3000){
+            return;
+        }
+    }
+}
+
+bool LineFollow::detectLine(){
+    for(int i = 0; i < numSensors; i ++){
+        if (HI->QRD_Vals[i] > 0.5){
+            return true;
+        }
+    }
+    return false;
 }

@@ -62,13 +62,19 @@ class HardwareInterface {
 
       unsigned long previousMillis = 0;
       unsigned long currentMillis = millis();
+      bool robotWasBumped();
+      bool robotHitPost();
+
    private:
       HardwareInterface();
       HardwareInterface(const HardwareInterface&);
       HardwareInterface& operator=(const HardwareInterface&);
       bool timer(unsigned int preset);
-
+      float lastLSpeed;
+      float lastRSpeed;
       static HardwareInterface* myInstance;
+      const float bumpThresholdVal = 1.0;
+      const float postThresholdVal = 0.5;
    };
 
 #endif

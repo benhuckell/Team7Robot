@@ -84,7 +84,23 @@ void HardwareInterface::update(){
     //WinchMotor->update();
 
     //Encoder values are updated internally via another interrupt
-
+    lastLSpeed = LEncoder->getSpeed();
+    lastRSpeed = REncoder->getSpeed();
+    
     //Update servo output
     //clawMotor->update();
+}
+
+bool HardwareInterface::robotWasBumped(){
+    if(lastLSpeed+lastRSpeed - (LEncoder->getSpeed()+REncoder->getSpeed()) > bumpThresholdVal){
+        return true;
+    }
+    return false;
+}
+
+bool HardwareInterface::robotHitPost(){
+    if(LEncoder->getSpeed()+REncoder->getSpeed() < postThresholdVal){
+        return true;
+    } 
+    return false;
 }

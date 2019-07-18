@@ -10,7 +10,7 @@ namespace StateLoops {
     }
 
     void StoneCollect::loop(){
-        display.println("Stone Collecting");
+        display.println("Stone Collecting");//should be on post
     }
 
     void StoneCollect::goToPost(enum postNumbers) {

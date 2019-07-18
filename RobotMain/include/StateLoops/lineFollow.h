@@ -21,8 +21,10 @@ namespace StateLoops{
             void findLine();
             void followTape(int robotSpeed, bool followRightEdge);
             void setMotorSpeeds();
-            float getWeightedError();
+            void turn180Degrees();
+            bool detectLine();
 
+            //varying data
             int LSpeed;
             int RSpeed;
             bool postDetected = false;
@@ -31,6 +33,7 @@ namespace StateLoops{
             std::queue<float> errorHistory; //holds history of recorded line errors
             HardwareInterface* HI;
 
+            //constant data
             int P_gain = 0; // K_p
             int I_gain = 0; // K_i
             int D_gain = 0; // K_d
@@ -39,5 +42,8 @@ namespace StateLoops{
             const unsigned int ERROR_HISTORY_SIZE = 2; //max size of error queue
             const float POST_TAPE_WIDTH = 4; //sensors per post tape width
             const float straightLineCorrectionFactor = 1.05;
+
+            //state data
+            bool climbedRamp = false;
     };
 }

@@ -20,16 +20,16 @@ void Encoder::update(){
     int elapsedTime = millis() - lastTime;
     lastTime = millis();
 
-    if(dir == LOW){
-        direction = -1;
-    }else if(dir == HIGH){
+    if(dir == HIGH){
         direction = 1;
+    }else if(dir == LOW){
+        direction = -1;
     }
     
     int ticks = count - lastCount; 
     lastCount = count;
  
-    speed = ticks/elapsedTime*direction;
+    speed = (float)ticks/elapsedTime*direction;
 }
 
 int Encoder::getSpeed() {
