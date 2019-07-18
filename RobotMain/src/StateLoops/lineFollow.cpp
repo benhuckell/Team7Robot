@@ -10,8 +10,16 @@ LineFollow::LineFollow(){
 }
 
 void LineFollow::loop(){
+    //initial values
     int robotSpeed = 35;
+    bool dir = true;
+
     followTape(robotSpeed, true);
+
+    //intersection handling
+    if(detectIntersection()){
+        intersectionTurn(dir);//true for right, false for left
+    }
 
     //bump detection
     if(HI->robotWasBumped() && !climbedRamp){
@@ -75,16 +83,11 @@ float LineFollow::getLinePositionError(bool followRightEdge)
     if(followRightEdge){ 
         //Find right edge
         for(i = numSensors-1; (HI->QRD_Vals[i] < HI->QRD_Thresh[i]) && (i > 0); i--){}//intentionally empty for loop
-        
-        // display.print("i: ");
-        // display.println(i);
         //;//intentionally blank for loop
         if(i == numSensors-1){ rightEdgeXVal = 0 + (numSensors-1)*0.5; } //handle case where line is directly below rightmost sensor
         else if(HI->QRD_Vals[i] > HI->QRD_Thresh[i]){
             //interpolate and subtract (numSensors-1)/2 to put a zero x value in the middle of the sensor array
             rightEdgeXVal = (float)i + (float)(HI->QRD_Vals[i] - HI->QRD_Thresh[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i+1]) - (float)(numSensors-1)*0.5;
-            // display.print("inter: ");
-            // display.println((float)(HI->QRD_Vals[i] - HI->QRD_Thresh[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i+1]));
         }
         else if(errorHistory.back() > 0){
             rightEdgeXVal = P_gain/10; //get most recent value
@@ -120,10 +123,7 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge){
     P_gain = analogRead(CONTROL_POT_1)/10;
     D_gain = analogRead(CONTROL_POT_2)/2;
 
-    //float error = getLinePositionError(followRightEdge); // get current error
     float error = getWeightedError();
-    // display.print("error: ");
-    // display.println(error);
 
     if(postDetected){
         return;
@@ -144,22 +144,6 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge){
     //adjust speed of both wheels to correct for error
     float speedAdj = 0;
     speedAdj = P_gain*error + I_gain*I_sum + D_gain*D_error;
-    // display.print("Padj: ");
-    // display.println(P_gain*error);
-    
-    // display.print("Iadj: ");
-    // display.println(I_gain*I_sum);
-    
-    // display.print("Dadj: ");
-    // display.println(D_gain*D_error);
-    
-    
-    // display.print("speedAdj: ");
-    // display.println(speedAdj);
-    // display.print("LSpeed: ");
-    // display.println(LSpeed);
-    // display.print("RSpeed: ");
-    // display.println(RSpeed);
 
     LSpeed = (robotSpeed + speedAdj)/straightLineCorrectionFactor;
     RSpeed = (robotSpeed - speedAdj);
@@ -170,15 +154,7 @@ void LineFollow::findIR() {
 
 }
 
-void LineFollow::findPost() {
-
-}
-
 void LineFollow::findGauntlet() {
-
-}
-
-void LineFollow::findLine() {
 
 }
 
@@ -199,6 +175,49 @@ bool LineFollow::detectLine(){
         if (HI->QRD_Vals[i] > 0.5){
             return true;
         }
+    }
+    return false;
+}
+bool LineFollow::detectIntersection(){
+    int count = 0;
+    bool firstLineFound = false;
+    bool middleFound = false;
+    bool secondLineFound = false;
+    for(int i = 0; i < numSensors; i ++){
+        if (HI->QRD_Vals[i] > 0.5){
+            count++;
+            firstLineFound = true;
+            if(middleFound == true){
+                secondLineFound = true;
+            }
+        }else if(firstLineFound){
+            middleFound = true;
+        }
+    }
+    if(count >= 4 && secondLineFound){//line found if we found a black then white then black sensor and at least 4 sensors were black
+        return true;
+    }
+    return false;
+}
+
+void LineFollow::intersectionTurn(bool dir){ //true for right, false for left
+    int start = millis();
+    LSpeed = 20;
+    RSpeed = -20;
+    while(millis() - start < 300){
+        setMotorSpeeds();
+    }
+}
+
+bool LineFollow::detectPost(){
+    int count = 0;
+    for(int i = 0; i < numSensors; i ++){
+        if (HI->QRD_Vals[i] > 0.5){
+            count++;
+        }
+    }
+    if(count >= 4){
+        return true;
     }
     return false;
 }

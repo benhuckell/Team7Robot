@@ -16,13 +16,14 @@ namespace StateLoops{
             float getLinePositionError(bool followRightEdge);
             float getWeightedError();
             void findIR();
-            void findPost();
             void findGauntlet();
-            void findLine();
             void followTape(int robotSpeed, bool followRightEdge);
             void setMotorSpeeds();
             void turn180Degrees();
             bool detectLine();
+            bool detectPost();
+            bool detectIntersection();
+            void intersectionTurn(bool dir);
 
             //varying data
             int LSpeed;
