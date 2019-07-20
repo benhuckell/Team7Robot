@@ -17,6 +17,7 @@ class QRD {
       int getMax();
 
    private:
+      bool states[8][3] = {{LOW,LOW,LOW},{LOW,LOW,HIGH},{LOW,HIGH,LOW},{LOW,HIGH,HIGH},{HIGH,LOW,LOW},{HIGH,LOW,HIGH},{HIGH,HIGH,LOW},{HIGH,HIGH,HIGH}};
       int QRD_Index;
       PinName QRD_port;
       int value;

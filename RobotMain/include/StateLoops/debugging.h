@@ -9,6 +9,7 @@ namespace StateLoops {
             Debugging();
             void loop();
         private:
+            int numSensors = 8;
             HardwareInterface* HI;
     };
 }

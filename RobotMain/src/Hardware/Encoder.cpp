@@ -28,8 +28,7 @@ void Encoder::update(){
     
     int ticks = count - lastCount; 
     lastCount = count;
- 
-    speed = (float)ticks/elapsedTime*direction;
+    speed = (float)1000*ticks/elapsedTime*direction;
 }
 
 int Encoder::getSpeed() {

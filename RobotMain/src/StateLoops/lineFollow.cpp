@@ -3,40 +3,45 @@
 
 using namespace StateLoops;
 
-enum lineFollowStates{online,offline} lineFollowState;
+
 
 LineFollow::LineFollow(){
     LineFollow::HI = HardwareInterface::i();
 }
 
 void LineFollow::loop(){
-    //initial values
-    int robotSpeed = 35;
-    bool dir = true;
-
-    followTape(robotSpeed, true);
-
+    followTape(robotSpeed, dir);
+ 
     //intersection handling
-    if(detectIntersection()){
-        intersectionTurn(dir);//true for right, false for left
-    }
-
+    // if(detectIntersection()){
+    //     display.println("INTERSECTION");
+    //     intersectionTurn(true);//true for right, false for left
+    // }
+    // display.println("NOPE");
+    
     //bump detection
-    if(HI->robotWasBumped() && !climbedRamp){
-        climbedRamp = true;
-        robotSpeed = -10;
-        setMotorSpeeds();
-        HI->update();
-        delay(500);
-        turn180Degrees();
-        robotSpeed = 35;
-    } else if(HI->robotHitPost()){
-        robotSpeed = 0;
-        MainState::instance()->setState(stoneCollecting);
-    }
+    // climbedRamp = true;
+    // if(climbedRamp && HI->robotWasBumped()){
+    //     climbedRamp = true;
+    //     HI->LMotor->setSpeed(-20);
+    //     HI->RMotor->setSpeed(-20);
+    //     HI->LMotor->update();
+    //     HI->RMotor->update();
+    //     delay(500);
+    //     turnXDegrees(180);
+    //     robotSpeed = 35;
+    //     display.println("BUMPED");
+    // } else if(HI->robotHitPost()){
+    //     robotSpeed = 0;
+    //     MainState::instance()->setState(stoneCollecting);
+    // }
 
     return;
 }
+
+//////////////////////////////////////////////////////////////////////////////
+///////////////////////////// PID START //////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 //update the stored motor speed values
 void LineFollow::setMotorSpeeds(){
@@ -45,12 +50,12 @@ void LineFollow::setMotorSpeeds(){
     if(LSpeed < -100) { LSpeed = -100; }
     else if(LSpeed > 100) { LSpeed = 100; }
     
-    HI->RMotor->setSpeed(RSpeed);
-    HI->LMotor->setSpeed(LSpeed/straightLineCorrectionFactor);
+    HI->LMotor->setSpeed(LSpeed);
+    HI->RMotor->setSpeed(RSpeed/straightLineCorrectionFactor);
 }
 
 float LineFollow::getWeightedError(){
-    float positionVector[numSensors] = { -7.3, -1.25, 1.25, 7.3 };
+    float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
     float sum = 0;
     bool onBlack = false;
     for(int i = 0; i < numSensors; i++){
@@ -59,7 +64,6 @@ float LineFollow::getWeightedError(){
             onBlack = true;
         }
     }
-
     if(onBlack){
         return sum;
     } else {
@@ -112,9 +116,6 @@ float LineFollow::getLinePositionError(bool followRightEdge)
         }
         edgeXPos = leftEdgeXVal;
     }
-    if((rightEdgeXVal - leftEdgeXVal) > POST_TAPE_WIDTH){
-        postDetected = true;
-    }
     return edgeXPos;
 }
 
@@ -125,9 +126,6 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge){
 
     float error = getWeightedError();
 
-    if(postDetected){
-        return;
-    }
     errorHistory.push(error); // add current error to errorQueue
     if(errorHistory.size() > ERROR_HISTORY_SIZE){ // keep queue size at ERROR_HISTORY_SIZE
         errorHistory.pop();
@@ -149,6 +147,9 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge){
     RSpeed = (robotSpeed - speedAdj);
     setMotorSpeeds();
 }
+//////////////////////////////////////////////////////////////////////////////
+///////////////////////////// PID END ////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 void LineFollow::findIR() {
 
@@ -158,18 +159,32 @@ void LineFollow::findGauntlet() {
 
 }
 
-void LineFollow::turn180Degrees(){
+void LineFollow::turnOnLine(){
     int start = millis();
     while(!detectLine()){
-        LSpeed = 20;
-        RSpeed = -20;
-        setMotorSpeeds();
+        HI->LMotor->setSpeed(20);
+        HI->RMotor->setSpeed(-20);
+        HI->LMotor->update();
+        HI->RMotor->update();
         if(millis() - start > 3000){
             return;
         }
     }
 }
 
+//+ve for CW -ve for CCW
+void LineFollow::turnXDegrees(int angle){
+    int startCountR = HI->REncoder->getCount();
+    HI->LMotor->setSpeed(20);
+    HI->RMotor->setSpeed(-20);
+    HI->LMotor->update();
+    HI->RMotor->update();
+    while(HI->REncoder->getCount()-startCountR < ticksPerAngle*angle){
+    }
+}
+
+//return true if any sensors detect black
+//return false otherwise
 bool LineFollow::detectLine(){
     for(int i = 0; i < numSensors; i ++){
         if (HI->QRD_Vals[i] > 0.5){
@@ -178,13 +193,16 @@ bool LineFollow::detectLine(){
     }
     return false;
 }
+
+//return true if line array detects two separate lines
+//return false otherwise
 bool LineFollow::detectIntersection(){
     int count = 0;
     bool firstLineFound = false;
     bool middleFound = false;
     bool secondLineFound = false;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.5){
+        if (HI->QRD_Vals[i] > HI->QRD_Thresh[i]){
             count++;
             firstLineFound = true;
             if(middleFound == true){
@@ -200,12 +218,12 @@ bool LineFollow::detectIntersection(){
     return false;
 }
 
+//turn at an intersection
 void LineFollow::intersectionTurn(bool dir){ //true for right, false for left
-    int start = millis();
-    LSpeed = 20;
-    RSpeed = -20;
-    while(millis() - start < 300){
-        setMotorSpeeds();
+    if(dir){
+        turnXDegrees(20);
+    }else{
+        turnXDegrees(-20);
     }
 }
 
@@ -220,4 +238,24 @@ bool LineFollow::detectPost(){
         return true;
     }
     return false;
+}
+
+void LineFollow::turnTowardsPost() {
+    if(clockwiseMove){
+        turnXDegrees(-90);
+    }else{
+        turnXDegrees(90);
+    }
+}
+
+void LineFollow::stopRobot(){
+    HI->LMotor->setSpeed(0);
+    HI->RMotor->setSpeed(0);
+    HI->LMotor->update();
+    HI->RMotor->update();
+    delay(500);
+}
+
+bool LineFollow::getNextTurnAngle(Position lastPosition, Position destination){
+    //if(clockwiseMove)
 }

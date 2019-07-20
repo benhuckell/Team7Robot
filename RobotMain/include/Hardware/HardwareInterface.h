@@ -14,19 +14,23 @@
 
 #define PUSH_BUTTON_1 PB4
 #define PUSH_BUTTON_2 PB5
+
 #define CONTROL_POT_1 PA_4
 #define CONTROL_POT_2 PA_5
 
-/*
+
 #define WINCH_UP PA_8 //winch inputs
 #define WINCH_DOWN PA_9
-*/
-#define LENCODER_1 PB1 //encoder inputs
-#define LENCODER_2 PB10
-#define RENCODER_1 PB1
-#define RENCODER_2 PB10
 
-//#define CLAW_SERVO PA_10
+#define WINCH_ENC_1 PB10
+#define WINCH_ENC_2 PB1
+
+#define LENCODER_1 PB15 //encoder inputs
+#define LENCODER_2 PA8
+#define RENCODER_1 PA11
+#define RENCODER_2 PA12
+
+#define CLAW_SERVO PA_10
 
 #define QRD_IN PA_6 //QRD read port
 
@@ -35,7 +39,7 @@ class HardwareInterface {
       void update();
 
       static HardwareInterface* i();      
-      static const int NUM_QRD_SENSORS = 4; //number of light sensors
+      static const int NUM_QRD_SENSORS = 8; //number of light sensors
 
       DriveMotor* LMotor;
       DriveMotor* RMotor;
@@ -49,13 +53,16 @@ class HardwareInterface {
       QRD* qrd1;
       QRD* qrd2;
       QRD* qrd3;
-      QRD* qrdLeft;
-      QRD* qrdRight;
+      QRD* qrd4;
+      QRD* qrd5;
+      QRD* qrd6;
+      QRD* qrd7;
 
       ServoMotor* clawMotor;
 
       QRD* QRD_Array[NUM_QRD_SENSORS];
       float QRD_Vals[NUM_QRD_SENSORS];
+      int QRD_RAW[NUM_QRD_SENSORS];
       int QRD_Thresh[NUM_QRD_SENSORS];
       int QRD_Max[NUM_QRD_SENSORS];
       int QRD_Min[NUM_QRD_SENSORS];
@@ -73,7 +80,7 @@ class HardwareInterface {
       float lastLSpeed;
       float lastRSpeed;
       static HardwareInterface* myInstance;
-      const float bumpThresholdVal = 1.0;
+      const float bumpThresholdVal = 10.0;
       const float postThresholdVal = 0.5;
    };
 

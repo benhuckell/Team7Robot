@@ -9,7 +9,8 @@ class Encoder {
         int getCount();
         void resetCount(); //Be Careful!!!
         void update();
-
+        
+        const float ticksPerRotation = 90;
     private:
         int encoder_port_1;
         int encoder_port_2;
@@ -19,7 +20,5 @@ class Encoder {
         float speed;
         int dir;
         int direction;
-        const float WheelDiameter = 0.02; //metres
-        const float ticksPerRotation = 90;
 
 };

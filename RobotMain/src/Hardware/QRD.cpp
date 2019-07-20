@@ -13,35 +13,14 @@ QRD::QRD(PinName QRD_port, int QRD_Index, int QRD_Thresh, int QRD_Min, int QRD_M
 }
 
 void QRD::update() {
-    //update value
-    /*digitalWrite(Select_0, QRD_Index&1);
-    digitalWrite(Select_1, QRD_Index&2);
-    digitalWrite(Select_2, QRD_Index&4);
-
-    value = analogRead(QRD_port); */
-
-    bool states[4][3] = {{LOW,LOW,LOW},{LOW,LOW,HIGH},{LOW,HIGH,LOW},{LOW,HIGH,HIGH}};
-
+    //update values
     digitalWrite(Select_0,states[QRD_Index][0]);
     digitalWrite(Select_1,states[QRD_Index][1]);
     digitalWrite(Select_2,states[QRD_Index][2]);
-    Serial.print(value);
+    //Serial.print(value);
     value = analogRead(QRD_port); //read from first multiplexer
     if(value < QRD_Min) { value = QRD_Min; }
     if(value > QRD_Max) { value = QRD_Max; }
-    //set value to the average of the last 10 values.
-    /*valHistory.push(value);
-    if(valHistory.size() > VAL_HISTORY_SIZE){ // keep queue size at 10
-        valHistory.pop();
-    }
-    
-    valCopy = valHistory;
-    int sum = 0;
-    for(int i = 0; i < valHistory.size(); i++){
-        sum += valCopy.front();
-        valCopy.pop();
-    }
-    value = sum/valHistory.size();*/
 }
 
 int QRD::getValue() {

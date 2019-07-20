@@ -24,23 +24,6 @@ Adafruit_SSD1306 display(-1);
 void setup() {
   Serial.begin(115200);
   delay(3000);
-
-
-    /* HardwareTimer Timer2 = HardwareTimer()
-
-    Timer2.setPrescaleFactor(100);
-    Timer2.setOverflow(UINT16_MAX);
-    Timer2.setMode(1, TIMER_INPUT_CAPTURE_RISING);
-    MainState::instance()->setState(lineFollowing);
-    Timer2.setPeriod(100000);//microseconds
-    Timer2.attachInterrupt(interruptRoutine);
-    Timer2.resume();*/
-    //Read push button
-
-    //pinMode(INTERRUPTPIN,INPUT_PULLUP);
-    //attachInterrupt(digitalPinToInterrupt(INTERRUPTPIN),interruptRoutine,RISING);
-
-    //Define main states robot can have
     
   //Declare State Classes
   LineFollow lineFollow;
@@ -57,10 +40,10 @@ void setup() {
   display.setTextColor(WHITE);
   display.setCursor(0,0);
   display.println("Working");
+  Serial.print("Working ");
   display.display();
 
-  MainState::instance()->setState(lineFollowing);
-  // Serial.print(" state: ");
+  MainState::instance()->setState(avengerCollecting);
   // Serial.print(MainState::instance()->getState());
   int count = 0;
     for(;;) {
