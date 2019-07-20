@@ -20,7 +20,7 @@ void QRD::update() {
 
     value = analogRead(QRD_port); */
 
-    bool states[4][3] = {{LOW,LOW,LOW},{LOW,LOW,HIGH},{LOW,HIGH,LOW},{LOW,HIGH,HIGH}};
+    bool states[8][3] = {{LOW,LOW,LOW},{LOW,LOW,HIGH},{LOW,HIGH,LOW},{LOW,HIGH,HIGH},{HIGH,LOW,LOW},{HIGH,LOW,HIGH},{HIGH,HIGH,LOW},{HIGH,HIGH,HIGH}};
 
     digitalWrite(Select_0,states[QRD_Index][0]);
     digitalWrite(Select_1,states[QRD_Index][1]);

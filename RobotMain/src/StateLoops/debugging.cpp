@@ -39,10 +39,18 @@ void Debugging::loop(){
     display.print(" ");
     display.print(HI->QRD_Vals[3]);
     display.println(" ");
+    display.print(HI->QRD_Vals[4]);
+    display.print(" ");
+    display.print(HI->QRD_Vals[5]);
+    display.print(" ");
+    display.print(HI->QRD_Vals[6]);
+    display.print(" ");
+    display.print(HI->QRD_Vals[7]);
+    display.println(" ");
 
-    float positionVector[4] = { -7.3, -1.25, 1.25, 7.3 };
+    float positionVector[] = { -30.5, -18, -8.4, -1.75, 1.75, 8.4, 18, 30.5 };
     float sum = 0;
-    for(int i = 0; i < 4; i++){
+    for(int i = 0; i < 8; i++){
         sum += HI->QRD_Vals[i]*positionVector[i];
     }
     

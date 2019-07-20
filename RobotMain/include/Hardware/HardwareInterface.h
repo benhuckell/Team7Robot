@@ -35,7 +35,7 @@ class HardwareInterface {
       void update();
 
       static HardwareInterface* i();      
-      static const int NUM_QRD_SENSORS = 4; //number of light sensors
+      static const int NUM_QRD_SENSORS = 8; //number of light sensors
 
       DriveMotor* LMotor;
       DriveMotor* RMotor;
@@ -49,8 +49,11 @@ class HardwareInterface {
       QRD* qrd1;
       QRD* qrd2;
       QRD* qrd3;
-      QRD* qrdLeft;
-      QRD* qrdRight;
+      QRD* qrd4;
+      QRD* qrd5;
+      QRD* qrd6;
+      QRD* qrd7;
+      
 
       ServoMotor* clawMotor;
 

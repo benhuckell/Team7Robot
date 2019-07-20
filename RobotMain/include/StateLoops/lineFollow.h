@@ -33,7 +33,7 @@ namespace StateLoops{
             int P_gain = 0; // K_p
             int I_gain = 0; // K_i
             int D_gain = 0; // K_d
-            static const int numSensors = 4;
+            static const int numSensors = 8;
             const float maxISum = 2; //max sum to avoid integral windup
             const unsigned int ERROR_HISTORY_SIZE = 2; //max size of error queue
             const float POST_TAPE_WIDTH = 4; //sensors per post tape width

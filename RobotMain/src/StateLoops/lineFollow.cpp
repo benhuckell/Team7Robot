@@ -25,12 +25,12 @@ void LineFollow::setMotorSpeeds(){
 
     Serial.print(RSpeed);
     Serial.print(LSpeed);
-    HI->RMotor->setSpeed(RSpeed);
-    HI->LMotor->setSpeed(LSpeed/straightLineCorrectionFactor);
+    HI->RMotor->setSpeed(35/straightLineCorrectionFactor);
+    HI->LMotor->setSpeed(35);
 }
 
 float LineFollow::getWeightedError(){
-    float positionVector[numSensors] = { -7.3, -1.25, 1.25, 7.3 };
+    float positionVector[numSensors] = { -30.5, -18, -8.4, -1.75, 1.75, 8.4, 18, 30.5 };
     float sum = 0;
     bool onBlack = false;
     for(int i = 0; i < numSensors; i++){
@@ -65,18 +65,13 @@ float LineFollow::getLinePositionError(bool followRightEdge)
         //Find right edge
         for(i = numSensors-1; (HI->QRD_Vals[i] < HI->QRD_Thresh[i]) && (i > 0); i--){}//intentionally empty for loop
         
-        // display.print("i: ");
-        // display.println(i);
-        //;//intentionally blank for loop
         if(i == numSensors-1){ rightEdgeXVal = 0 + (numSensors-1)*0.5; } //handle case where line is directly below rightmost sensor
         else if(HI->QRD_Vals[i] > HI->QRD_Thresh[i]){
             //interpolate and subtract (numSensors-1)/2 to put a zero x value in the middle of the sensor array
             rightEdgeXVal = (float)i + (float)(HI->QRD_Vals[i] - HI->QRD_Thresh[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i+1]) - (float)(numSensors-1)*0.5;
-            // display.print("inter: ");
-            // display.println((float)(HI->QRD_Vals[i] - HI->QRD_Thresh[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i+1]));
         }
         else if(errorHistory.back() > 0){
-            rightEdgeXVal = P_gain/10; //get most recent value
+            rightEdgeXVal = P_gain/10;
         }
         else if(errorHistory.back() < 0){
             rightEdgeXVal = -P_gain/(10*straightLineCorrectionFactor);
@@ -132,7 +127,7 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge){
 
     //adjust speed of both wheels to correct for error
     float speedAdj = 0;
-    speedAdj = P_gain*error + I_gain*I_sum + D_gain*D_error;
+    speedAdj = P_gain*error + I_gain*I_sum - D_gain*D_error;
     // display.print("Padj: ");
     // display.println(P_gain*error);
     
