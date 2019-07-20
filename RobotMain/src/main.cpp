@@ -17,10 +17,6 @@
 
 Adafruit_SSD1306 display(-1);
 
-// void interruptRoutine(){
-//     HardwareInterface::i()->update();
-// }
-
 void setup() {
   Serial.begin(115200);
   delay(3000);

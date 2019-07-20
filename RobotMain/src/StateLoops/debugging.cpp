@@ -75,30 +75,13 @@ void Debugging::loop(){
     // else{
     //     display.println("NOPE");
     // }
-    
-    int numBlack = 0;
-    bool firstLineFound = false;
-    bool middleFound = false;
-    bool secondLineFound = false;
-    for(int i = 0; i < numSensors; i ++){
-        display.print(HI->QRD_Vals[i]);
-        display.print(" ");
-        if (HI->QRD_Vals[i] > 0.5){
-            numBlack++;
-            firstLineFound = true;
-            if(middleFound == true){
-                secondLineFound = true;
-            }
-        }else if(firstLineFound){
-            middleFound = true;
-        }
-    }
-    display.print(numBlack);
-    display.println(" ");
-    if(numBlack >= 4 && secondLineFound){//line found if we found a black then white then black sensor and at least 4 sensors were black
-        display.println("INTERSECTION");
-    }
-    display.println("NOPE");
+
+    // display.print(numBlack);
+    // display.println(" ");
+    // if(numBlack >= 4 && secondLineFound){//line found if we found a black then white then black sensor and at least 4 sensors were black
+    //     display.println("INTERSECTION");
+    // }
+    // display.println("NOPE");
     // float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
     // float sum = 0;
     // for(int i = 0; i < numSensors; i++){
@@ -116,7 +99,7 @@ void Debugging::loop(){
     // display.print(float(HI->QRD_Vals[3] - HI->QRD_Min[3])/float(HI->QRD_Max[3] - HI->QRD_Min[3]));
     // display.print(" ");
 
-    //HardwareInterface::i()->update();
+    HardwareInterface::i()->update();
 
     display.display();
 

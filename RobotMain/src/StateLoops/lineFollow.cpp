@@ -55,7 +55,6 @@ void LineFollow::setMotorSpeeds(){
 }
 
 float LineFollow::getWeightedError(){
-    float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
     float sum = 0;
     bool onBlack = false;
     for(int i = 0; i < numSensors; i++){
@@ -67,12 +66,7 @@ float LineFollow::getWeightedError(){
     if(onBlack){
         return sum;
     } else {
-        if(errorHistory.back() > 0){
-            return positionVector[numSensors-1];
-        }
-        else{
-            return positionVector[0];
-        }
+        return errorHistory.back();
     }
 }
 
@@ -227,10 +221,10 @@ void LineFollow::intersectionTurn(bool dir){ //true for right, false for left
     }
 }
 
-bool LineFollow::detectPost(){
+bool LineFollow::detectJunction(){
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.5){
+        if (HI->QRD_Vals[i] > 0.4){
             count++;
         }
     }

@@ -14,7 +14,6 @@ namespace StateLoops{
             enum dir {CLOCKWISE, COUNTERCLOCKWISE};
             
         private:
-            
             float getLinePositionError(bool followRightEdge);
             float getWeightedError();
             void findIR();
@@ -22,7 +21,7 @@ namespace StateLoops{
             void followTape(int robotSpeed, bool followRightEdge);
             void setMotorSpeeds();
             bool detectLine();
-            bool detectPost();
+            bool detectJunction();
             bool detectIntersection();
             void intersectionTurn(bool dir);
             void turnTowardsPost();
@@ -48,6 +47,7 @@ namespace StateLoops{
             int I_gain = 0; // K_i
             int D_gain = 0; // K_d
             static const int numSensors = 8;
+            float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
             const float maxISum = 2; //max sum to avoid integral windup
             const unsigned int ERROR_HISTORY_SIZE = 2; //max size of error queue
             const float straightLineCorrectionFactor = 1.05;
@@ -68,24 +68,27 @@ namespace StateLoops{
             // {{[RightGauntlet][CCW][false],     [RightGauntlet][CCW][true]},     {[RightGauntlet][CW][false],     [RightGauntlet][CW][true]}}}
 
             //enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
+            //enum Destination {LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet};
             //enum dir {CCW, CW};
-            //bool stoneCollected
-            //nextTurnAngle[lastPosition][dir][nextPosition == destination]
-            /*bool nextTurnAngle[12][2][2] = {{{-45,-45},{-45,-45}}, //LeftStart
-                                            {{100,15},{100,-45}}, //LeftGauntlet
-                                            {{15,20},{130,-10}}, //LeftIntersection
-                                            {{}},//Post1
-                                            {{}},//Post2
-                                            {{}},//Post3
-                                            {{}},//Post4
-                                            {{}},//Post5
-                                            {{}},//Post6
-                                            {{}},//RightIntersection
-                                            {{}},//RightGauntlet
-                                            {{45,45},{45,45}}};//RightStart
+            //bool stoneCollected;
+            //nextTurnAngle[prevPosition][destination];                        
+            /*bool nextTurnAngle[12][10] = 
+                            /*LeftStart*/       //{{10,-90, NULL,NULL,NULL,NULL, NULL,NULL, NULL,NULL},
+                            /*LeftGauntlet*/     //{NULL,NULL, -30,-30,-30,-30, 15,15, 15,15},
+                            /*LeftIntersection*/ //{-90,NULL, -90,-5,-5,-5, 90,-10, -10,-10},
+                            /*Post1*/            //{20 ,NULL, NULL,-90,5,5, -110,-110, -110,-110},
+                            /*Post2*/            //{-5,-5, 90,NULL,-90,-5, -5,-5, -5,-5},
+                            /*Post3*/            //{-5,-5, -5,90,NULL,-90, -5,-5, 5,5},
+                            /*Post4*/            //{-5,-5, -5,-5,90,NULL, },
+                            /*Post5*/            //{NULL,NULL, NULL,NULL,NULL,NULL, NULL,NULL, NULL,NULL},
+                            /*Post6*/            //{},
+                            /*RightIntersection*///{},
+                            /*RightGauntlet*/    //{},
+                            /*RightStart*/       //{}};
+
 
             //nextPosition[currentPosition][dir][reachedDestination]
-            Position nextPosition[10][2][2] = {{{LeftIntersection,LeftGauntlet},{LeftIntersection,LeftGauntlet}},//LeftGauntlet
+            /*Position nextPosition[10][2][2] = {{{LeftIntersection,LeftGauntlet},{LeftIntersection,LeftGauntlet}},//LeftGauntlet
                                                {{Post5,LeftGauntlet},{Post1,LeftGauntlet}},//LeftIntersection
                                                {{LeftIntersection,Post1},{Post2,Post1}},//Post1
                                                {{Post1,Post2},{Post3,Post2}},//Post2
