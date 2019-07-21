@@ -10,7 +10,7 @@ LineFollow::LineFollow(){
 }
 
 void LineFollow::loop(){
-    int robotSpeed = 35;
+    int robotSpeed = 30;
     followTape(robotSpeed, true);
     return;
 }
@@ -25,8 +25,8 @@ void LineFollow::setMotorSpeeds(){
 
     Serial.print(RSpeed);
     Serial.print(LSpeed);
-    HI->RMotor->setSpeed(35/straightLineCorrectionFactor);
-    HI->LMotor->setSpeed(35);
+    HI->RMotor->setSpeed(RSpeed/straightLineCorrectionFactor);
+    HI->LMotor->setSpeed(LSpeed);
 }
 
 float LineFollow::getWeightedError(){
@@ -44,11 +44,11 @@ float LineFollow::getWeightedError(){
         return sum;
     }
     else {
-        if(errorHistory.back() > 0){
-            return positionVector[numSensors-1];
+        if(errorHistory.back() < 0){
+            return positionVector[0];
         }
         else{
-            return positionVector[0];
+            return positionVector[numSensors-1];
         }
     }
 }
@@ -101,8 +101,8 @@ float LineFollow::getLinePositionError(bool followRightEdge)
 
 //runs a PID to follow the tape
 void LineFollow::followTape(int robotSpeed, bool followRightEdge){
-    P_gain = analogRead(CONTROL_POT_1)/10;
-    D_gain = analogRead(CONTROL_POT_2)/2;
+    P_gain = float(analogRead(CONTROL_POT_1))/float(200.0);
+    D_gain = float(analogRead(CONTROL_POT_2))/float(100.0);
 
     //float error = getLinePositionError(followRightEdge); // get current error
     float error = getWeightedError();
@@ -127,7 +127,7 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge){
 
     //adjust speed of both wheels to correct for error
     float speedAdj = 0;
-    speedAdj = P_gain*error + I_gain*I_sum - D_gain*D_error;
+    speedAdj = P_gain*error + I_gain*I_sum + D_gain*D_error;
     // display.print("Padj: ");
     // display.println(P_gain*error);
     

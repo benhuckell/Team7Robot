@@ -27,9 +27,9 @@ void Debugging::loop(){
     display.print("PB2: ");
     display.println(digitalRead(PUSH_BUTTON_2));
     display.print("K_p: ");
-    display.println(analogRead(CONTROL_POT_1));
+    display.println(float(analogRead(CONTROL_POT_1))/float(200.0));
     display.print("K_d: ");
-    display.println(analogRead(CONTROL_POT_2));
+    display.println(float(analogRead(CONTROL_POT_2))/float(100.0));
 
     display.print(HI->QRD_Vals[0]);
     display.print(" ");
@@ -54,6 +54,7 @@ void Debugging::loop(){
         sum += HI->QRD_Vals[i]*positionVector[i];
     }
     
+
     display.print(sum);
     display.println(" ");
     // display.print(float(HI->QRD_Vals[0] - HI->QRD_Min[0])/float(HI->QRD_Max[0] - HI->QRD_Min[0]));
