@@ -29,7 +29,7 @@ void Debugging::loop(){
     display.print("K_p: ");
     display.println(float(analogRead(CONTROL_POT_1))/float(200.0));
     display.print("K_d: ");
-    display.println(float(analogRead(CONTROL_POT_2))/float(100.0));
+    display.println(float(analogRead(CONTROL_POT_2))/float(50.0));
 
     display.print(HI->QRD_Vals[0]);
     display.print(" ");

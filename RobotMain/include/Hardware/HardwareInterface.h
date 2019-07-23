@@ -14,20 +14,24 @@
 
 #define PUSH_BUTTON_1 PB4
 #define PUSH_BUTTON_2 PB5
+
 #define CONTROL_POT_1 PA_4
 #define CONTROL_POT_2 PA_5
 
-/*
+
 #define WINCH_UP PA_8 //winch inputs
 #define WINCH_DOWN PA_9
 
-#define LENCODER_1 PB5 //encoder inputs
-#define LENCODER_2 PB6
-#define RENCODER_1 PB7
-#define RENCODER_2 PB8
+#define WINCH_ENC_1 PB10
+#define WINCH_ENC_2 PB1
+
+#define LENCODER_1 PB15 //encoder inputs
+#define LENCODER_2 PA8
+#define RENCODER_1 PA11
+#define RENCODER_2 PA12
 
 #define CLAW_SERVO PA_10
-*/
+
 #define QRD_IN PA_6 //QRD read port
 
 class HardwareInterface {
@@ -53,25 +57,31 @@ class HardwareInterface {
       QRD* qrd5;
       QRD* qrd6;
       QRD* qrd7;
-      
 
       ServoMotor* clawMotor;
 
       QRD* QRD_Array[NUM_QRD_SENSORS];
       float QRD_Vals[NUM_QRD_SENSORS];
+      int QRD_RAW[NUM_QRD_SENSORS];
       int QRD_Thresh[NUM_QRD_SENSORS];
       int QRD_Max[NUM_QRD_SENSORS];
       int QRD_Min[NUM_QRD_SENSORS];
 
       unsigned long previousMillis = 0;
       unsigned long currentMillis = millis();
+      bool robotWasBumped();
+      bool robotHitPost();
+
    private:
       HardwareInterface();
       HardwareInterface(const HardwareInterface&);
       HardwareInterface& operator=(const HardwareInterface&);
       bool timer(unsigned int preset);
-
+      float lastLSpeed;
+      float lastRSpeed;
       static HardwareInterface* myInstance;
+      const float bumpThresholdVal = 10.0;
+      const float postThresholdVal = 0.5;
    };
 
 #endif

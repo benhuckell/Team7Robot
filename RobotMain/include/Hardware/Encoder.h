@@ -3,25 +3,22 @@
 
 class Encoder {
     public:
-        Encoder(PinName encoder_port_1, PinName encoder_port_2);
-        void update_port_1();
-        void update_port_2();
+        Encoder(int encoder_port_1, int encoder_port_2);
+        void ISR();
         int getSpeed(); 
         int getCount();
         void resetCount(); //Be Careful!!!
-
+        void update();
+        
+        const float ticksPerRotation = 90;
     private:
-        PinName encoder_port_1;
-        PinName encoder_port_2;
-        unsigned int timeSinceLastPulse_1;
-        unsigned int timeOfLastPulse_1;
-        unsigned int timeSinceLastPulse_2;
-        unsigned int timeOfLastPulse_2;
-        int speed;
-        int rpm;
+        int encoder_port_1;
+        int encoder_port_2;
+        unsigned int lastTime;
         int count;
+        int lastCount;
+        float speed;
+        int dir;
         int direction;
-        const float WheelDiameter = 0.02; //metres
-        const int ticksPerRotation = 90;
 
 };

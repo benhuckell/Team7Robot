@@ -10,8 +10,25 @@ LineFollow::LineFollow(){
 }
 
 void LineFollow::loop(){
-    int robotSpeed = 30;
-    followTape(robotSpeed, true);
+    int robotSpeed = 60;
+    if(detectJunction()){
+        HI->RMotor->setSpeed(-50);
+        HI->LMotor->setSpeed(-50);
+        HI->update();
+        delay(150);
+        HI->RMotor->setSpeed(0);
+        HI->LMotor->setSpeed(0);
+        HI->update();
+        delay(1000);
+        turnXDegrees(90);
+        delay(4000);
+    }
+    else{ 
+        turnXDegrees(90);
+        //followTape(robotSpeed, true);
+    }
+    
+
     return;
 }
 
@@ -102,7 +119,7 @@ float LineFollow::getLinePositionError(bool followRightEdge)
 //runs a PID to follow the tape
 void LineFollow::followTape(int robotSpeed, bool followRightEdge){
     P_gain = float(analogRead(CONTROL_POT_1))/float(200.0);
-    D_gain = float(analogRead(CONTROL_POT_2))/float(100.0);
+    D_gain = float(analogRead(CONTROL_POT_2))/float(50.0);
 
     //float error = getLinePositionError(followRightEdge); // get current error
     float error = getWeightedError();
@@ -145,7 +162,7 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge){
     // display.print("RSpeed: ");
     // display.println(RSpeed);
 
-    LSpeed = (robotSpeed + speedAdj)/straightLineCorrectionFactor;
+    LSpeed = (robotSpeed + speedAdj);
     RSpeed = (robotSpeed - speedAdj);
     setMotorSpeeds();
 }
@@ -164,4 +181,30 @@ void LineFollow::findGauntlet() {
 
 void LineFollow::findLine() {
 
+}
+
+bool LineFollow::detectJunction(){
+    int count = 0;
+    for(int i = 0; i < numSensors; i ++){
+        if (HI->QRD_Vals[i] > 0.5){
+            count++;
+        }
+    }
+    if(count >= 4){
+        return true;
+    }
+    return false;
+}
+
+void LineFollow::turnXDegrees(int angle){
+    int startCountR = HI->REncoder->getCount();
+    HI->LMotor->setSpeed(45);
+    HI->RMotor->setSpeed(-45);
+    HI->LMotor->update();
+    HI->RMotor->update();
+    while(HI->REncoder->getCount()-startCountR < ticksPerAngle*angle){
+        Serial.print("count: ");
+        Serial.print(HI->REncoder->getCount());
+    }
+    return;
 }
