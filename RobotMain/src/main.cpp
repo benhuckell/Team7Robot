@@ -36,18 +36,19 @@ void setup() {
   display.setTextColor(WHITE);
   display.setCursor(0,0);
   display.println("Working");
-  Serial.print("Working ");
   display.display();
 
-  MainState::instance()->setState(avengerCollecting);
+  MainState::instance()->setState(lineFollowing);
   // Serial.print(MainState::instance()->getState());
   int count = 0;
     for(;;) {
 
       if(digitalRead(TOGGLE_SWITCH)){
+        lineFollow.startingPosition = lineFollow.LeftGauntlet;
         MainState::instance()->setState(debugging);
       }
       else if(digitalRead(TOGGLE_SWITCH) == 0 && MainState::instance()->getState()==debugging){
+        lineFollow.startingPosition = lineFollow.RightGauntlet;
         display.clearDisplay();
         display.setCursor(0,0);
         display.println("Line Following");
