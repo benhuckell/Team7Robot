@@ -25,7 +25,6 @@ void QRD::update() {
     digitalWrite(Select_0,states[QRD_Index][0]);
     digitalWrite(Select_1,states[QRD_Index][1]);
     digitalWrite(Select_2,states[QRD_Index][2]);
-    Serial.print(value);
     value = analogRead(QRD_port); //read from first multiplexer
     if(value < QRD_Min) { value = QRD_Min; }
     if(value > QRD_Max) { value = QRD_Max; }

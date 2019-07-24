@@ -3,8 +3,6 @@
 DriveMotor::DriveMotor(PinName forward, PinName back){
     DriveMotor::motor_port_forwards = forward;
     DriveMotor::motor_port_backwards = back;
-    Serial.print(motor_port_backwards);
-    Serial.print(motor_port_forwards);
 
     T_PWM = 500; //500 clock pulses
     PWM_FREQ = 100000; //100KHz 

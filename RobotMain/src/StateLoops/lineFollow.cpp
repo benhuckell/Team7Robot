@@ -11,24 +11,35 @@ LineFollow::LineFollow(){
 
 void LineFollow::loop(){
     int robotSpeed = 60;
+    bool postOnRight = true; //true for right false for left
     if(detectJunction()){
-        HI->RMotor->setSpeed(-50);
-        HI->LMotor->setSpeed(-50);
-        HI->update();
-        delay(150);
-        HI->RMotor->setSpeed(0);
-        HI->LMotor->setSpeed(0);
-        HI->update();
-        delay(1000);
-        turnXDegrees(90);
-        delay(4000);
-    }
-    else{ 
-        turnXDegrees(90);
-        //followTape(robotSpeed, true);
-    }
-    
+        if(getWeightedError() >= 0){
+            postOnRight = true;
+        }
+        else if(getWeightedError() < 0){
+            postOnRight = false;
+        }
+        
+        int time = millis();
+        while(millis()-time < 150){
+            followTape(robotSpeed,true);
+            HI->update();
+        }
 
+        stopMoving();
+
+        if(postOnRight){
+            turnXDegrees(90);
+            delay(3000);
+        }
+        else{
+            turnXDegrees(-90);
+            delay(3000);
+        }
+    }
+    else { 
+        followTape(robotSpeed, true);
+    }
     return;
 }
 
@@ -122,7 +133,7 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge){
     D_gain = float(analogRead(CONTROL_POT_2))/float(50.0);
 
     //float error = getLinePositionError(followRightEdge); // get current error
-    float error = getWeightedError();
+    error = getWeightedError();
     // display.print("error: ");
     // display.println(error);
 
@@ -185,6 +196,7 @@ void LineFollow::findLine() {
 
 bool LineFollow::detectJunction(){
     int count = 0;
+
     for(int i = 0; i < numSensors; i ++){
         if (HI->QRD_Vals[i] > 0.5){
             count++;
@@ -197,14 +209,44 @@ bool LineFollow::detectJunction(){
 }
 
 void LineFollow::turnXDegrees(int angle){
-    int startCountR = HI->REncoder->getCount();
-    HI->LMotor->setSpeed(45);
-    HI->RMotor->setSpeed(-45);
-    HI->LMotor->update();
-    HI->RMotor->update();
-    while(HI->REncoder->getCount()-startCountR < ticksPerAngle*angle){
-        Serial.print("count: ");
-        Serial.print(HI->REncoder->getCount());
+    int startRCount = HI->REncoder->getCount();
+    int startLCount = HI->LEncoder->getCount();
+    bool LStopped = false;
+    bool RStopped = false;
+    if(angle > 0){
+        HI->LMotor->setSpeed(0);
+        HI->RMotor->setSpeed(-70/straightLineCorrectionFactor);
+        HI->update();
+    }else if(angle < 0){
+        HI->LMotor->setSpeed(-70);
+        HI->RMotor->setSpeed(40/straightLineCorrectionFactor);
+        HI->update();
     }
+    while(!LStopped || !RStopped){
+        if(HI->REncoder->getCount()-startRCount > ticksPerAngle*abs(angle)){
+            HI->RMotor->setSpeed(0);
+            HI->RMotor->update();
+            LStopped = true;
+        }
+        if(HI->LEncoder->getCount()-startLCount > ticksPerAngle*abs(angle)){
+            HI->LMotor->setSpeed(0);
+            HI->LMotor->update();
+            RStopped = true;
+        }
+    }
+    
+
+    HI->update();
     return;
+}
+
+void LineFollow::stopMoving(){
+    HI->RMotor->setSpeed(-50);
+    HI->LMotor->setSpeed(-50);
+    HI->update();
+    delay(150);
+    HI->RMotor->setSpeed(0);
+    HI->LMotor->setSpeed(0);
+    HI->update();
+    delay(150);
 }

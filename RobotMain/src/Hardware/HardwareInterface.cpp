@@ -33,14 +33,14 @@ HardwareInterface::HardwareInterface(){
     attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
     attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
 
-    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 100, 75, 470);
-    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 90, 62, 91);
-    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 65, 61, 105);
-    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 65, 60, 80);
-    HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 65, 61, 102);
-    HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 70, 61, 80);
-    HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 70, 62, 88);
-    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 100, 67, 234);
+    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 100, 61, 674);
+    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 90, 54, 321);
+    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 65, 52, 258);
+    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 65, 51, 179);
+    HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 65, 51, 305);
+    HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 70, 52, 243);
+    HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 70, 54, 192);
+    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 100, 61, 515);
 
     HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 
