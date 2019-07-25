@@ -5,25 +5,25 @@ using namespace StateLoops;
 
 LineFollow::LineFollow(){
     LineFollow::HI = HardwareInterface::i();
+}
 
+void LineFollow::setup(){
     //Calculate paths
+    currentPosition = startingPosition;
     if(startingPosition == LeftGauntlet){ //team == THANOS
         for(int i = 0; i < 6; i++){
-            CurrentPath.push(PostPriority[i]);
-            CurrentPath.push(LeftIntersection);
-            CurrentPath.push(LeftGauntlet);
+            destinationList.push(PostPriority[i]);
+            destinationList.push(LeftIntersection);
+            destinationList.push(LeftGauntlet);
         }
     }else{ //team == METHANOS
         for(int i = 0; i < 6; i++){
-            CurrentPath.push(PostPriority[i]);
-            CurrentPath.push(RightIntersection);
-            CurrentPath.push(RightGauntlet);
+            destinationList.push(PostPriority[i]);
+            destinationList.push(RightIntersection);
+            destinationList.push(RightGauntlet);
         }
     }
-    destination = CurrentPath.front();
-
-    nextPos = nextPosition[currentPosition][dir][currentPosition == destination];
-    nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
+    destination = destinationList.front();
 
     if(destination <= Post4 && destination >= Post1){
         if(startingPosition == LeftGauntlet){
@@ -38,8 +38,9 @@ LineFollow::LineFollow(){
             dir = CW;
         }
     }
+    nextPos = nextPosition[currentPosition][dir][currentPosition == destination];
+    nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
 }
-
 void LineFollow::loop(){
     int robotSpeed = 60;
     bool postOnRight = true; //true for right false for left
@@ -49,8 +50,6 @@ void LineFollow::loop(){
         currentPosition = nextPos;
         int angle = nextAngle;
         bool destinationReached = (currentPosition == destination);
-        nextPos = nextPosition[currentPosition][dir][destinationReached];
-        nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
 
         //check if current junction is a post
         postDetected = (destination <= Post6 && destination >= Post1);
@@ -93,10 +92,14 @@ void LineFollow::loop(){
             turnXDegrees(angle);
             delay(3000);
         }
+        
+        nextPos = nextPosition[currentPosition][dir][destinationReached];
+        nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
+        
         if(destinationReached){
             //update destination
-            CurrentPath.pop();
-            destination = CurrentPath.front();
+            destinationList.pop();
+            destination = destinationList.front();
             //update dir
             if(destination <= Post4 || destination >= Post1){
                 if(startingPosition == LeftGauntlet){
@@ -114,9 +117,31 @@ void LineFollow::loop(){
         }
     }
     else if(HI->robotWasBumped()){
-        //turn around
+        //back up for 500ms
+        LMotor->setSpeed(-40);
+        RMotor->setSpeed(-40);
+        LMotor->update();
+        RMotor->update();
+        delay(500);
 
-        //update PostPriority list
+        //stop
+        LMotor->setSpeed(0);
+        RMotor->setSpeed(0);
+        LMotor->update();
+        RMotor->update();
+
+        //turn around
+        turnOnLine();
+        //update dir
+        if(dir == CW){
+            dir = CCW;
+        }else{
+            dir = CW;
+        }
+        Position listCopy[destinationList.size()];
+        //update destinationList
+        temp = destinationList.front()
+        destinationList.pop();
     }
     else { 
         followTape(robotSpeed, true);

@@ -11,6 +11,7 @@ namespace StateLoops{
         public:
             LineFollow();
             void loop();
+            void setup();
             enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
             enum Direction {CCW, CW};
             enum Team {THANOS, METHANOS}; //left, right
@@ -55,11 +56,11 @@ namespace StateLoops{
             //NAVIGATION
             Team team;
             Position PostPriority[6] = {Post1, Post2, Post3, Post5, Post6, Post4};
-            std::queue<Position> CurrentPath;
+            std::queue<Position> destinationList;
             Position destination = PostPriority[0];
             Direction dir = CW;//0 is CW, 1 is CCW
             Position prevPosition;
-            Position currentPosition = startingPosition;
+            Position currentPosition;
             Position nextPos;
             int nextAngle;
             bool goingToGauntlet;
@@ -72,32 +73,6 @@ namespace StateLoops{
             //enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
             //enum dir {CCW, CW};
             
-            //int nextCenterAngle[currentPos][centerDest][dir]
-            /*int turnAngleCenter[8][8][2]
-                {{-110},{NULL}, {-90},{5},{5},{5}, {90},{-10}, {-5},{-5}},           //LI
-                {20,NULL, NULL,-90,5,5, -110,-110, 5,NULL},                          //P1
-                {-5,-5, 90,NULL,-90,-5, -5,-5, -5,-5},                               //P2
-                {-5,-5, -5,90,NULL,-90, NULL,NULL, 5,5},                             //P3
-                {5,5, -5,-5,90,NULL, 110,110, NULL,-30},                             //P4
-                {-10,NULL, 120,120,NULL,NULL, NULL,90, -5,-5},                       //P5 
-                {-5,-5, -5,NULL,NULL,-120, -90,NULL, NULL,10},                       //P6
-                {5,5, -5,-5,-5,90, 5,-90, NULL,120},                                 //RI*/
-
-            //nextTurnAngle[prevPosition][destination][dir];     
-            /*int nextTurnAngleOld[12][10] = 
-                {{{5},{-70}, {NULL},{NULL},{NULL},{NULL}, {NULL},{NULL}, {NULL},{NULL}}, //LeftStart
-                {{NULL},{NULL}, {-30},{-30},{-30},{-30}, {15},{15}, {NULL},{NULL}},      //LeftGauntlet
-                {-110,NULL, -90,5,5,5, 90,-10, -5,-5},               //LeftIntersection
-                {20,NULL, NULL,-90,5,5, -110,-110, 5,NULL},          //Post1
-                {-5,-5, 90,NULL,-90,-5, -5,-5, -5,-5},               //Post2
-                {-5,-5, -5,90,NULL,-90, NULL,NULL, 5,5},             //Post3
-                {5,5, -5,-5,90,NULL, 110,110, NULL,-30},             //Post4
-                {-10,NULL, 120,120,NULL,NULL, NULL,90, -5,-5},       //Post5 
-                {-5,-5, -5,NULL,NULL,-120, -90,NULL, NULL,10},       //Post6
-                {5,5, -5,-5,-5,90, 5,-90, NULL,120},                 //RightIntersection
-                {NULL,NULL, 45,45,45,45, -20,-20, NULL,NULL},        //RightGauntlet
-                {NULL,NULL, NULL,NULL,NULL,NULL, NULL,NULL, 60,-5}}; //RightStart*/
-
             //!!WARNING!! DO NOT USE WHEN nextPos == destination && destination is a post. In this case the turn angle will be found automatically. 
             //  ^^This case is not covered by this array and may return an incorrect value
             //nextTurnAngle[currentPosition][dir][nextPos == destination]   
