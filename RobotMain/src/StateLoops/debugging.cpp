@@ -29,7 +29,7 @@ void Debugging::loop(){
     display.print("K_p: ");
     display.println(float(analogRead(CONTROL_POT_1))/float(200.0));
     display.print("K_d: ");
-    display.println(float(analogRead(CONTROL_POT_2))/float(50.0));
+    display.println(float(analogRead(CONTROL_POT_2))/float(10.0));
 
     display.print(HI->QRD_Vals[0]);
     display.print(" ");
@@ -47,6 +47,23 @@ void Debugging::loop(){
     display.print(" ");
     display.print(HI->QRD_Vals[7]);
     display.println(" ");
+
+    // display.print(HI->QRD_RAW[0]);
+    // display.print(" ");
+    // display.print(HI->QRD_RAW[1]);
+    // display.print(" ");
+    // display.print(HI->QRD_RAW[2]);
+    // display.print(" ");
+    // display.print(HI->QRD_RAW[3]);
+    // display.println(" ");
+    // display.print(HI->QRD_RAW[4]);
+    // display.print(" ");
+    // display.print(HI->QRD_RAW[5]);
+    // display.print(" ");
+    // display.print(HI->QRD_RAW[6]);
+    // display.print(" ");
+    // display.print(HI->QRD_RAW[7]);
+    // display.println(" ");
 
     float positionVector[] = { -30.5, -18, -8.4, -1.75, 1.75, 8.4, 18, 30.5 };
     float sum = 0;

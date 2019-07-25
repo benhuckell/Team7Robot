@@ -33,14 +33,14 @@ HardwareInterface::HardwareInterface(){
    attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 100, 61, 674);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 90, 54, 321);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 65, 52, 258);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 65, 51, 179);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 65, 51, 305);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 70, 52, 243);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 70, 54, 192);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 100, 61, 515);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 350, 60, 728);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 53, 325);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 170, 50, 247);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 135, 50, 177);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 180, 51, 278);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 165, 51, 239);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 130, 53, 173);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 300, 61, 510);
 
    HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 
@@ -155,11 +155,11 @@ void HardwareInterface::turn_time(int target, int timeout, float kdrift, float k
        float motor_power_1 =  k_p * error;
 
        //motor cap: can be generally inplemente
-       if (motor_power_1 > 80){
-           motor_power_1 = 80;
+       if (motor_power_1 > 60){
+           motor_power_1 = 60;
        }
-       else if (motor_power_1 < -80 ){
-               motor_power_1 = -80;
+       else if (motor_power_1 < -60 ){
+               motor_power_1 = -60;
        }
        float motor_power_2_L = (-motor_power_1) + (kdrift* float(drift_error));
        float motor_power_2_R = (motor_power_1) + (kdrift* float(drift_error));
@@ -170,7 +170,7 @@ void HardwareInterface::turn_time(int target, int timeout, float kdrift, float k
        //Serial.println("speedL: " + String(motor_power_2_L) + " | speedR " + String(motor_power_2_R));
        //Serial.println(" ");
        LMotor->setSpeed(motor_power_2_L);
-       RMotor->setSpeed(motor_power_2_R);
+       RMotor->setSpeed(motor_power_2_R/1.05);
 
        LMotor->update();
        RMotor->update();
@@ -181,20 +181,12 @@ void HardwareInterface::turn_time(int target, int timeout, float kdrift, float k
 
    //brake power
 
-      
-   int direction = 0;
-   if(target > 0){ direction = 1; } //left
-   else{ direction = -1; }  //right
-  
-   LMotor->setSpeed(direction*40);
-   RMotor->setSpeed(-direction* 40);
-   LMotor->update();
-   RMotor->update();
-   delay(100);
+    
    LMotor->setSpeed(0);
    RMotor->setSpeed(0);
    LMotor->update();
    RMotor->update();
+    delay(100);
 
 }
 
@@ -235,13 +227,13 @@ void HardwareInterface::turn_single_backwards(int target, int timeout, float kdr
 
        }
        else{
-           //right turn, R motor moves backwards
+           //left turn, L motor moves backwards
            tarR = 0;
            errorR = tarR - R_tics;
            tarL = abs(target);
            errorL = tarL + L_tics; //postive going to zero
            motor_power_L =  -k_p * errorL;
-           motor_power_R =  k_p * errorR;
+           motor_power_R =  -k_p * errorR;
        }
         //Serial.println("Drift error: " + String(drift_error));
 
@@ -263,22 +255,91 @@ void HardwareInterface::turn_single_backwards(int target, int timeout, float kdr
 
    //brake power
 
-      
-   if(target > 0){ 
-       LMotor->setSpeed(0);
-       RMotor->setSpeed(40);
-   } //left
-   else{
-       LMotor->setSpeed(40);
-       RMotor->setSpeed(0); }  //right
-  
-   LMotor->update();
-   RMotor->update();
-   delay(100);
    LMotor->setSpeed(0);
    RMotor->setSpeed(0);
    LMotor->update();
    RMotor->update();
+   delay(100);
 
 }
+
+
+
+void HardwareInterface::turn_single(int target, int motor, int dir, int timeout, float k_p){
+
+    //motor = 1 is left motor
+    //motor = -1 is right motor
+
+    //dir = 1 is forward
+    //dir = -1 is backwards
+
+    //f
+
+   int L_tics_start = LEncoder->getCount();
+   int R_tics_start = REncoder->getCount();
+
+   int start_time = millis();
+   int net_time = 0;
+   //Serial.print("loop entered \n");
+   while(net_time < timeout){
+
+       net_time = millis() - start_time;
+       int L_tics = LEncoder->getCount() - L_tics_start;
+       int R_tics = REncoder->getCount() - R_tics_start;
+       Serial.println("Rtic: " + String(R_tics) + "| Ltics : " + String(L_tics));
+      
+       //when negitive, robot is turning too much to left
+       //Serial.println("Drift error: " + String(drift_error));
+       int errorL = 0;
+       int errorR = 0;
+       float motor_power_L = 0.0;
+       float motor_power_R = 0.0;
+       
+       if(motor == 1){
+           //left motor
+            errorL = (dir*target) - L_tics;
+            errorR = 0;
+       }
+       else{
+           //rght motor
+           errorL = 0;
+           errorR = (dir*target) - R_tics;
+       }
+        //Serial.println("Drift error: " + String(drift_error));
+        motor_power_L = errorL*k_p;
+        motor_power_R = errorR*k_p;
+
+        //cap motor power
+        if(motor_power_L > 60){
+            motor_power_L = 60;
+        }
+
+        if(motor_power_R > 60){
+            motor_power_R = 60;
+        }
+       //output motor power
+      
+       Serial.println("speedR: " + String(motor_power_R) + " | speedL " + String(motor_power_L));
+       Serial.println("errorR: " + String(errorR) + " | error: " + String(errorL));
+       Serial.println(" ");
+       LMotor->setSpeed(motor_power_L);
+       RMotor->setSpeed(motor_power_R);
+
+       LMotor->update();
+       RMotor->update();
+
+
+   }
+    //Serial.print("loop exit \n");
+
+   //brake power
+
+   LMotor->setSpeed(0);
+   RMotor->setSpeed(0);
+   LMotor->update();
+   RMotor->update();
+   delay(100);
+
+}
+
 

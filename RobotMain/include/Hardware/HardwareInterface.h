@@ -30,7 +30,7 @@
 #define RENCODER_1 PA12 //switched
 #define RENCODER_2 PA11
 
-#define LENCODER_DIRECTION 1
+#define LENCODER_DIRECTION -1
 #define RENCODER_DIRECTION -1
 
 #define CLAW_SERVO PA_10
@@ -75,8 +75,9 @@ class HardwareInterface {
      bool robotWasBumped();
      bool robotHitPost();
 
-     void turn_time(int target, int timeout = 1500, float kdrift = 0.5, float k_p = 0.5);
-     void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0.5, float k_p = 0.5);
+     void turn_time(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
+     void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
+     void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);
   private:
      HardwareInterface();
      HardwareInterface(const HardwareInterface&);

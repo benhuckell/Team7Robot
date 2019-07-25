@@ -69,11 +69,14 @@ void setup() {
         MainState::instance()->setState(debugging);
       }
       else if(digitalRead(TOGGLE_SWITCH) == 0 && MainState::instance()->getState()==debugging){
+        lineFollow.startingPosition = lineFollow.LeftStart;
+        lineFollow.setup();
         display.clearDisplay();
         display.setCursor(0,0);
         display.println("Line Following");
         display.display();
         MainState::instance()->setState(lineFollowing);
+      
       }
 
       //MainState::i()->getState().loop();
