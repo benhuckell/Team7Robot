@@ -20,15 +20,10 @@ namespace StateLoops{
             float getLinePositionError(bool followRightEdge);
             float getWeightedError();
             void findIR();
-            void findGauntlet();
             void followTape(int robotSpeed, bool followRightEdge);
             void setMotorSpeeds();
             bool detectLine();
             bool detectJunction();
-            bool detectIntersection();
-            void intersectionTurn();
-            void turnTowardsPost();
-            void turnXDegrees(int angle);
             void turnOnLine();
             void stopMoving();
 
@@ -73,7 +68,6 @@ namespace StateLoops{
             // GUIDE //
             //enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
             //enum dir {CCW, CW};
-            
             
             //!!WARNING!! DO NOT USE WHEN nextPos == destination && destination is a post. In this case the turn angle will be found automatically. 
             //  ^^This case is not covered by this array and may return an incorrect value

@@ -273,8 +273,6 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
     //dir = 1 is forward
     //dir = -1 is backwards
 
-    //f
-
    int L_tics_start = LEncoder->getCount();
    int R_tics_start = REncoder->getCount();
 
@@ -342,4 +340,76 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
 
 }
 
+void HardwareInterface::moveIntake() {
+    //set the height that the winch raises the entire assembly to
+    //need to use PID to get to the correct height
+    int tick_num=WinchEncoder->getCount();
+    int tickError=winchTickTarget-tick_num;
 
+    float WinchSpeed=0;
+    WinchSpeed = Winch_P_gain*tickError;
+
+    //to set what happens at edge cases
+    if(WinchSpeed>100){
+        WinchSpeed=100;
+    }
+    if(WinchSpeed<-100){
+        WinchSpeed=-100;
+    }
+
+    WinchMotor->setSpeed(WinchSpeed);
+    WinchMotor->update();
+}
+
+bool HardwareInterface::checkForRock(){
+    if(!(clawCurrentAngle==clawFullyOpen)){
+        clawMotor->clawSetPos(clawFullyOpen);
+        clawCurrentAngle=clawFullyOpen;
+        delay(1000);
+    }
+
+    clawMotor->clawSetPos(clawWithRock);
+    delay(2000);
+
+    if(digitalRead(LIM_SWITCH_PIN==LOW)){
+        hasRock==false;
+    } else{
+        hasRock==true;
+    }
+    clawCurrentAngle=clawWithRock;
+    
+        
+}
+
+//return true if any sensors detect black
+//return false otherwise
+bool HardwareInterface::detectLine(){
+    for(int i = 0; i < NUM_QRD_SENSORS; i ++){
+        if (QRD_Vals[i] > 0.6){
+            return true;
+        }
+    }
+    return false;
+}
+
+void HardwareInterface::turnOnLine(){
+    //start turning
+    RMotor->setSpeed(-50);
+    LMotor->setSpeed(50);
+    RMotor->update();
+    LMotor->update();
+
+    while(detectLine()){}
+    while(!detectLine()){}
+    
+    //apply brakes
+    RMotor->setSpeed(50);
+    LMotor->setSpeed(-50);
+    RMotor->update();
+    LMotor->update();
+    delay(150);
+    RMotor->setSpeed(0);
+    LMotor->setSpeed(0);
+    RMotor->update();
+    LMotor->update();
+}

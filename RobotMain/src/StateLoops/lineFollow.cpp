@@ -249,30 +249,6 @@ void LineFollow::findIR() {
 
 }
 
-void LineFollow::findGauntlet() {
-
-}
-
-//return true if any sensors detect black
-//return false otherwise
-bool LineFollow::detectLine(){
-    for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.6){
-            return true;
-        }
-    }
-    return false;
-}
-
-//turn at an intersection
-void LineFollow::intersectionTurn(){
-    if(dir == CW){
-        turnXDegrees(20);
-    }else{
-        turnXDegrees(-20);
-    }
-}
-
 bool LineFollow::detectJunction(){
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
@@ -286,14 +262,6 @@ bool LineFollow::detectJunction(){
     return false;
 }
 
-void LineFollow::turnTowardsPost() {
-    if(dir){
-        turnXDegrees(-90);
-    }else{
-        turnXDegrees(90);
-    }
-}
-
 void LineFollow::stopMoving(){
     HI->RMotor->setSpeed(-35);
     HI->LMotor->setSpeed(-35);
@@ -305,17 +273,3 @@ void LineFollow::stopMoving(){
     delay(150);
 }
 
-void LineFollow::turnOnLine(){
-    HI->RMotor->setSpeed(-50);
-    HI->LMotor->setSpeed(50);
-    HI->RMotor->update();
-    HI->LMotor->update();
-
-    while(detectLine()){}
-    while(!detectLine()){}
-    
-    HI->RMotor->setSpeed(0);
-    HI->LMotor->setSpeed(0);
-    HI->RMotor->update();
-    HI->LMotor->update();
-}

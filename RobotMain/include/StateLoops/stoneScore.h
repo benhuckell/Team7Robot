@@ -1,17 +1,21 @@
 #pragma once
 
 #include "StateLoops/State.h"
+#include "Hardware/HardwareInterface.h"
 
 namespace StateLoops {
     class StoneScore : public State {
         public:
-            static void loop();
+            StoneScore();
+            void loop();
+            enum HoleNumbers {holeOne,holeTwo,holeThree,holeFour} ;
         private:
-            enum stoneScoreStates{} stoneScoreState;
-            enum holeNumbers{holeOne,holeTwo,holeThree,holeFour,holeFive} holeNumber;
-            static void goToGauntlet();
-            static void findHole(enum holeNumbers);
-            static void placeStone();
-            static void returnToTape();
+            void goToHole(enum HoleNumbers);
+            void placeStone();
+            void returnToTape();
+            
+            HardwareInterface* HI;
+
+            int holeTurnAngles[4] = {-20, -10, 10, 20};
     };
 }

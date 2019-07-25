@@ -15,3 +15,7 @@ void ServoMotor::update(){
         pwm_start(motor_port, 100000, 500, closedAngle, 0);
     }
 }
+
+void ServoMotor::clawSetPos(int clawAngle) {
+    pwm_start(motor_port, 100000, 500, clawAngle, 0);
+}
