@@ -13,6 +13,11 @@ void REncoderInterrupt(){
     HardwareInterface::i()->REncoder->ISR();
 }
 
+void WinchEncoderInterrupt(){
+    //Serial.print(" InterruptingR... ");
+    HardwareInterface::i()->WinchEncoder->ISR();
+}
+
 HardwareInterface::HardwareInterface(){
     Serial.begin(9600);
 
@@ -26,10 +31,16 @@ HardwareInterface::HardwareInterface(){
     HardwareInterface::LEncoder = new Encoder(LENCODER_1, LENCODER_2);
     HardwareInterface::REncoder = new Encoder(RENCODER_1, RENCODER_2);
 
+    HardwareInterface::WinchEncoder = new Encoder(LENCODER_3, RENCODER_3);
+
     pinMode(LENCODER_1,INPUT_PULLUP);
     pinMode(LENCODER_2,INPUT_PULLUP);
     pinMode(RENCODER_1,INPUT_PULLUP);
     pinMode(RENCODER_2,INPUT_PULLUP);
+    
+    pinMode(LENCODER_3,INPUT_PULLUP);
+    pinMode(RENCODER_3,INPUT_PULLUP);
+
     attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
     attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
 
@@ -92,7 +103,7 @@ void HardwareInterface::update(){
     //update Motor outputs
     LMotor->update();
     RMotor->update();
-    //WinchMotor->update();
+    WinchMotor->update();
 
     //Encoder values are updated internally via another interrupt
     
@@ -101,9 +112,12 @@ void HardwareInterface::update(){
 
     LEncoder->update();
     REncoder->update();
+    WinchEncoder->update();
     
     //Update servo output
-    //clawMotor->update();
+
+    //P controller update
+    moveIntake();
 }
 
 bool HardwareInterface::robotWasBumped(){
@@ -128,4 +142,45 @@ bool HardwareInterface::robotHitPost(){
         return true;
     } 
     return false;
+}
+
+void HardwareInterface::moveIntake() {
+    //set the height that the winch raises the entire assembly to
+    //need to use PID to get to the correct height
+    int tick_num=WinchEncoder->getCount();
+    int tickError=Winch_tick_target-tick_num;
+
+    float WinchSpeed=0;
+    WinchSpeed = Winch_P_gain*tickError;
+
+    //to set what happens at edge cases
+    if(WinchSpeed>100){
+        WinchSpeed=100;
+    }
+    if(WinchSpeed<-100){
+        WinchSpeed=-100;
+    }
+
+    WinchMotor->setSpeed(WinchSpeed);
+    WinchMotor->update();
+}
+
+bool HardwareInterface::checkForRock(){
+    if(!(clawCurrentAngle==clawFullyOpen)){
+        clawMotor->clawSetPos(clawFullyOpen);
+        clawCurrentAngle=clawFullyOpen;
+        delay(1000);
+    }
+
+    clawMotor->clawSetPos(clawWithRock);
+    delay(2000);
+
+    if(digitalRead(LIM_SWIT_PIN==LOW)){
+        rock==false;
+    } else{
+        rock==true;
+    }
+    clawCurrentAngle=clawWithRock;
+    
+        
 }

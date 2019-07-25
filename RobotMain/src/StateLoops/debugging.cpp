@@ -10,7 +10,21 @@ Debugging::Debugging(){
 }
 
 void Debugging::loop(){
-    HI->LMotor->setSpeed(0);
+    /*HI->Winch_tick_target=20;
+    HI->moveIntake();   
+    delay(2000);
+
+     HI->Winch_tick_target=0;
+     HI->moveIntake();
+     delay(2000); */
+
+     HI->clawMotor->clawSetPos(200);
+      delay(2000);
+      HI->clawMotor->clawSetPos(300);
+      delay(2000);
+    
+
+  /*   HI->LMotor->setSpeed(0);
     HI->RMotor->setSpeed(0);
 
     pinMode(PUSH_BUTTON_1, INPUT_PULLDOWN);
@@ -71,5 +85,6 @@ void Debugging::loop(){
     display.display();
 
     return;
+    */
 }
 

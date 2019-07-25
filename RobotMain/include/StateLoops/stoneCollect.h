@@ -1,10 +1,12 @@
 #pragma once
 
 #include "StateLoops/State.h"
+#include "Hardware/HardwareInterface.h"
 
 namespace StateLoops {
     class StoneCollect : public State {
         public:
+            StoneCollect();
             void loop();
         private:
             enum stoneCollectStates{} stoneCollectState;
@@ -13,5 +15,7 @@ namespace StateLoops {
             void raiseIntake(enum postNumbers);
             void intakeStone();
             void returnToTape();
+            HardwareInterface* HI;
+            PinName limitSwitchPin;
     };
 }

@@ -59,22 +59,23 @@ void setup() {
   display.println("Working");
   display.display();
 
-  MainState::instance()->setState(lineFollowing);
+ // MainState::instance()->setState(lineFollowing);
   // Serial.print(" state: ");
   // Serial.print(MainState::instance()->getState());
   int count = 0;
     for(;;) {
 
-      if(digitalRead(TOGGLE_SWITCH)){
+     // if(digitalRead(TOGGLE_SWITCH)){
         MainState::instance()->setState(debugging);
-      }
+        
+     /*  }
       else if(digitalRead(TOGGLE_SWITCH) == 0 && MainState::instance()->getState()==debugging){
         display.clearDisplay();
         display.setCursor(0,0);
         display.println("Line Following");
         display.display();
         MainState::instance()->setState(lineFollowing);
-      }
+      }*/
 
       //MainState::i()->getState().loop();
       switch(MainState::instance()->getState())
