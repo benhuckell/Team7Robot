@@ -30,11 +30,16 @@
 #define RENCODER_1 PA12 //switched
 #define RENCODER_2 PA11
 
+#define WINCH_ENC_1 PA5
+#define WINCH_ENC_2 PA4
+
 #define LENCODER_DIRECTION -1
 #define RENCODER_DIRECTION -1
+#define WINCH_ENCODER_DIRECTION -1
 
 #define LIM_SWITCH_PIN PB11
 #define CLAW_SERVO PA_10
+#define LIM_SWITCH_PIN PB11
 
 #define QRD_IN PA_6 //QRD read port
 
@@ -88,6 +93,7 @@ class HardwareInterface {
      void turn_time(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
      void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
      void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);
+     
   private:
      HardwareInterface();
      HardwareInterface(const HardwareInterface&);
@@ -108,11 +114,7 @@ class HardwareInterface {
       float Winch_P_gain=1;
       
       //can hard code these values
-      int clawFullyClosed;
       int clawFullyOpen;
-      int clawWithRock;
-
-      int clawCurrentAngle=clawFullyOpen;
   };
 
 #endif

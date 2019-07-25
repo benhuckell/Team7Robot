@@ -13,6 +13,10 @@ void REncoderInterrupt(){
    HardwareInterface::i()->REncoder->ISR();
 }
 
+void WinchEncoderInterrupt(){
+    HardwareInterface::i()->WinchEncoder->ISR();
+}
+
 HardwareInterface::HardwareInterface(){
    Serial.begin(9600);
 
@@ -26,12 +30,19 @@ HardwareInterface::HardwareInterface(){
    HardwareInterface::LEncoder = new Encoder(LENCODER_1, LENCODER_2, LENCODER_DIRECTION);
    HardwareInterface::REncoder = new Encoder(RENCODER_1, RENCODER_2, RENCODER_DIRECTION);
 
+   HardwareInterface::WinchEncoder = new Encoder(WINCH_ENC_1, WINCH_ENC_2, WINCH_ENCODER_DIRECTION);
+
    pinMode(LENCODER_1,INPUT_PULLUP);
    pinMode(LENCODER_2,INPUT_PULLUP);
    pinMode(RENCODER_1,INPUT_PULLUP);
    pinMode(RENCODER_2,INPUT_PULLUP);
+
+    pinMode(WINCH_ENC_1,INPUT_PULLUP);
+    pinMode(WINCH_ENC_2,INPUT_PULLUP);
+
    attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
+   attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
 
    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 350, 60, 728);
    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 53, 325);
