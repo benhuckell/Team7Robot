@@ -1,18 +1,30 @@
 #include "Hardware/Encoder.h"
     
-Encoder::Encoder(int encoder_port_1, int encoder_port_2) {
+Encoder::Encoder(int encoder_port_1, int encoder_port_2, int encoder_orientation_local) {
     Encoder::encoder_port_1 = encoder_port_1;
     Encoder::encoder_port_2 = encoder_port_2;
     lastTime = millis();
     count = 0;
     lastCount = 0;
     speed = 0;
+    encoder_orientation = encoder_orientation_local;
+    
 }
 
 //gets called on every rising edge of the encoder output
 void Encoder::ISR(){
-    count++;
     dir = digitalRead(encoder_port_2);
+    //Serial.print("encoder Port1: "+ String (encoder_port_1) + " | ");
+    //Serial.println("encoder Port2: "+ String (encoder_port_2));
+    //Serial.println("dir: "+ String( dir));
+    if(dir > 0){
+        count = count + (encoder_orientation); // counts 1 up (allegedly)
+        //Serial.println("+1 : " + String(count));
+    }
+    else{
+        count = count - (encoder_orientation); // counts 1 down (allegedly)
+        //Serial.println("-1 " + String(count));
+    }
 }
 
 

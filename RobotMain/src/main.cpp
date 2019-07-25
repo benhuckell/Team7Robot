@@ -22,9 +22,9 @@ Adafruit_SSD1306 display(-1);
 // }
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   delay(3000);
-
+  Serial.println("Starting...");
 
     /* HardwareTimer Timer2 = HardwareTimer()
 
@@ -41,9 +41,20 @@ void setup() {
     //attachInterrupt(digitalPinToInterrupt(INTERRUPTPIN),interruptRoutine,RISING);
 
     //Define main states robot can have
-    
+
+
+  
+  //   display.clearDisplay();
+  //   display.setCursor(0,0);
+  // display.println("LineFollownpre");
+  // display.display();
   //Declare State Classes
   LineFollow lineFollow;
+  // Serial.println("Out of constructor");
+  // display.clearDisplay();
+  //   display.setCursor(0,0);
+  // display.println("LineFollownpost");
+  // display.display();
   AvengerCollect avengerCollect;
   AvengerScore avengerScore;
   StoneCollect stoneCollect;
@@ -56,8 +67,10 @@ void setup() {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
-  display.println("Working");
+  display.println("Working2");
   display.display();
+
+
 
   MainState::instance()->setState(lineFollowing);
   // Serial.print(" state: ");
@@ -74,6 +87,7 @@ void setup() {
         display.println("Line Following");
         display.display();
         MainState::instance()->setState(lineFollowing);
+        //lineFollow.startingPosition = lineFollow.LeftStart;
       }
 
       //MainState::i()->getState().loop();

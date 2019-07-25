@@ -5,37 +5,140 @@ using namespace StateLoops;
 
 enum lineFollowStates{online,offline} lineFollowState;
 
-LineFollow::LineFollow(){
+LineFollow::LineFollow() : 
+    startingPosition(LeftStart),
+    ticksPerAngle(0.25),
+    destination(PostPriority[0]),
+    currentPosition(LeftStart){
+
     LineFollow::HI = HardwareInterface::i();
+        Serial.println("HI Done");
+
+
+    display.clearDisplay();
+    display.setCursor(0,0);
+  display.println("LineFollowHWI");
+  display.display();
+
+    //Calculate paths
+    if(startingPosition == LeftGauntlet){
+        for(int i = 0; i < 6; i++){
+            destinationList.push(PostPriority[i]);
+            destinationList.push(LeftIntersection);
+            destinationList.push(LeftGauntlet);
+        }
+    }
+    else{
+        for(int i = 0; i < 6; i++){
+            destinationList.push(PostPriority[i]);
+            destinationList.push(RightIntersection);
+            destinationList.push(RightGauntlet);
+        }
+    }
+    destination = destinationList.front();
+
+    if(destination <= Post4 && destination >= Post1){
+        if(startingPosition == LeftGauntlet){
+            dir =  CW;
+        }else{
+            dir = CCW;
+        }
+    }else if(destination == Post5 || destination == Post6){
+        if(startingPosition == LeftGauntlet){
+            dir = CCW;
+        }else{
+            dir = CW;
+        }
+    }
+
+    nextPos = nextPosition[currentPosition][dir][(int)currentPosition == destination];
+    nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
+    Serial.println("Completed constructor");
 }
+
 
 void LineFollow::loop(){
     int robotSpeed = 60;
     bool postOnRight = true; //true for right false for left
     if(detectJunction()){
-        if(getWeightedError() >= 0){
-            postOnRight = true;
-        }
-        else if(getWeightedError() < 0){
-            postOnRight = false;
-        }
-        
-        int time = millis();
-        while(millis()-time < 150){
-            followTape(robotSpeed,true);
-            HI->update();
-        }
+        //update position variables
+        prevPosition = currentPosition;
+        currentPosition = nextPos;
+        int angle = nextAngle;
+        bool destinationReached = (currentPosition == destination);
+        postDetected = (currentPosition >= Post1 && currentPosition <= Post6);
+        nextPos = nextPosition[currentPosition][dir][destinationReached];
+        nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
 
-        stopMoving();
+        //condition to go to post
+        if(postDetected && destinationReached){
+            //find which side the post is on
+            if(getWeightedError() >= 0){
+                postOnRight = true;
+            }else if(getWeightedError() < 0){
+                postOnRight = false;
+            }
+            //drive forwards slightly
+            int time = millis();
+            while(millis()-time < 150){
+                followTape(robotSpeed,true);
+                HI->update();
+            }
+            //brake and turn
+            stopMoving();
+            if(postOnRight){
+                HI->turn_single_backwards(150,1000);
+                //One wheel turn 90 (positive to left, negative to right)
+                // HI->turn_single_backwards(150,1000)
+                delay(3000);
+            }else{
+                HI->turn_single_backwards(-150,1000);
+                delay(3000);
+            }
 
-        if(postOnRight){
-            turnXDegrees(90);
-            delay(3000);
-        }
+            //drive to post
+            while(!HI->robotHitPost()){
+                HI->LMotor->setSpeed(50);
+                HI->RMotor->setSpeed(50);
+                HI->LMotor->update();
+                HI->RMotor->update();
+            }
+            stopMoving();
+            MainState::instance()->setState(stoneCollecting);
+        } 
         else{
-            turnXDegrees(-90);
-            delay(3000);
+            //turn at intersection
+            stopMoving();
+            HI->turn_time(angle*1.7,angle*12);
+            delay(2000);
         }
+
+        if(destinationReached){
+            //update destination
+            destinationList.pop();
+            destination = destinationList.front();
+            //update dir
+            if(destination <= Post4 || destination >= Post1){
+                if(startingPosition == LeftGauntlet){
+                    dir =  CW;
+                }else{
+                    dir = CCW;
+                }
+            }
+            else if(destination == Post5 || destination == Post6){
+                if(startingPosition == LeftGauntlet){
+                    dir = CCW;
+                }
+                else{
+                    dir = CW;
+                }
+            }
+        }
+    }
+    else if(HI->robotWasBumped()){
+        //turn around
+
+        //update PostPriority list
     }
     else { 
         followTape(robotSpeed, true);
@@ -121,9 +224,6 @@ float LineFollow::getLinePositionError(bool followRightEdge)
         }
         edgeXPos = leftEdgeXVal;
     }
-    if((rightEdgeXVal - leftEdgeXVal) > POST_TAPE_WIDTH){
-        postDetected = true;
-    }
     return edgeXPos;
 }
 
@@ -182,15 +282,8 @@ void LineFollow::findIR() {
 
 }
 
-void LineFollow::findPost() {
-
-}
 
 void LineFollow::findGauntlet() {
-
-}
-
-void LineFollow::findLine() {
 
 }
 
@@ -214,7 +307,7 @@ void LineFollow::turnXDegrees(int angle){
     bool LStopped = false;
     bool RStopped = false;
     if(angle > 0){
-        HI->LMotor->setSpeed(0);
+        HI->LMotor->setSpeed(40);
         HI->RMotor->setSpeed(-70/straightLineCorrectionFactor);
         HI->update();
     }else if(angle < 0){

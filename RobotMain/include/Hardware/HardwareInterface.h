@@ -27,61 +27,66 @@
 
 #define LENCODER_1 PB15 //encoder inputs
 #define LENCODER_2 PA8
-#define RENCODER_1 PA11
-#define RENCODER_2 PA12
+#define RENCODER_1 PA12 //switched
+#define RENCODER_2 PA11
+
+#define LENCODER_DIRECTION 1
+#define RENCODER_DIRECTION -1
 
 #define CLAW_SERVO PA_10
 
 #define QRD_IN PA_6 //QRD read port
 
 class HardwareInterface {
-   public:
-      void update();
+  public:
+     void update();
 
-      static HardwareInterface* i();      
-      static const int NUM_QRD_SENSORS = 8; //number of light sensors
+     static HardwareInterface* i();     
+     static const int NUM_QRD_SENSORS = 8; //number of light sensors
 
-      DriveMotor* LMotor;
-      DriveMotor* RMotor;
+     DriveMotor* LMotor;
+     DriveMotor* RMotor;
 
-      DriveMotor* WinchMotor;
+     DriveMotor* WinchMotor;
 
-      Encoder* LEncoder;
-      Encoder* REncoder;
+     Encoder* LEncoder;
+     Encoder* REncoder;
 
-      QRD* qrd0;
-      QRD* qrd1;
-      QRD* qrd2;
-      QRD* qrd3;
-      QRD* qrd4;
-      QRD* qrd5;
-      QRD* qrd6;
-      QRD* qrd7;
+     QRD* qrd0;
+     QRD* qrd1;
+     QRD* qrd2;
+     QRD* qrd3;
+     QRD* qrd4;
+     QRD* qrd5;
+     QRD* qrd6;
+     QRD* qrd7;
 
-      ServoMotor* clawMotor;
+     ServoMotor* clawMotor;
 
-      QRD* QRD_Array[NUM_QRD_SENSORS];
-      float QRD_Vals[NUM_QRD_SENSORS];
-      int QRD_RAW[NUM_QRD_SENSORS];
-      int QRD_Thresh[NUM_QRD_SENSORS];
-      int QRD_Max[NUM_QRD_SENSORS];
-      int QRD_Min[NUM_QRD_SENSORS];
+     QRD* QRD_Array[NUM_QRD_SENSORS];
+     float QRD_Vals[NUM_QRD_SENSORS];
+     int QRD_RAW[NUM_QRD_SENSORS];
+     int QRD_Thresh[NUM_QRD_SENSORS];
+     int QRD_Max[NUM_QRD_SENSORS];
+     int QRD_Min[NUM_QRD_SENSORS];
 
-      unsigned long previousMillis = 0;
-      unsigned long currentMillis = millis();
-      bool robotWasBumped();
-      bool robotHitPost();
+     unsigned long previousMillis = 0;
+     unsigned long currentMillis = 0;//millis();
+     bool robotWasBumped();
+     bool robotHitPost();
 
-   private:
-      HardwareInterface();
-      HardwareInterface(const HardwareInterface&);
-      HardwareInterface& operator=(const HardwareInterface&);
-      bool timer(unsigned int preset);
-      float lastLSpeed;
-      float lastRSpeed;
-      static HardwareInterface* myInstance;
-      const float bumpThresholdVal = 10.0;
-      const float postThresholdVal = 0.5;
-   };
+     void turn_time(int target, int timeout = 1500, float kdrift = 0.0, float k_p = 0.5);
+     void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0.0, float k_p = 0.5);
+  private:
+     HardwareInterface();
+     HardwareInterface(const HardwareInterface&);
+     HardwareInterface& operator=(const HardwareInterface&);
+     bool timer(unsigned int preset);
+     float lastLSpeed;
+     float lastRSpeed;
+     static HardwareInterface* myInstance;
+     const float bumpThresholdVal = 10.0;
+     const float postThresholdVal = 0.5;
+  };
 
 #endif
