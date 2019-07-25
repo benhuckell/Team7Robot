@@ -66,5 +66,5 @@ void StoneScore::returnToTape() {
     HI->RMotor->update();
 
     //turn to Line
-    HI->turnOnLine();
+    HI->turnOnLine(HI->dir);
 }

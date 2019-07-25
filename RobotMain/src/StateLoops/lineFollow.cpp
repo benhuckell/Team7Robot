@@ -27,20 +27,19 @@ void LineFollow::setup(){
 
     if(destination <= Post4 && destination >= Post1){
         if(startingPosition == LeftStart){
-            dir =  CW;
+            HI->dir = HI->CW;
         }else{
-            dir = CCW;
+            HI->dir = HI->CCW;
         }
     }else if(destination == Post5 || destination == Post6){
         if(startingPosition == LeftStart){
-            dir = CCW;
+            HI->dir = HI->CCW;
         }else{
-            dir = CW;
+            HI->dir = HI->CW;
         }
     }
-    Serial.print(dir);
-    nextPos = nextPosition[currentPosition][dir][currentPosition == destination];
-    nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
+    nextPos = nextPosition[currentPosition][HI->dir][currentPosition == destination];
+    nextAngle = nextTurnAngle[currentPosition][HI->dir][(int)(nextPos == destination)];
 
 }
 void LineFollow::loop(){
@@ -55,8 +54,8 @@ void LineFollow::loop(){
         int angle = nextAngle;
         //angle = 70;
         bool destinationReached = (currentPosition == destination);
-        nextPos = nextPosition[currentPosition][dir][destinationReached];
-        nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
+        nextPos = nextPosition[currentPosition][HI->dir][destinationReached];
+        nextAngle = nextTurnAngle[currentPosition][HI->dir][(int)(nextPos == destination)];
 
         //check if current junction is a post
         postDetected = (currentPosition <= Post6 && currentPosition >= Post1);
@@ -113,20 +112,20 @@ void LineFollow::loop(){
             //update dir
             if(destination <= Post4 || destination >= Post1){
                 if(startingPosition == LeftGauntlet){
-                    dir =  CW;
+                    HI->dir =  HI->CW;
                 }else{
-                    dir = CCW;
+                    HI->dir = HI->CCW;
                 }
             }else if(destination == Post5 || destination == Post6){
                 if(startingPosition == LeftGauntlet){
-                    dir = CCW;
+                     HI->dir = HI->CCW;
                 }else{
-                    dir = CW;
+                     HI->dir = HI->CW;
                 }
             }
         }
     }
-    else { 
+    else {
         followTape(robotSpeed, true);
     }
     return;

@@ -367,6 +367,12 @@ void HardwareInterface::checkForRock(){
         delay(1000);
     } else{
         stoneCollected=true;
+        //change direction towards gauntlet
+        if(dir == CW){
+            dir = CCW;
+        }else{
+            dir = CW;
+        }
     }
 }
 
@@ -381,10 +387,15 @@ bool HardwareInterface::detectLine(){
     return false;
 }
 
-void HardwareInterface::turnOnLine(){
+void HardwareInterface::turnOnLine(Direction dir){
     //start turning
-    RMotor->setSpeed(-50);
-    LMotor->setSpeed(50);
+    if(dir == CW){ 
+        RMotor->setSpeed(-50);
+        LMotor->setSpeed(50);
+    }else{
+        RMotor->setSpeed(50);
+        LMotor->setSpeed(-50);
+    }
     RMotor->update();
     LMotor->update();
 
@@ -392,8 +403,13 @@ void HardwareInterface::turnOnLine(){
     while(!detectLine()){}
     
     //apply brakes
-    RMotor->setSpeed(50);
-    LMotor->setSpeed(-50);
+    if(dir == CW){ 
+        RMotor->setSpeed(50);
+        LMotor->setSpeed(-50);
+    }else{
+        RMotor->setSpeed(-50);
+        LMotor->setSpeed(50);
+    }
     RMotor->update();
     LMotor->update();
     delay(150);

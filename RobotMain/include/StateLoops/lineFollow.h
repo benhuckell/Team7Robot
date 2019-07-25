@@ -13,7 +13,6 @@ namespace StateLoops{
             void loop();
             void setup();
             enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
-            enum Direction {CCW, CW};
             Position startingPosition;
 
         private:
@@ -54,7 +53,6 @@ namespace StateLoops{
             
             std::queue<Position> destinationList;
             Position destination;// = PostPriority[0];
-            Direction dir = CW;//0 is CW, 1 is CCW
             Position prevPosition;
             Position currentPosition;
             Position nextPos;

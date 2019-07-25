@@ -46,7 +46,9 @@ class HardwareInterface {
 
       static HardwareInterface* i();     
       static const int NUM_QRD_SENSORS = 8; //number of light sensors
-
+      enum PostNumber {Post1, Post2, Post3, Post4, Post5, Post6};         
+      enum Direction {CCW, CW};
+      
       DriveMotor* LMotor;
       DriveMotor* RMotor;
 
@@ -79,13 +81,14 @@ class HardwareInterface {
       void moveIntake(int winchTickTarget);
       void clawSetPos(int clawAngle);
       void checkForRock();
-      void turnOnLine();
+      void turnOnLine(Direction dir);
       bool detectLine();
       void turn_time(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
       void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
       void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);
       
       bool stoneCollected;
+      Direction dir;//0 is CW, 1 is CCW
      
   private:
       HardwareInterface();
