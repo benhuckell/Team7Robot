@@ -6,6 +6,7 @@ class ServoMotor {
    public:
       ServoMotor(PinName motor_port);
       void update();
+      void clawSetPos(int clawAngle);
       
    private:
       PinName motor_port;
