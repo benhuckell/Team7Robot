@@ -4,13 +4,11 @@
 
 class ServoMotor {
    public:
-      ServoMotor(PinName motor_port);
+      ServoMotor(PinName motor_port, int startingAngle);
       void update();
-      void clawSetPos(int clawAngle);
-      
+      void setPos(int angle);
+      int getPos();
    private:
       PinName motor_port;
-      bool openClaw;
-      const int openAngle = 300;
-      const int closedAngle = 200;
+      int currentAngle;
 };

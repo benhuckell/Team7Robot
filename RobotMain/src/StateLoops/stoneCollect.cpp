@@ -2,19 +2,16 @@
 #include "stateController.h"
 
 namespace StateLoops {
-    enum stoneCollectStates{} stoneCollectState;
-    enum postNumbers{postOne, postTwo, postThree} postNumber;
-    
+    StoneCollect::StoneCollect(){
+        StoneCollect::HI = HardwareInterface::i();
+    }
+
     void StoneCollect::loop(){
         display.println("Stone Collecting");
     }
 
-    void StoneCollect::goToPost(enum postNumbers) {
-        
-    }
-    
-    void StoneCollect::raiseIntake(enum postNumbers) {
-
+    void StoneCollect::raiseIntake(PostNumber postNum) {
+        HI->moveIntake(winchTickTargets[postNum]);
     }
     
     void StoneCollect::intakeStone() {
