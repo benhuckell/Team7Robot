@@ -13,6 +13,7 @@ namespace StateLoops{
             void loop();
             enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
             enum Direction {CCW, CW};
+            enum Team {THANOS, METHANOS}; //left, right
             Position startingPosition;
 
         private:
@@ -52,6 +53,7 @@ namespace StateLoops{
             const float wheelCircumference = PI*0.055; //metres
 
             //NAVIGATION
+            Team team;
             Position PostPriority[6] = {Post1, Post2, Post3, Post5, Post6, Post4};
             std::queue<Position> CurrentPath;
             Position destination = PostPriority[0];

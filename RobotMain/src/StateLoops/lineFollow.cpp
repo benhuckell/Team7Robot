@@ -7,20 +7,36 @@ LineFollow::LineFollow(){
     LineFollow::HI = HardwareInterface::i();
 
     //Calculate paths
-    if(startingPosition == LeftGauntlet){
+    if(startingPosition == LeftGauntlet){ //team == THANOS
         for(int i = 0; i < 6; i++){
             CurrentPath.push(PostPriority[i]);
             CurrentPath.push(LeftIntersection);
             CurrentPath.push(LeftGauntlet);
         }
-    }else if(startingPosition == RightGauntlet){
+    }else{ //team == METHANOS
         for(int i = 0; i < 6; i++){
             CurrentPath.push(PostPriority[i]);
             CurrentPath.push(RightIntersection);
             CurrentPath.push(RightGauntlet);
         }
-    }else{
+    }
+    destination = CurrentPath.front();
 
+    nextPos = nextPosition[currentPosition][dir][currentPosition == destination];
+    nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
+
+    if(destination <= Post4 && destination >= Post1){
+        if(startingPosition == LeftGauntlet){
+            dir =  CW;
+        }else{
+            dir = CCW;
+        }
+    }else if(destination == Post5 || destination == Post6){
+        if(startingPosition == LeftGauntlet){
+            dir = CCW;
+        }else{
+            dir = CW;
+        }
     }
 }
 
@@ -32,9 +48,12 @@ void LineFollow::loop(){
         prevPosition = currentPosition;
         currentPosition = nextPos;
         int angle = nextAngle;
-        bool destinationReached = currentPosition == destination;
+        bool destinationReached = (currentPosition == destination);
         nextPos = nextPosition[currentPosition][dir][destinationReached];
         nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
+
+        //check if current junction is a post
+        postDetected = (destination <= Post6 && destination >= Post1);
 
         //condition to go to post
         if(postDetected && destinationReached){
@@ -50,7 +69,7 @@ void LineFollow::loop(){
                 followTape(robotSpeed,true);
                 HI->update();
             }
-            //brake and turn
+            //brake and turn towards post
             stopMoving();
             if(postOnRight){
                 turnXDegrees(90);
@@ -59,17 +78,45 @@ void LineFollow::loop(){
                 turnXDegrees(-90);
                 delay(3000);
             }
+            //drive to post
+            while(!HI->robotHitPost()){
+                HI->LMotor->setSpeed(50);
+                HI->RMotor->setSpeed(50);
+                HI->LMotor->update();
+                HI->RMotor->update();
+            }
+            stopMoving();
+            MainState::instance()->setState(stoneCollecting);
         } 
         else{
-            //turn at intersection
+            //turn at junction
             turnXDegrees(angle);
             delay(3000);
         }
         if(destinationReached){
             //update destination
-            destination = CurrentPath.front();
             CurrentPath.pop();
+            destination = CurrentPath.front();
+            //update dir
+            if(destination <= Post4 || destination >= Post1){
+                if(startingPosition == LeftGauntlet){
+                    dir =  CW;
+                }else{
+                    dir = CCW;
+                }
+            }else if(destination == Post5 || destination == Post6){
+                if(startingPosition == LeftGauntlet){
+                    dir = CCW;
+                }else{
+                    dir = CW;
+                }
+            }
         }
+    }
+    else if(HI->robotWasBumped()){
+        //turn around
+
+        //update PostPriority list
     }
     else { 
         followTape(robotSpeed, true);
@@ -193,19 +240,6 @@ void LineFollow::findGauntlet() {
 
 }
 
-void LineFollow::turnOnLine(){
-    int start = millis();
-    while(!detectLine()){
-        HI->LMotor->setSpeed(20);
-        HI->RMotor->setSpeed(-20);
-        HI->LMotor->update();
-        HI->RMotor->update();
-        if(millis() - start > 3000){
-            return;
-        }
-    }
-}
-
 //+ve for CW -ve for CCW
 void LineFollow::turnXDegrees(int angle){
     int startRCount = HI->REncoder->getCount();
@@ -250,30 +284,6 @@ bool LineFollow::detectLine(){
     return false;
 }
 
-//return true if line array detects two separate lines
-//return false otherwise
-bool LineFollow::detectIntersection(){
-    int count = 0;
-    bool firstLineFound = false;
-    bool middleFound = false;
-    bool secondLineFound = false;
-    for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > HI->QRD_Thresh[i]){
-            count++;
-            firstLineFound = true;
-            if(middleFound == true){
-                secondLineFound = true;
-            }
-        }else if(firstLineFound){
-            middleFound = true;
-        }
-    }
-    if(count >= 4 && secondLineFound){//line found if we found a black then white then black sensor and at least 4 sensors were black
-        return true;
-    }
-    return false;
-}
-
 //turn at an intersection
 void LineFollow::intersectionTurn(){
     if(dir == CW){
@@ -291,12 +301,6 @@ bool LineFollow::detectJunction(){
         }
     }
     if(count >= 4){
-        if(detectIntersection()){
-            postDetected = false;
-        }
-        else{
-            postDetected = true;
-        }
         return true;
     }
     return false;
@@ -319,4 +323,19 @@ void LineFollow::stopMoving(){
     HI->LMotor->setSpeed(0);
     HI->update();
     delay(150);
+}
+
+void LineFollow::turnOnLine(){
+    HI->RMotor->setSpeed(-50);
+    HI->LMotor->setSpeed(50);
+    HI->RMotor->update();
+    HI->LMotor->update();
+
+    while(detectLine()){}
+    while(!detectLine()){}
+    
+    HI->RMotor->setSpeed(0);
+    HI->LMotor->setSpeed(0);
+    HI->RMotor->update();
+    HI->LMotor->update();
 }

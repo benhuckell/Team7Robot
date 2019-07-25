@@ -44,11 +44,11 @@ void setup() {
     for(;;) {
 
       if(digitalRead(TOGGLE_SWITCH)){
-        lineFollow.startingPosition = lineFollow.LeftGauntlet;
+        lineFollow.startingPosition = lineFollow.LeftStart;
         MainState::instance()->setState(debugging);
       }
       else if(digitalRead(TOGGLE_SWITCH) == 0 && MainState::instance()->getState()==debugging){
-        lineFollow.startingPosition = lineFollow.RightGauntlet;
+        lineFollow.startingPosition = lineFollow.RightStart;
         display.clearDisplay();
         display.setCursor(0,0);
         display.println("Line Following");
