@@ -41,7 +41,7 @@ namespace StateLoops{
             HardwareInterface* HI;
 
             //constant data
-            float P_gain = 4; // K_p
+            float P_gain = 1; // K_p
             float I_gain = 0; // K_i
             float D_gain = 16.5; // K_d
             static const int numSensors = 8;

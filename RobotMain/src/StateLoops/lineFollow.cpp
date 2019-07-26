@@ -166,7 +166,7 @@ float LineFollow::getLinePositionError(bool followRightEdge)
     int maxIndex = 0;
     float secondMaxVal = 0;
     int secondMaxIndex = 0;
-
+    Serial.print("getLine()");
     if(followRightEdge){
         for(int i = numSensors-1; i > 0; i--){
             if(HI->QRD_Vals[i] > QRD_Thresh){
@@ -241,25 +241,15 @@ float LineFollow::getLinePositionError(bool followRightEdge)
 
 
 
-    Serial.println("FULL ARRAY: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " " );
-
-    Serial.print(secondMaxIndex);
-    Serial.print(" ");
-    Serial.print(secondMaxVal);
-    Serial.print(" ");
-    Serial.print(maxIndex);
-    Serial.print(" ");
-    Serial.print(maxVal);
-    Serial.print(" ");
-    Serial.println(returnError);
-    Serial.println(" ");
-
     return returnError;
 }
 
 //runs a PID to follow the tape
 void LineFollow::followTape(int robotSpeed, bool followRightEdge){
     float error = getLinePositionError(followRightEdge);
+    Serial.println("FULL ARRAY: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " " );
+    Serial.print("error: ");
+    Serial.print(error);
 
     HI->errorHistory.push(error); // add current error to errorQueue
     if(HI->errorHistory.size() > ERROR_HISTORY_SIZE){ // keep queue size at ERROR_HISTORY_SIZE
