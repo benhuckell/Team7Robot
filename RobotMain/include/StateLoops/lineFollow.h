@@ -79,9 +79,9 @@ namespace StateLoops{
             //nextTurnAngle[currentPosition][dir][nextPos == destination]   
                  //CCW//    //CW//
             int nextTurnAngle[12][2][2] = 
-                {{{-40,0},{-40,0}},             //LeftStart
-                {{15,15},{-20,-20}},            //LeftGauntlet
-                {{-10,-110},{10,-110}},         //LeftIntersection
+                {{{-40,0},{-37,0}},             //LeftStart
+                {{-15,-15},{-7,-7}},            //LeftGauntlet
+                {{-10,-110},{10,-140}},         //LeftIntersection
                 {{-110,20},{-10,-110}},          //Post1
                 {{-10,90},{-10,-90}},           //Post2
                 {{-10,90},{10,-90}},            //Post3

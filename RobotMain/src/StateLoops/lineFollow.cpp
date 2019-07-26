@@ -71,7 +71,7 @@ void LineFollow::loop(){
             }
             //drive forwards slightly
             int time = millis();
-            while(millis()-time < 240){
+            while(millis()-time < 200){
                 followTape(robotSpeed,true);
                 HI->update();
             }
@@ -108,6 +108,7 @@ void LineFollow::loop(){
                 HI->turn_single(angle*9, 1, 1, angle*12, 1);
             } 
             else{
+                stopMoving();
                 HI->turn_single(abs(angle)*9, -1, 1, abs(angle)*12, 0.7);
             }
         }
