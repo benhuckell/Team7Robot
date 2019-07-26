@@ -77,9 +77,10 @@ namespace StateLoops{
             //!!WARNING!! DO NOT USE WHEN nextPos == destination && destination is a post. In this case the turn angle will be found automatically. 
             //  ^^This case is not covered by this array and may return an incorrect value
             //nextTurnAngle[currentPosition][dir][nextPos == destination]   
+                 //CCW//    //CW//
             int nextTurnAngle[12][2][2] = 
-                {{{-50,0},{-50,0}},             //LeftStart
-                {{15,15},{-40,-40}},            //LeftGauntlet
+                {{{-40,0},{-40,0}},             //LeftStart
+                {{15,15},{-20,-20}},            //LeftGauntlet
                 {{-10,-110},{10,-110}},         //LeftIntersection
                 {{-110,20},{-10,-110}},          //Post1
                 {{-10,90},{-10,-90}},           //Post2

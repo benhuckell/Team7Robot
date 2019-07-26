@@ -38,7 +38,7 @@
 #define LIM_SWITCH_PIN PB11
 
 #define LED_RED PB9
-#define LED_BLUE PB7
+#define LED_BLUE PB8
 
 #define QRD_IN PA_6 //QRD read port
 

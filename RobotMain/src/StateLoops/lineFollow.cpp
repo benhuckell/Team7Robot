@@ -103,11 +103,11 @@ void LineFollow::loop(){
         } 
         else{
             //turn at junction
+            stopMoving();
             if(angle>0){
                 HI->turn_single(angle*9, 1, 1, angle*12, 1);
             } 
             else{
-                digitalWrite(LED_BLUE,HIGH);
                 HI->turn_single(abs(angle)*9, -1, 1, abs(angle)*12, 0.7);
             }
         }
@@ -200,9 +200,7 @@ float LineFollow::getLinePositionError(bool followRightEdge)
 
 //runs a PID to follow the tape
 void LineFollow::followTape(int robotSpeed, bool followRightEdge){
-    nextTurnAngle[LeftGauntlet][CW][false] = analogRead(CONTROL_POT_1)/10.0;
-    nextTurnAngle[LeftGauntlet][CCW][false] = analogRead(CONTROL_POT_1)/10.0;
-    nextTurnAngle[LeftIntersection][CCW][false] = analogRead(CONTROL_POT_2)/10.0;
+
 
     float error = HI->getWeightedError();
 
@@ -260,9 +258,10 @@ void LineFollow::intersectionTurn(){
 }
 
 bool LineFollow::detectJunction(){
+    digitalWrite(LED_BLUE,HIGH);
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.75){
+        if (HI->QRD_Vals[i] > 0.65){
             count++;
         }
     }

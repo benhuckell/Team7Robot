@@ -45,14 +45,14 @@ HardwareInterface::HardwareInterface(){
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 350, 76, 756);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 60, 517);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 170, 56, 426);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 135, 55, 405);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 180, 56, 490);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 165, 58, 466);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 130, 59, 412);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 300, 74, 643);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 350, 84, 685);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 61, 518);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 170, 57, 471);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 135, 56, 402);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 180, 57, 494);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 165, 58, 467);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 130, 60, 414);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 300, 76, 632);
 
    HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 
@@ -316,11 +316,11 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
        if(motor == 1){
            //left motor
             errorL = (dir*target) - L_tics;
-            errorR = 0;
+            errorR = -20*dir;
        }
        else{
            //rght motor
-           errorL = 0;
+           errorL = -dir*20;
            errorR = (dir*target) - R_tics;
        }
         //Serial.println("Drift error: " + String(drift_error));
