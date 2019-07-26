@@ -102,8 +102,6 @@ class HardwareInterface {
      const float bumpThresholdVal = 10.0;
      const float postThresholdVal = 0.5;
 
-      const float bumpThresholdVal = 10.0;
-      const float postThresholdVal = 0.5;
       static const int POST_1_TICKS = 1;
       static const int POST_2_TICKS = 1;
       static const int POST_3_TICKS = 1;

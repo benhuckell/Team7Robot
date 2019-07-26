@@ -276,7 +276,7 @@ void LineFollow::intersectionTurn(){
 bool LineFollow::detectJunction(){
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.6){
+        if (HI->QRD_Vals[i] > 0.7){
             count++;
         }
     }
