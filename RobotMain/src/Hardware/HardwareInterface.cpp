@@ -37,21 +37,22 @@ HardwareInterface::HardwareInterface(){
    pinMode(RENCODER_1,INPUT_PULLUP);
    pinMode(RENCODER_2,INPUT_PULLUP);
 
-    pinMode(WINCH_ENC_1,INPUT_PULLUP);
-    pinMode(WINCH_ENC_2,INPUT_PULLUP);
-
+   pinMode(WINCH_ENC_1,INPUT_PULLUP);
+   pinMode(WINCH_ENC_2,INPUT_PULLUP);
+   pinMode(LED_RED, OUTPUT);
+   pinMode(LED_BLUE, OUTPUT);
    attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 350, 64, 671);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 57, 426);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 170, 54, 388);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 135, 53, 333);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 180, 54, 431);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 165, 55, 395);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 130, 55, 313);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 300, 61, 535);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 350, 76, 756);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 60, 517);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 170, 56, 426);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 135, 55, 405);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 180, 56, 490);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 165, 58, 466);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 130, 59, 412);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 300, 74, 643);
 
    HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 
@@ -152,7 +153,9 @@ void HardwareInterface::turn_time(int target, int timeout, float kdrift, float k
    int net_time = 0;
    //Serial.print("loop entered \n");
    while(net_time < timeout){
-
+       update();
+       errorHistory.pop();
+       errorHistory.push(getWeightedError());
        net_time = millis() - start_time;
        int L_tics = LEncoder->getCount() - L_tics_start;
        int R_tics = REncoder->getCount() - R_tics_start;
@@ -213,7 +216,9 @@ void HardwareInterface::turn_single_backwards(int target, int timeout, float kdr
    int net_time = 0;
    //Serial.print("loop entered \n");
    while(net_time < timeout){
-
+       update();
+       errorHistory.pop();
+       errorHistory.push(getWeightedError());
        net_time = millis() - start_time;
        int L_tics = LEncoder->getCount() - L_tics_start;
        int R_tics = REncoder->getCount() - R_tics_start;
@@ -293,7 +298,9 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
    int net_time = 0;
    //Serial.print("loop entered \n");
    while(net_time < timeout){
-
+       update();
+       errorHistory.pop();
+       errorHistory.push(getWeightedError());
        net_time = millis() - start_time;
        int L_tics = LEncoder->getCount() - L_tics_start;
        int R_tics = REncoder->getCount() - R_tics_start;
@@ -321,12 +328,12 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
         motor_power_R = errorR*k_p;
 
         //cap motor power
-        if(motor_power_L > 60){
-            motor_power_L = 60;
+        if(motor_power_L > 80){
+            motor_power_L = 80;
         }
 
-        if(motor_power_R > 60){
-            motor_power_R = 60;
+        if(motor_power_R > 80){
+            motor_power_R = 80;
         }
        //output motor power
       
@@ -374,7 +381,7 @@ void HardwareInterface::moveIntake() {
     WinchMotor->update();
 }
 
-bool HardwareInterface::checkForRock(){
+void HardwareInterface::checkForRock(){
     if(!(clawCurrentAngle==clawFullyOpen)){
         clawMotor->clawSetPos(clawFullyOpen);
         clawCurrentAngle=clawFullyOpen;
@@ -385,13 +392,33 @@ bool HardwareInterface::checkForRock(){
     delay(2000);
 
     if(digitalRead(LIM_SWITCH_PIN==LOW)){
-        hasRock==false;
+        hasRock=false;
     } else{
-        hasRock==true;
+        hasRock=true;
     }
     clawCurrentAngle=clawWithRock;
     
         
 }
 
+float HardwareInterface::getWeightedError(){
+    float sum = 0;
+    float weightedSum = 0;
+    bool onBlack = false;
+    for(int i = 0; i < NUM_QRD_SENSORS; i++){
+        sum += QRD_Vals[i];
+        weightedSum += QRD_Vals[i]*positionVector[i];
+    }
 
+    if(sum > 0.7){
+        onBlack = true;
+    }
+
+    if(onBlack){
+        return weightedSum;
+    } else if(errorHistory.back() < 0){
+        return positionVector[0];
+    } else {
+        return positionVector[NUM_QRD_SENSORS-1];
+    }
+}

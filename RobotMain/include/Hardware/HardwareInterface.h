@@ -30,15 +30,15 @@
 #define RENCODER_1 PA12 //switched
 #define RENCODER_2 PA11
 
-#define WINCH_ENC_1 PA5
-#define WINCH_ENC_2 PA4
-
 #define LENCODER_DIRECTION -1
 #define RENCODER_DIRECTION -1
 #define WINCH_ENCODER_DIRECTION -1
 
 #define CLAW_SERVO PA_10
 #define LIM_SWITCH_PIN PB11
+
+#define LED_RED PB9
+#define LED_BLUE PB7
 
 #define QRD_IN PA_6 //QRD read port
 
@@ -76,6 +76,9 @@ class HardwareInterface {
      int QRD_Max[NUM_QRD_SENSORS];
      int QRD_Min[NUM_QRD_SENSORS];
 
+     float positionVector[NUM_QRD_SENSORS] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
+     std::queue<float> errorHistory; //holds history of recorded line errors
+
      bool hasRock;
      int winchTickTarget = 0;
 
@@ -85,8 +88,8 @@ class HardwareInterface {
      bool robotHitPost();
      void moveIntake();
      void clawSetPos(int clawAngle);
-     bool checkForRock();
-
+     void checkForRock();
+     float getWeightedError();  
      void turn_time(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
      void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
      void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);

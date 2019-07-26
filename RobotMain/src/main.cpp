@@ -70,6 +70,7 @@ void setup() {
       }
       else if(digitalRead(TOGGLE_SWITCH) == 0 && MainState::instance()->getState()==debugging){
         lineFollow.startingPosition = lineFollow.LeftStart;
+        digitalWrite(LED_BLUE,LOW);
         lineFollow.setup();
         display.clearDisplay();
         display.setCursor(0,0);

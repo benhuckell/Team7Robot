@@ -38,13 +38,12 @@ namespace StateLoops{
             int RSpeed;
             int robotSpeed = 35;
             float I_sum = 0; //cummulative sum
-            std::queue<float> errorHistory; //holds history of recorded line errors
             HardwareInterface* HI;
 
             //constant data
-            float P_gain = 0; // K_p
+            float P_gain = 1.9; // K_p
             float I_gain = 0; // K_i
-            float D_gain = 0; // K_d
+            float D_gain = 16.5; // K_d
             static const int numSensors = 8;
             float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
             const float maxISum = 2; //max sum to avoid integral windup
@@ -79,8 +78,8 @@ namespace StateLoops{
             //  ^^This case is not covered by this array and may return an incorrect value
             //nextTurnAngle[currentPosition][dir][nextPos == destination]   
             int nextTurnAngle[12][2][2] = 
-                {{{-25,0},{-25,0}},             //LeftStart
-                {{15,15},{-20,-20}},            //LeftGauntlet
+                {{{-50,0},{-50,0}},             //LeftStart
+                {{15,15},{-40,-40}},            //LeftGauntlet
                 {{-10,-110},{10,-110}},         //LeftIntersection
                 {{-110,20},{-10,-110}},          //Post1
                 {{-10,90},{-10,-90}},           //Post2

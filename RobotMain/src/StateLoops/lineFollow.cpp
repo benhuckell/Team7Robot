@@ -46,9 +46,9 @@ void LineFollow::setup(){
 void LineFollow::loop(){
     //setMotorSpeeds();
     int robotSpeed = 60;
-
     bool postOnRight = true; //true for right false for left
     if(detectJunction()){
+        digitalWrite(LED_RED,HIGH);
         //update position variables
         prevPosition = currentPosition;
         currentPosition = nextPos;
@@ -64,47 +64,52 @@ void LineFollow::loop(){
         //condition to go to post
         if(postDetected && destinationReached){
             //find which side the post is on
-            if(getWeightedError() >= 0){
+            if(HI->getWeightedError() >= 0){
                 postOnRight = true;
-            }else if(getWeightedError() < 0){
+            }else if(HI->getWeightedError() < 0){
                 postOnRight = false;
             }
             //drive forwards slightly
             int time = millis();
-            while(millis()-time < 150){
+            while(millis()-time < 240){
                 followTape(robotSpeed,true);
                 HI->update();
             }
             //brake and turn towards post
             stopMoving();
             if(postOnRight){
-                HI->turn_single(400, -1, -1, 3000, 0.7);
+                HI->turn_single(240, -1, -1, 3000, 0.7);
                 delay(3000);
             }else{
-                HI->turn_single(400, 1, -1, 3000, 0.7);
+                HI->turn_single(240,1,-1,3000,1);
                 delay(3000);
             }
             //drive to post
-            while(!HI->robotHitPost()){
-                HI->LMotor->setSpeed(50);
-                HI->RMotor->setSpeed(50);
-                HI->LMotor->update();
-                HI->RMotor->update();
-            }
+            // while(!HI->robotHitPost()){
+            //     HI->LMotor->setSpeed(50);
+            //     HI->RMotor->setSpeed(50);
+            //     HI->LMotor->update();
+            //     HI->RMotor->update();
+            // }
             stopMoving();
+            
+            for(int i = 0; i < 5; i ++){
+                digitalWrite(LED_RED, HIGH);
+                delay(300);
+                digitalWrite(LED_RED, LOW);
+                delay(300);
+            }
             MainState::instance()->setState(stoneCollecting);
         } 
         else{
             //turn at junction
-            stopMoving();
-            delay(1000);
             if(angle>0){
-                HI->turn_single(angle*2.3, 1, 1, 3000, 1);
-            }
+                HI->turn_single(angle*9, 1, 1, angle*12, 1);
+            } 
             else{
-                HI->turn_single(abs(angle)*2.3, -1, 1, 3000, 0.7);
+                digitalWrite(LED_BLUE,HIGH);
+                HI->turn_single(abs(angle)*9, -1, 1, abs(angle)*12, 0.7);
             }
-            delay(2000);
         }
         if(destinationReached){
             //update destination
@@ -125,8 +130,11 @@ void LineFollow::loop(){
                 }
             }
         }
+        HI->update();
     }
     else { 
+        digitalWrite(LED_RED, LOW);
+        Serial.println("following tape");
         followTape(robotSpeed, true);
     }
     return;
@@ -147,29 +155,6 @@ void LineFollow::setMotorSpeeds(){
     HI->RMotor->setSpeed(RSpeed/straightLineCorrectionFactor);
 }
 
-float LineFollow::getWeightedError(){
-    float sum = 0;
-    float weightedSum = 0;
-    int countBlack = 0;
-    bool onBlack = false;
-    for(int i = 0; i < numSensors; i++){
-        sum += HI->QRD_Vals[i];
-        weightedSum += HI->QRD_Vals[i]*positionVector[i];
-    }
-
-    if(sum > 0.7){
-        onBlack = true;
-    }
-
-    if(onBlack){
-        return weightedSum;
-    } else if(errorHistory.back() < 0){
-        return positionVector[0];
-    } else {
-        return positionVector[numSensors-1];
-    }
-}
-
 // Returns the current amount of line following error
 float LineFollow::getLinePositionError(bool followRightEdge)
 {
@@ -187,10 +172,10 @@ float LineFollow::getLinePositionError(bool followRightEdge)
             //interpolate and subtract (numSensors-1)/2 to put a zero x value in the middle of the sensor array
             rightEdgeXVal = (float)i + (float)(HI->QRD_Vals[i] - HI->QRD_Thresh[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i+1]) - (float)(numSensors-1)*0.5;
         }
-        else if(errorHistory.back() > 0){
+        else if(HI->errorHistory.back() > 0){
             rightEdgeXVal = P_gain/10; //get most recent value
         }
-        else if(errorHistory.back() < 0){
+        else if(HI->errorHistory.back() < 0){
             rightEdgeXVal = -P_gain/(10*straightLineCorrectionFactor);
         }
         edgeXPos = rightEdgeXVal;
@@ -206,7 +191,7 @@ float LineFollow::getLinePositionError(bool followRightEdge)
             leftEdgeXVal = (float)i - (float)(HI->QRD_Vals[i] - HI->QRD_Thresh[i])/(HI->QRD_Vals[i] - HI->QRD_Vals[i-1]) - (float)(numSensors-1)*0.5;
         }
         else{
-            leftEdgeXVal = errorHistory.back(); //get most recent value
+            leftEdgeXVal = HI->errorHistory.back(); //get most recent value
         }
         edgeXPos = leftEdgeXVal;
     }
@@ -215,14 +200,15 @@ float LineFollow::getLinePositionError(bool followRightEdge)
 
 //runs a PID to follow the tape
 void LineFollow::followTape(int robotSpeed, bool followRightEdge){
-    P_gain = (float)analogRead(CONTROL_POT_1)/200.0;
-    D_gain = (float)analogRead(CONTROL_POT_2)/7.5;
+    nextTurnAngle[LeftGauntlet][CW][false] = analogRead(CONTROL_POT_1)/10.0;
+    nextTurnAngle[LeftGauntlet][CCW][false] = analogRead(CONTROL_POT_1)/10.0;
+    nextTurnAngle[LeftIntersection][CCW][false] = analogRead(CONTROL_POT_2)/10.0;
 
-    float error = getWeightedError();
+    float error = HI->getWeightedError();
 
-    errorHistory.push(error); // add current error to errorQueue
-    if(errorHistory.size() > ERROR_HISTORY_SIZE){ // keep queue size at ERROR_HISTORY_SIZE
-        errorHistory.pop();
+    HI->errorHistory.push(error); // add current error to errorQueue
+    if(HI->errorHistory.size() > ERROR_HISTORY_SIZE){ // keep queue size at ERROR_HISTORY_SIZE
+        HI->errorHistory.pop();
     }
 
     I_sum += error;
@@ -231,7 +217,7 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge){
     }
 
     //calc average derivative
-    float D_error = (errorHistory.back() - errorHistory.front())/(ERROR_HISTORY_SIZE);
+    float D_error = (HI->errorHistory.back() - HI->errorHistory.front())/(ERROR_HISTORY_SIZE);
 
     //adjust speed of both wheels to correct for error
     float speedAdj = 0;
@@ -276,7 +262,7 @@ void LineFollow::intersectionTurn(){
 bool LineFollow::detectJunction(){
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.7){
+        if (HI->QRD_Vals[i] > 0.75){
             count++;
         }
     }
@@ -298,7 +284,7 @@ void LineFollow::stopMoving(){
     HI->RMotor->setSpeed(-35);
     HI->LMotor->setSpeed(-35);
     HI->update();
-    delay(225);
+    delay(200);
     HI->RMotor->setSpeed(0);
     HI->LMotor->setSpeed(0);
     HI->update();
