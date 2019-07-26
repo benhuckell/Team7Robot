@@ -21,7 +21,7 @@ namespace StateLoops{
             float getWeightedError();
             void findIR();
             void findGauntlet();
-            void followTape(int robotSpeed, bool followRightEdge);
+            void followTape(int robotSpeed, bool followRightEdge, bool errorCalculationMethod);
             void setMotorSpeeds();
             bool detectLine();
             bool detectJunction();
