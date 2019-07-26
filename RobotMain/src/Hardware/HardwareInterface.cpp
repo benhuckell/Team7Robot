@@ -53,7 +53,7 @@ HardwareInterface::HardwareInterface(){
    HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 130, 55, 313);
    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 300, 61, 535);
 
-   HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
+   HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO, openAngle);
 
    HardwareInterface::QRD_Array[0] = qrd0;
    HardwareInterface::QRD_Array[1] = qrd1;
@@ -71,17 +71,6 @@ HardwareInterface::HardwareInterface(){
    }
 }
 
-bool HardwareInterface::timer(unsigned int preset){
- unsigned long currentMillis = millis();
-
- if(currentMillis - previousMillis >= preset){
-   previousMillis = currentMillis;
-   return true;
- }
- else{
-   return false;
- }
-}
 HardwareInterface* HardwareInterface::i(){
    if(myInstance == NULL){
        myInstance = new HardwareInterface();
@@ -284,8 +273,6 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
     //dir = 1 is forward
     //dir = -1 is backwards
 
-    //f
-
    int L_tics_start = LEncoder->getCount();
    int R_tics_start = REncoder->getCount();
 
@@ -344,7 +331,6 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
     //Serial.print("loop exit \n");
 
    //brake power
-
    LMotor->setSpeed(0);
    RMotor->setSpeed(0);
    LMotor->update();
@@ -353,7 +339,7 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
 
 }
 
-void HardwareInterface::moveIntake() {
+void HardwareInterface::raiseIntake(int winchTickTarget) {
     //set the height that the winch raises the entire assembly to
     //need to use PID to get to the correct height
     int tick_num=WinchEncoder->getCount();
@@ -362,36 +348,81 @@ void HardwareInterface::moveIntake() {
     float WinchSpeed=0;
     WinchSpeed = Winch_P_gain*tickError;
 
-    //to set what happens at edge cases
-    if(WinchSpeed>100){
-        WinchSpeed=100;
-    }
-    if(WinchSpeed<-100){
-        WinchSpeed=-100;
-    }
-
     WinchMotor->setSpeed(WinchSpeed);
     WinchMotor->update();
 }
 
-bool HardwareInterface::checkForRock(){
-    if(!(clawCurrentAngle==clawFullyOpen)){
-        clawMotor->clawSetPos(clawFullyOpen);
-        clawCurrentAngle=clawFullyOpen;
-        delay(1000);
-    }
+void HardwareInterface::lowerIntake(int winchTickTarget) {
+    //set the height that the winch raises the entire assembly to
+    //need to use PID to get to the correct height
+    int tick_num=WinchEncoder->getCount();
+    int tickError=winchTickTarget-tick_num;
 
-    clawMotor->clawSetPos(clawWithRock);
+    float WinchSpeed=0;
+    WinchSpeed = Winch_P_gain*tickError;
+
+    WinchMotor->setSpeed(WinchSpeed*-1);
+    WinchMotor->update();
+}
+
+void HardwareInterface::getStone(){
+    clawMotor->setPos(closedAngle);
     delay(2000);
 
     if(digitalRead(LIM_SWITCH_PIN==LOW)){
-        hasRock==false;
+        stoneCollected=false;
+        clawMotor->setPos(openAngle);
+        delay(1000);
     } else{
-        hasRock==true;
+        stoneCollected=true;
+        //change direction towards gauntlet
+        if(dir == CW){
+            dir = CCW;
+        }else{
+            dir = CW;
+        }
     }
-    clawCurrentAngle=clawWithRock;
-    
-        
 }
 
+//return true if any sensors detect black
+//return false otherwise
+bool HardwareInterface::detectLine(){
+    for(int i = 0; i < NUM_QRD_SENSORS; i ++){
+        if (QRD_Vals[i] > 0.6){
+            return true;
+        }
+    }
+    return false;
+}
 
+void HardwareInterface::turnOnLine(Direction dir){
+    //start turning
+    if(dir == CW){ 
+        RMotor->setSpeed(-50);
+        LMotor->setSpeed(50);
+    }else{
+        RMotor->setSpeed(50);
+        LMotor->setSpeed(-50);
+    }
+    RMotor->update();
+    LMotor->update();
+
+    while(detectLine()){}
+    while(!detectLine()){}
+    
+    //apply brakes
+    if(dir == CW){ 
+        RMotor->setSpeed(50);
+        LMotor->setSpeed(-50);
+    }else{
+        RMotor->setSpeed(-50);
+        LMotor->setSpeed(50);
+    }
+    RMotor->update();
+    LMotor->update();
+    delay(150);
+    RMotor->setSpeed(0);
+    LMotor->setSpeed(0);
+    RMotor->update();
+    LMotor->update();
+}

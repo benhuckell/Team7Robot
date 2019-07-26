@@ -30,13 +30,11 @@
 #define RENCODER_1 PA12 //switched
 #define RENCODER_2 PA11
 
-#define WINCH_ENC_1 PA5
-#define WINCH_ENC_2 PA4
-
 #define LENCODER_DIRECTION -1
 #define RENCODER_DIRECTION -1
 #define WINCH_ENCODER_DIRECTION -1
 
+#define LIM_SWITCH_PIN PB11
 #define CLAW_SERVO PA_10
 #define LIM_SWITCH_PIN PB11
 
@@ -44,54 +42,58 @@
 
 class HardwareInterface {
   public:
-     void update();
+      void update();
 
-     static HardwareInterface* i();     
-     static const int NUM_QRD_SENSORS = 8; //number of light sensors
+      static HardwareInterface* i();     
+      static const int NUM_QRD_SENSORS = 8; //number of light sensors
+      enum PostNumber {Post1, Post2, Post3, Post4, Post5, Post6};         
+      enum Direction {CCW, CW};
 
-     DriveMotor* LMotor;
-     DriveMotor* RMotor;
+      DriveMotor* LMotor;
+      DriveMotor* RMotor;
 
-     DriveMotor* WinchMotor;
+      DriveMotor* WinchMotor;
 
-     Encoder* LEncoder;
-     Encoder* REncoder;
-     Encoder* WinchEncoder;
+      Encoder* LEncoder;
+      Encoder* REncoder;
+      Encoder* WinchEncoder;
 
-     QRD* qrd0;
-     QRD* qrd1;
-     QRD* qrd2;
-     QRD* qrd3;
-     QRD* qrd4;
-     QRD* qrd5;
-     QRD* qrd6;
-     QRD* qrd7;
+      QRD* qrd0;
+      QRD* qrd1;
+      QRD* qrd2;
+      QRD* qrd3;
+      QRD* qrd4;
+      QRD* qrd5;
+      QRD* qrd6;
+      QRD* qrd7;
 
-     ServoMotor* clawMotor;
+      ServoMotor* clawMotor;
 
-     QRD* QRD_Array[NUM_QRD_SENSORS];
-     float QRD_Vals[NUM_QRD_SENSORS];
-     int QRD_RAW[NUM_QRD_SENSORS];
-     int QRD_Thresh[NUM_QRD_SENSORS];
-     int QRD_Max[NUM_QRD_SENSORS];
-     int QRD_Min[NUM_QRD_SENSORS];
+      QRD* QRD_Array[NUM_QRD_SENSORS];
+      float QRD_Vals[NUM_QRD_SENSORS];
+      int QRD_RAW[NUM_QRD_SENSORS];
+      int QRD_Thresh[NUM_QRD_SENSORS];
+      int QRD_Max[NUM_QRD_SENSORS];
+      int QRD_Min[NUM_QRD_SENSORS];
 
-     bool hasRock;
-     int winchTickTarget = 0;
-
-     unsigned long previousMillis = 0;
-     unsigned long currentMillis = millis();
-     bool robotWasBumped();
-     bool robotHitPost();
-     void moveIntake();
-     void clawSetPos(int clawAngle);
-     bool checkForRock();
-
-     void turn_time(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
-     void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
-     void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);
-     
+      bool robotWasBumped();
+      bool robotHitPost();
+      void raiseIntake(int winchTickTarget);
+      void lowerIntake(int winchTickTarget);
+      void getStone();
+      void turnOnLine(Direction dir);
+      bool detectLine();
+      void turn_time(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
+      void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
+      void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);
+      
+      bool stoneCollected;
+      Direction dir;//0 is CW, 1 is CCW
+      PostNumber postNum;
+      const int openAngle = 300;
+      const int closedAngle = 200;
   private:
+<<<<<<< HEAD
      HardwareInterface();
      HardwareInterface(const HardwareInterface&);
      HardwareInterface& operator=(const HardwareInterface&);
@@ -102,6 +104,18 @@ class HardwareInterface {
      const float bumpThresholdVal = 10.0;
      const float postThresholdVal = 0.5;
 
+=======
+      HardwareInterface();
+      HardwareInterface(const HardwareInterface&);
+      HardwareInterface& operator=(const HardwareInterface&);
+      bool timer(unsigned int preset);
+      float lastLSpeed;
+      float lastRSpeed;
+      static HardwareInterface* myInstance;
+      const float bumpThresholdVal = 10.0;
+      const float postThresholdVal = 0.5;
+     
+>>>>>>> 35b60880ab3f08eb8bc37a64370b564fbdeb1817
       static const int POST_1_TICKS = 1;
       static const int POST_2_TICKS = 1;
       static const int POST_3_TICKS = 1;
@@ -109,13 +123,6 @@ class HardwareInterface {
       static const int POST_5_TICKS = 1;
       static const int POST_6_TICKS = 1;
       float Winch_P_gain=1;
-
-      //can hard code these values
-      int clawFullyClosed;
-      int clawFullyOpen;
-      int clawWithRock;
-
-      int clawCurrentAngle=clawFullyOpen;
   };
 
 #endif

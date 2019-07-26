@@ -1,0 +1,134 @@
+[1mdiff --cc RobotMain/include/Hardware/HardwareInterface.h[m
+[1mindex 8092b98,cf6c63c..0000000[m
+[1m--- a/RobotMain/include/Hardware/HardwareInterface.h[m
+[1m+++ b/RobotMain/include/Hardware/HardwareInterface.h[m
+[36m@@@ -44,64 -42,67 +42,80 @@@[m
+  [m
+  class HardwareInterface {[m
+    public:[m
+[31m-      void update();[m
+[31m- [m
+[31m-      static HardwareInterface* i();     [m
+[31m-      static const int NUM_QRD_SENSORS = 8; //number of light sensors[m
+[31m- [m
+[31m-      DriveMotor* LMotor;[m
+[31m-      DriveMotor* RMotor;[m
+[31m- [m
+[31m-      DriveMotor* WinchMotor;[m
+[31m- [m
+[31m-      Encoder* LEncoder;[m
+[31m-      Encoder* REncoder;[m
+[31m-      Encoder* WinchEncoder;[m
+[31m- [m
+[31m-      QRD* qrd0;[m
+[31m-      QRD* qrd1;[m
+[31m-      QRD* qrd2;[m
+[31m-      QRD* qrd3;[m
+[31m-      QRD* qrd4;[m
+[31m-      QRD* qrd5;[m
+[31m-      QRD* qrd6;[m
+[31m-      QRD* qrd7;[m
+[31m- [m
+[31m-      ServoMotor* clawMotor;[m
+[31m- [m
+[31m-      QRD* QRD_Array[NUM_QRD_SENSORS];[m
+[31m-      float QRD_Vals[NUM_QRD_SENSORS];[m
+[31m-      int QRD_RAW[NUM_QRD_SENSORS];[m
+[31m-      int QRD_Thresh[NUM_QRD_SENSORS];[m
+[31m-      int QRD_Max[NUM_QRD_SENSORS];[m
+[31m-      int QRD_Min[NUM_QRD_SENSORS];[m
+[31m- [m
+[31m-      bool hasRock;[m
+[31m-      int winchTickTarget = 0;[m
+[31m- [m
+[31m-      unsigned long previousMillis = 0;[m
+[31m-      unsigned long currentMillis = millis();[m
+[31m-      bool robotWasBumped();[m
+[31m-      bool robotHitPost();[m
+[31m-      void moveIntake();[m
+[31m-      void clawSetPos(int clawAngle);[m
+[31m-      bool checkForRock();[m
+[31m- [m
+[31m-      void turn_time(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);[m
+[31m-      void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);[m
+[31m-      void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);[m
+[31m-      [m
+[32m+       void update();[m
+[32m+ [m
+[32m+       static HardwareInterface* i();     [m
+[32m+       static const int NUM_QRD_SENSORS = 8; //number of light sensors[m
+[32m+       enum PostNumber {Post1, Post2, Post3, Post4, Post5, Post6};         [m
+[32m+       enum Direction {CCW, CW};[m
+[32m+ [m
+[32m+       DriveMotor* LMotor;[m
+[32m+       DriveMotor* RMotor;[m
+[32m+ [m
+[32m+       DriveMotor* WinchMotor;[m
+[32m+ [m
+[32m+       Encoder* LEncoder;[m
+[32m+       Encoder* REncoder;[m
+[32m+       Encoder* WinchEncoder;[m
+[32m+ [m
+[32m+       QRD* qrd0;[m
+[32m+       QRD* qrd1;[m
+[32m+       QRD* qrd2;[m
+[32m+       QRD* qrd3;[m
+[32m+       QRD* qrd4;[m
+[32m+       QRD* qrd5;[m
+[32m+       QRD* qrd6;[m
+[32m+       QRD* qrd7;[m
+[32m+ [m
+[32m+       ServoMotor* clawMotor;[m
+[32m+ [m
+[32m+       QRD* QRD_Array[NUM_QRD_SENSORS];[m
+[32m+       float QRD_Vals[NUM_QRD_SENSORS];[m
+[32m+       int QRD_RAW[NUM_QRD_SENSORS];[m
+[32m+       int QRD_Thresh[NUM_QRD_SENSORS];[m
+[32m+       int QRD_Max[NUM_QRD_SENSORS];[m
+[32m+       int QRD_Min[NUM_QRD_SENSORS];[m
+[32m+ [m
+[32m+       bool robotWasBumped();[m
+[32m+       bool robotHitPost();[m
+[32m+       void raiseIntake(int winchTickTarget);[m
+[32m+       void lowerIntake(int winchTickTarget);[m
+[32m+       void getStone();[m
+[32m+       void turnOnLine(Direction dir);[m
+[32m+       bool detectLine();[m
+[32m+       void turn_time(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);[m
+[32m+       void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);[m
+[32m+       void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);[m
+[32m+       [m
+[32m+       bool stoneCollected;[m
+[32m+       Direction dir;//0 is CW, 1 is CCW[m
+[32m+       PostNumber postNum;[m
+[32m+       const int openAngle = 300;[m
+[32m+       const int closedAngle = 200;[m
+    private:[m
+[32m++<<<<<<< HEAD[m
+[32m +     HardwareInterface();[m
+[32m +     HardwareInterface(cowarning: LF will be replaced by CRLF in RobotMain/.vscode/extensions.json.
+The file will have its original line endings in your working directory.
+nst HardwareInterface&);[m
+[32m +     HardwareInterface& operator=(const HardwareInterface&);[m
+[32m +     bool timer(unsigned int preset);[m
+[32m +     float lastLSpeed;[m
+[32m +     float lastRSpeed;[m
+[32m +     static HardwareInterface* myInstance;[m
+[32m +     const float bumpThresholdVal = 10.0;[m
+[32m +     const float postThresholdVal = 0.5;[m
+[32m +[m
+[32m++=======[m
+[32m+       HardwareInterface();[m
+[32m+       HardwareInterface(const HardwareInterface&);[m
+[32m+       HardwareInterface& operator=(const HardwareInterface&);[m
+[32m+       bool timer(unsigned int preset);[m
+[32m+       float lastLSpeed;[m
+[32m+       float lastRSpeed;[m
+[32m+       static HardwareInterface* myInstance;[m
+[32m+       const float bumpThresholdVal = 10.0;[m
+[32m+       const float postThresholdVal = 0.5;[m
+[32m+      [m
+[32m++>>>>>>> 35b60880ab3f08eb8bc37a64370b564fbdeb1817[m
+        static const int POST_1_TICKS = 1;[m
+        static const int POST_2_TICKS = 1;[m
+        static const int POST_3_TICKS = 1;[m
