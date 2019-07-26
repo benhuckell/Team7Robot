@@ -339,7 +339,7 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
 
 }
 
-void HardwareInterface::moveIntake(int winchTickTarget) {
+void HardwareInterface::raiseIntake(int winchTickTarget) {
     //set the height that the winch raises the entire assembly to
     //need to use PID to get to the correct height
     int tick_num=WinchEncoder->getCount();
@@ -352,12 +352,20 @@ void HardwareInterface::moveIntake(int winchTickTarget) {
     WinchMotor->update();
 }
 
-void HardwareInterface::checkForRock(){
-    if(!(clawMotor->getPos()==openAngle)){
-        clawMotor->setPos(openAngle);
-        delay(1000);
-    }
+void HardwareInterface::lowerIntake(int winchTickTarget) {
+    //set the height that the winch raises the entire assembly to
+    //need to use PID to get to the correct height
+    int tick_num=WinchEncoder->getCount();
+    int tickError=winchTickTarget-tick_num;
 
+    float WinchSpeed=0;
+    WinchSpeed = Winch_P_gain*tickError;
+
+    WinchMotor->setSpeed(WinchSpeed*-1);
+    WinchMotor->update();
+}
+
+void HardwareInterface::getStone(){
     clawMotor->setPos(closedAngle);
     delay(2000);
 

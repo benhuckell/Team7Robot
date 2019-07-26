@@ -10,8 +10,11 @@ StoneScore::StoneScore(){
 void StoneScore::loop(){
     display.println("Stone Scoring");
     delay(1000);
+    HI->lowerIntake(HI->WinchEncoder->getCount() - gauntletTickTarget);//lower intake to gauntlet
     goToHole(holeOne);
     placeStone();
+    HI->raiseIntake(gauntletTickTarget*2);
+    returnToTape();
 }
 
 void StoneScore::goToHole(HoleNumbers holeNum) {
@@ -50,7 +53,10 @@ void StoneScore::goToHole(HoleNumbers holeNum) {
 }
 
 void StoneScore::placeStone() {
-    
+    if(HI->clawMotor->getPos()!=HI->openAngle){
+        HI->clawMotor->setPos(HI->openAngle);
+        delay(1000);
+    }
 }
 
 void StoneScore::returnToTape() {

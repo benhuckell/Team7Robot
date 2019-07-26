@@ -16,6 +16,7 @@ namespace StateLoops {
             
             HardwareInterface* HI;
 
-            int holeTurnAngles[4] = {-20, -10, 10, 20};
+            int holeTurnAngles[4] = {-20, -10, 10, 20}; //untuned
+            int gauntletTickTarget = 20; //untuned
     };
 }

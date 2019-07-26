@@ -8,17 +8,9 @@ namespace StateLoops {
 
     void StoneCollect::loop(){
         display.println("Stone Collecting");
-        raiseIntake(Post1);
-        intakeStone();
+        HI->raiseIntake(winchTickTargets[HI->postNum] - HI->WinchEncoder->getCount());
+        HI->getStone();
         returnToTape();
-    }
-
-    void StoneCollect::raiseIntake(PostNumber postNum) {
-        HI->moveIntake(winchTickTargets[postNum]);
-    }
-    
-    void StoneCollect::intakeStone() {
-        HI->checkForRock();
     }
     
     void StoneCollect::returnToTape() {
@@ -33,7 +25,6 @@ namespace StateLoops {
         HI->LMotor->update();
         HI->RMotor->update();
 
-        ;
-
+        HI->turnOnLine(HI->dir);
     }
 }

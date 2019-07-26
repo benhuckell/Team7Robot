@@ -11,8 +11,6 @@ namespace StateLoops {
             void loop();
             int winchTickTargets[6] = {20,10,10,20,30,30};
         private:
-            void raiseIntake(PostNumber postNum);
-            void intakeStone();
             void returnToTape();
 
             HardwareInterface* HI;

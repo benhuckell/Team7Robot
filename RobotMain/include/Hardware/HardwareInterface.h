@@ -48,7 +48,7 @@ class HardwareInterface {
       static const int NUM_QRD_SENSORS = 8; //number of light sensors
       enum PostNumber {Post1, Post2, Post3, Post4, Post5, Post6};         
       enum Direction {CCW, CW};
-      
+
       DriveMotor* LMotor;
       DriveMotor* RMotor;
 
@@ -78,9 +78,9 @@ class HardwareInterface {
 
       bool robotWasBumped();
       bool robotHitPost();
-      void moveIntake(int winchTickTarget);
-      void clawSetPos(int clawAngle);
-      void checkForRock();
+      void raiseIntake(int winchTickTarget);
+      void lowerIntake(int winchTickTarget);
+      void getStone();
       void turnOnLine(Direction dir);
       bool detectLine();
       void turn_time(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
@@ -89,7 +89,9 @@ class HardwareInterface {
       
       bool stoneCollected;
       Direction dir;//0 is CW, 1 is CCW
-     
+      PostNumber postNum;
+      const int openAngle = 300;
+      const int closedAngle = 200;
   private:
       HardwareInterface();
       HardwareInterface(const HardwareInterface&);
@@ -108,10 +110,6 @@ class HardwareInterface {
       static const int POST_5_TICKS = 1;
       static const int POST_6_TICKS = 1;
       float Winch_P_gain=1;
-      
-      //can hard code these values
-      const int openAngle = 300;
-      const int closedAngle = 200;
   };
 
 #endif
