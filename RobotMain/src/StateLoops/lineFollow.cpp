@@ -246,6 +246,9 @@ float LineFollow::getLinePositionError(bool followRightEdge)
 
 //runs a PID to follow the tape
 void LineFollow::followTape(int robotSpeed, bool followRightEdge){
+    P_gain = float(analogRead(CONTROL_POT_1))/float(200.0);
+    D_gain = float(analogRead(CONTROL_POT_2))/float(7.5);
+
     float error = getLinePositionError(followRightEdge);
     Serial.println("FULL ARRAY: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " " );
     Serial.print("error: ");

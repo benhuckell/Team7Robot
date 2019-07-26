@@ -29,10 +29,10 @@ void Debugging::loop(){
     display.println(digitalRead(PUSH_BUTTON_1));
     display.print("PB2: ");
     display.println(digitalRead(PUSH_BUTTON_2));
-    display.print("turn1: ");
-    display.println(float(analogRead(CONTROL_POT_1))/float(10.0));
-    display.print("turn2: ");
-    display.println(float(analogRead(CONTROL_POT_2))/float(10.0));
+    display.print("k_p: ");
+    display.println(float(analogRead(CONTROL_POT_1))/float(200.0));
+    display.print("k_d: ");
+    display.println(float(analogRead(CONTROL_POT_2))/float(7.5));
 
     if(digitalRead(PUSH_BUTTON_2) && calibrateMode == false){ 
         delay(1000);
