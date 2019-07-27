@@ -31,6 +31,7 @@ namespace StateLoops{
             void turnXDegrees(int angle);
             void turnOnLine();
             void stopMoving();
+            float getWeightedEdgeError(bool followRightEdge);
 
             //varying data
             float error;

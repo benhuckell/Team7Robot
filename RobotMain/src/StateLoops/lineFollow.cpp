@@ -245,6 +245,73 @@ float LineFollow::getLinePositionError(bool followRightEdge)
    return returnError;
 }
 
+float LineFollow::getWeightedEdgeError(bool followRightEdge)
+{
+    int QRD_Thresh = 0.4;
+    float sum = 0;
+    float weightedSum = 0;
+    bool onBlack = false;
+    float maxVal = -1;
+    int maxIndex = -1;
+    if(followRightEdge){
+        for(int i = numSensors-1; i > 0; i--){
+            if(HI->QRD_Vals[i] > QRD_Thresh){
+                if(i == 0){
+                    maxIndex = 0;
+                    maxVal = HI->QRD_Vals[i];
+                    for(int i = 0; i < numSensors; i++){
+                        weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                    }
+                    break;
+                }
+                else if(HI->QRD_Vals[i-1] < HI->QRD_Vals[i]){
+                    maxIndex = i;
+                    for(int i = maxIndex-1; i < numSensors; i++){
+                        weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    else{//left edge
+        for(int i = 0; i < numSensors; i++){
+            if(HI->QRD_Vals[i] > QRD_Thresh){
+                if(i == numSensors-1){
+                    maxIndex = 0;
+                    maxVal = HI->QRD_Vals[i];
+                    for(int i = 0; i < numSensors; i++){
+                        weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                    }
+                    break;
+                }
+                else if(HI->QRD_Vals[i+1] < HI->QRD_Vals[i]){
+                    maxIndex = i;
+                    for(int i = maxIndex+1; i >= 0; i--){
+                        weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    for(int i = 0; i < numSensors; i++){
+        sum += HI->QRD_Vals[i];
+    }
+
+    if(sum > 0.7){
+        onBlack = true;
+    }
+
+    if(onBlack){
+        return weightedSum;
+    } else if(HI->errorHistory.back() < 0){
+        return positionVector[0];
+    } else {
+        return positionVector[numSensors-1];
+    }
+}
 
 //runs a PID to follow the tape
 void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollow){
