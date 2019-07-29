@@ -18,7 +18,7 @@ void WinchEncoderInterrupt(){
 }
 
 HardwareInterface::HardwareInterface(){
-   Serial.begin(9600);
+   Serial.begin(115200);
 
    HardwareInterface::LMotor = new DriveMotor(LMOTOR_FORWARDS, LMOTOR_BACKWARDS);
    HardwareInterface::RMotor = new DriveMotor(RMOTOR_FORWARDS, RMOTOR_BACKWARDS);
@@ -45,14 +45,24 @@ HardwareInterface::HardwareInterface(){
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 62, 644);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 56, 426);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 54, 339);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 53, 317);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 55, 411);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 55, 334);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 56, 268);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 64, 502);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 61, 594);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 56, 331);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 54, 284);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 53, 224);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 55, 353);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 54, 317);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 55, 193);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 60, 432);
+
+    //For calibrating
+//    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);
+//    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 0, 1000);
+//    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 0, 1000);
+//    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 0, 1000);
+//    HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 0, 1000);
+//    HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 0, 1000);
+//    HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 0, 1000);
+//    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 0, 1000);
 
    HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 

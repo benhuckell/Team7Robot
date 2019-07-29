@@ -51,7 +51,7 @@ void LineFollow::loop(){
     //setMotorSpeeds();
     int robotSpeed = 43;
     bool postOnRight = true; //true for right' false for left
-    followTape(robotSpeed,false,true);
+    followTape(robotSpeed,true,true);
     // if(detectJunction()){
     //     digitalWrite(LED_RED,HIGH);
     //     //update position variables
@@ -210,6 +210,7 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
        }
    }
 
+
    if(onBlack){
        return weightedSum;
    } else if(HI->errorHistory.back() < 0){
@@ -217,6 +218,7 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
    } else {
        return positionVector[numSensors-1];
    }
+
 }
 
 
@@ -349,6 +351,10 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollo
     LSpeed = (robotSpeed + speedAdj);
     RSpeed = (robotSpeed - speedAdj);
     setMotorSpeeds();
+
+    Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
+    Serial.print("Error: " + String(error));
+
 }
 //////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// PID END ////////////////////////////////////////

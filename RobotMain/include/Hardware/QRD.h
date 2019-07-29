@@ -10,7 +10,7 @@ class QRD {
    public:
       QRD(PinName QRD_port, int QRD_Index, int QRD_Min, int QRD_Max);
       void update(); //updates value,max,min
-      static constexpr float QRD_Thresh = 0.4;
+      static constexpr float QRD_Thresh = 0.3;
       int getValue();
       int getThresh();
       int getMin();
