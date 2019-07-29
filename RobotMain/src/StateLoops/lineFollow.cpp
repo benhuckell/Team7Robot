@@ -8,6 +8,10 @@ LineFollow::LineFollow(){
 }
 
 void LineFollow::setup(){
+    //Turn off LEDs
+    digitalWrite(LED_BLUE,LOW);
+    digitalWrite(LED_RED,LOW);
+
     //Calculate paths
     currentPosition = startingPosition;
     if(startingPosition == LeftStart){ //team == THANOS
@@ -45,8 +49,8 @@ void LineFollow::setup(){
 }
 void LineFollow::loop(){
     //setMotorSpeeds();
-    int robotSpeed = 60;
-    bool postOnRight = true; //true for right false for left
+    int robotSpeed = 43;
+    bool postOnRight = true; //true for right' false for left
     followTape(robotSpeed,false,true);
     // if(detectJunction()){
     //     digitalWrite(LED_RED,HIGH);
@@ -157,6 +161,65 @@ void LineFollow::setMotorSpeeds(){
     HI->RMotor->setSpeed(RSpeed/straightLineCorrectionFactor);
 }
 
+float LineFollow::getWeightedEdgeError(bool followRightEdge)
+{
+   float weightedSum = 0;
+   bool onBlack = false;
+   int maxIndex = -1;
+   if(followRightEdge){
+       for(int i = numSensors-1; i > 0; i--){
+           if(HI->QRD_Vals[i] > QRD::QRD_Thresh){
+               onBlack = true;
+               if(i == 0){
+                   maxIndex = 0;
+                   for(int i = 0; i < numSensors; i++){
+                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                   }
+                   break;
+               }
+               else if(HI->QRD_Vals[i-1] < HI->QRD_Vals[i]){
+                   maxIndex = i;
+                   for(int i = maxIndex-1; i < numSensors; i++){
+                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                   }
+                   break;
+               }
+           }
+       }
+       return 0;
+   }
+   else{//left edge
+       for(int i = 0; i < numSensors; i++){
+           if(HI->QRD_Vals[i] > QRD::QRD_Thresh){
+               onBlack = true;
+               if(i == numSensors-1){
+                   maxIndex = 0;
+                   for(int i = 0; i < numSensors; i++){
+                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                   }
+                   break;
+               }
+               else if(HI->QRD_Vals[i+1] < HI->QRD_Vals[i]){
+                   maxIndex = i;
+                   for(int i = maxIndex+1; i >= 0; i--){
+                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                   }
+                   break;
+               }
+           }
+       }
+   }
+
+   if(onBlack){
+       return weightedSum;
+   } else if(HI->errorHistory.back() < 0){
+       return positionVector[0];
+   } else {
+       return positionVector[numSensors-1];
+   }
+}
+
+
 // Returns the current amount of line following error
 float LineFollow::getLinePositionError(bool followRightEdge)
 {
@@ -251,9 +314,11 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollo
     float error = 0;
 
     if(edgeFollow){
-        error = getLinePositionError(false);
+        error = getWeightedEdgeError(followRightEdge);
+        digitalWrite(LED_BLUE,HIGH);
     }
     else{
+        digitalWrite(LED_RED,HIGH);
         error = HI->getWeightedError();
     }
     Serial.println("error: " + String(error));

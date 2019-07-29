@@ -19,6 +19,7 @@ namespace StateLoops{
         private:
             float getLinePositionError(bool followRightEdge);
             float getWeightedError();
+            float getWeightedEdgeError(bool followRightEdge);
             void findIR();
             void findGauntlet();
             void followTape(int robotSpeed, bool followRightEdge, bool edgeFollow);
@@ -44,8 +45,8 @@ namespace StateLoops{
             float P_gain = 1.9; // K_p
             float I_gain = 0; // K_i
             float D_gain = 16.5; // K_d
-            float P_gain_edge = 4;
-            float D_gain_edge = 40;
+            float P_gain_edge = 1.9;
+            float D_gain_edge = 16.5;
             static const int numSensors = 8;
             float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
             const float maxISum = 2; //max sum to avoid integral windup

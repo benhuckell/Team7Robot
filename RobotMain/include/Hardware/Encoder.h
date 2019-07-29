@@ -16,7 +16,7 @@ class Encoder {
        int encoder_port_1;
        int encoder_port_2;
        unsigned int lastTime;
-       int count;
+       volatile int count;
        int lastCount;
        float speed;
        int dir;
