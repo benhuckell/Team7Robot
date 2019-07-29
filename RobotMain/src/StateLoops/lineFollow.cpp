@@ -165,23 +165,27 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
 {
    float weightedSum = 0;
    bool onBlack = false;
-   int maxIndex = -1;
+   bool foundMax = false;
+   int minIndex = -1;
    if(followRightEdge){
        for(int i = numSensors-1; i >= 0; i--){
            if(HI->QRD_Vals[i] > QRD::QRD_Thresh){
                onBlack = true;
                if(i == 0){
-                   for(int i = numSensors-1; i >= 0; i--){
-                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                   for(int j = numSensors-1; j >= 0; j--){
+                       weightedSum += HI->QRD_Vals[j]*positionVector[j];
                    }
                    break;
                }
-               else if(HI->QRD_Vals[i-1] < HI->QRD_Vals[i]){
-                   maxIndex = i;
-                   for(int i = maxIndex-1; i < numSensors; i++){
-                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
-                   }
-                   break;
+               else if(HI->QRD_Vals[i-1] < HI->QRD_Vals[i]){//found max at i
+                   foundMax = true;
+               }
+               else if(foundMax && HI->QRD_Vals[i-1] > HI->QRD_Vals[i]){//found min at i
+                    minIndex = i;
+                    for(int j = minIndex; j < numSensors; j++){
+                        weightedSum += HI->QRD_Vals[j]*positionVector[j];
+                    }
+                    break;
                }
            }
        }
@@ -191,15 +195,18 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
            if(HI->QRD_Vals[i] > QRD::QRD_Thresh){
                onBlack = true;
                if(i == numSensors-1){
-                   for(int i = 0; i < numSensors; i++){
-                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                   for(int j = 0; j < numSensors; j++){
+                       weightedSum += HI->QRD_Vals[j]*positionVector[j];
                    }
                    break;
                }
-               else if(HI->QRD_Vals[i+1] < HI->QRD_Vals[i]){
-                   maxIndex = i;
-                   for(int i = maxIndex+1; i >= 0; i--){
-                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
+               else if(HI->QRD_Vals[i+1] < HI->QRD_Vals[i]){//found max at i
+                   foundMax = true;
+               }
+               else if(foundMax && HI->QRD_Vals[i-1] > HI->QRD_Vals[i]){//found min at i
+                   minIndex = i;
+                   for(int j = minIndex; j >= 0; j--){
+                       weightedSum += HI->QRD_Vals[j]*positionVector[j];
                    }
                    break;
                }

@@ -361,13 +361,11 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
     //Serial.print("loop exit \n");
 
    //brake power
-
    LMotor->setSpeed(0);
    RMotor->setSpeed(0);
    LMotor->update();
    RMotor->update();
    delay(100);
-
 }
 
 void HardwareInterface::moveIntake() {
@@ -432,3 +430,4 @@ float HardwareInterface::getWeightedError(){
         return positionVector[NUM_QRD_SENSORS-1];
     }
 }
+

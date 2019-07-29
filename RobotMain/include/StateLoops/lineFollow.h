@@ -58,7 +58,7 @@ namespace StateLoops{
             //NAVIGATION
             
             Position PostPriority[6] = {Post1, Post2, Post3, Post5, Post6, Post4};
-            
+            Turn TurnTypes[4] = {LeftEdge, RightEdge, QRDTurn, Post};
             std::queue<Position> destinationList;
             Position destination;// = PostPriority[0];
             Direction dir = CW;//0 is CW, 1 is CCW
