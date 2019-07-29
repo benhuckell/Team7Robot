@@ -1,12 +1,11 @@
 #include "Hardware/QRD.h"
 
-QRD::QRD(PinName QRD_port, int QRD_Index, int QRD_Thresh, int QRD_Min, int QRD_Max){
+QRD::QRD(PinName QRD_port, int QRD_Index, int QRD_Min, int QRD_Max){
     QRD::QRD_port = QRD_port;
     QRD::QRD_Index = QRD_Index;
-    QRD::QRD_Thresh = QRD_Thresh;
     QRD::QRD_Min = QRD_Min;
     QRD::QRD_Max = QRD_Max;
-
+    
     pinMode(Select_0, OUTPUT);
     pinMode(Select_1, OUTPUT);
     pinMode(Select_2, OUTPUT);
@@ -45,10 +44,6 @@ void QRD::update() {
 
 int QRD::getValue() {
     return value;
-}
-
-int QRD::getThresh() {
-    return QRD_Thresh;
 }
 
 int QRD::getMin() {

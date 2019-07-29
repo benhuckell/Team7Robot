@@ -132,7 +132,6 @@ void LineFollow::loop(){
     //             }
     //         }
     //     }
-    //     HI->update();
     // }
     // else { 
     //     digitalWrite(LED_RED, LOW);
@@ -247,7 +246,6 @@ float LineFollow::getLinePositionError(bool followRightEdge)
 
 float LineFollow::getWeightedEdgeError(bool followRightEdge)
 {
-    int QRD_Thresh = 0.4;
     float sum = 0;
     float weightedSum = 0;
     bool onBlack = false;
@@ -255,7 +253,8 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
     int maxIndex = -1;
     if(followRightEdge){
         for(int i = numSensors-1; i > 0; i--){
-            if(HI->QRD_Vals[i] > QRD_Thresh){
+            if(HI->QRD_Vals[i] > QRD::QRD_Thresh){
+                onBlack = true;
                 if(i == 0){
                     maxIndex = 0;
                     maxVal = HI->QRD_Vals[i];
@@ -273,10 +272,12 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
                 }
             }
         }
+        return 0;
     }
     else{//left edge
         for(int i = 0; i < numSensors; i++){
-            if(HI->QRD_Vals[i] > QRD_Thresh){
+            if(HI->QRD_Vals[i] > QRD::QRD_Thresh){
+                onBlack = true;
                 if(i == numSensors-1){
                     maxIndex = 0;
                     maxVal = HI->QRD_Vals[i];
@@ -296,14 +297,6 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
         }
     }
 
-    for(int i = 0; i < numSensors; i++){
-        sum += HI->QRD_Vals[i];
-    }
-
-    if(sum > 0.7){
-        onBlack = true;
-    }
-
     if(onBlack){
         return weightedSum;
     } else if(HI->errorHistory.back() < 0){
@@ -318,16 +311,28 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollo
     float error = 0;
 
     if(edgeFollow){
-        error = getLinePositionError(false);
+        error = getWeightedEdgeError(followRightEdge);
     }
     else{
         error = HI->getWeightedError();
     }
     Serial.println("error: " + String(error));
 
-    HI->errorHistory.push(error); // add current error to errorQueue
-    if(HI->errorHistory.size() > ERROR_HISTORY_SIZE){ // keep queue size at ERROR_HISTORY_SIZE
+    //update errorHistory
+    HI->errorHistory.push(error); // add most recent error to errorQueue
+    if(HI->errorHistory.size() > ERROR_HISTORY_SIZE){ // keep queue size at ERROR_HISTORY_SIZE (2)
         HI->errorHistory.pop();
+    }
+
+    //check for losing line on Left
+    if(followRightEdge){
+        if(HI->errorHistory.back() - HI->errorHistory.front() > HI->positionVector[1]*HI->QRD_Max[1]*QRD::QRD_Thresh - HI->positionVector[0]*HI->QRD_Max[0]*QRD::QRD_Thresh){
+            error = positionVector[0];
+        }
+    }else{ //check for losing line on right
+        if(HI->errorHistory.back() - HI->errorHistory.front() > HI->positionVector[numSensors-2]*HI->QRD_Max[numSensors-2]*QRD::QRD_Thresh - HI->positionVector[numSensors-1]*HI->QRD_Max[numSensors-2]*QRD::QRD_Thresh){
+            error = positionVector[numSensors-1];
+        }
     }
 
     I_sum += error;

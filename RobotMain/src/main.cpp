@@ -10,7 +10,6 @@
 #include "Hardware/HardwareInterface.h"
 #include "stateController.h"
 #include "stm32/HardwareTimer.h"
-#include <servo.h>
 
 #define INTERRUPTPIN PA_8
 #define TOGGLE_SWITCH PB3
@@ -24,18 +23,6 @@ Adafruit_SSD1306 display(-1);
 void setup() {
   Serial.begin(115200);
   delay(3000);
-
-
-    /* HardwareTimer Timer2 = HardwareTimer()
-
-    Timer2.setPrescaleFactor(100);
-    Timer2.setOverflow(UINT16_MAX);
-    Timer2.setMode(1, TIMER_INPUT_CAPTURE_RISING);
-    MainState::instance()->setState(lineFollowing);
-    Timer2.setPeriod(100000);//microseconds
-    Timer2.attachInterrupt(interruptRoutine);
-    Timer2.resume();*/
-    //Read push button
 
     //pinMode(INTERRUPTPIN,INPUT_PULLUP);
     //attachInterrupt(digitalPinToInterrupt(INTERRUPTPIN),interruptRoutine,RISING);

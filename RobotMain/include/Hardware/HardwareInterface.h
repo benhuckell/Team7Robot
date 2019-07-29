@@ -72,7 +72,6 @@ class HardwareInterface {
      QRD* QRD_Array[NUM_QRD_SENSORS];
      float QRD_Vals[NUM_QRD_SENSORS];
      int QRD_RAW[NUM_QRD_SENSORS];
-     int QRD_Thresh[NUM_QRD_SENSORS];
      int QRD_Max[NUM_QRD_SENSORS];
      int QRD_Min[NUM_QRD_SENSORS];
 
@@ -81,6 +80,7 @@ class HardwareInterface {
 
      bool hasRock;
      int winchTickTarget = 0;
+
 
      unsigned long previousMillis = 0;
      unsigned long currentMillis = millis();

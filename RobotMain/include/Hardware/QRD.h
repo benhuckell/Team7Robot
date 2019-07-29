@@ -8,19 +8,18 @@
 
 class QRD {
    public:
-      QRD(PinName QRD_port, int QRD_Index, int QRD_Thresh, int QRD_Min, int QRD_Max);
+      QRD(PinName QRD_port, int QRD_Index, int QRD_Min, int QRD_Max);
       void update(); //updates value,max,min
 
       int getValue();
-      int getThresh();
       int getMin();
       int getMax();
 
+      static constexpr float QRD_Thresh = 0.4;
    private:
       int QRD_Index;
       PinName QRD_port;
       int value;
-      int QRD_Thresh;
       int QRD_Max;
       int QRD_Min;
       std::queue<int> valHistory;
