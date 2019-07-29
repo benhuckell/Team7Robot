@@ -167,12 +167,11 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
    bool onBlack = false;
    int maxIndex = -1;
    if(followRightEdge){
-       for(int i = numSensors-1; i > 0; i--){
+       for(int i = numSensors-1; i >= 0; i--){
            if(HI->QRD_Vals[i] > QRD::QRD_Thresh){
                onBlack = true;
                if(i == 0){
-                   maxIndex = 0;
-                   for(int i = 0; i < numSensors; i++){
+                   for(int i = numSensors-1; i >= 0; i--){
                        weightedSum += HI->QRD_Vals[i]*positionVector[i];
                    }
                    break;
@@ -186,14 +185,12 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
                }
            }
        }
-       return 0;
    }
    else{//left edge
        for(int i = 0; i < numSensors; i++){
            if(HI->QRD_Vals[i] > QRD::QRD_Thresh){
                onBlack = true;
                if(i == numSensors-1){
-                   maxIndex = 0;
                    for(int i = 0; i < numSensors; i++){
                        weightedSum += HI->QRD_Vals[i]*positionVector[i];
                    }
