@@ -26,9 +26,9 @@
 #define WINCH_ENC_2 PB1
 
 #define LENCODER_1 PB15 //encoder inputs
-#define LENCODER_2 PA8
-#define RENCODER_1 PA12 //switched
-#define RENCODER_2 PA11
+#define LENCODER_2 PA11
+#define RENCODER_1 PA8 //switched
+#define RENCODER_2 PA12
 
 #define LENCODER_DIRECTION -1
 #define RENCODER_DIRECTION -1

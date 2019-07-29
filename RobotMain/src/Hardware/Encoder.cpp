@@ -14,16 +14,11 @@ Encoder::Encoder(int encoder_port_1, int encoder_port_2, int encoder_orientation
 //gets called on every rising edge of the encoder output
 void Encoder::ISR(){
    dir = digitalRead(encoder_port_2);
-   //Serial.print("encoder Port1: "+ String (encoder_port_1) + " | ");
-   //Serial.println("encoder Port2: "+ String (encoder_port_2));
-   //Serial.println("dir: "+ String( dir));
    if(dir > 0){
        count = count + (encoder_orientation); // counts 1 up (allegedly)
-       //Serial.println("+1 : " + String(count));
    }
    else{
        count = count - (encoder_orientation); // counts 1 down (allegedly)
-       //Serial.println("-1 " + String(count));
    }
 }
 

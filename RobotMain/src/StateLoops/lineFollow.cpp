@@ -47,7 +47,7 @@ void LineFollow::loop(){
     //setMotorSpeeds();
     int robotSpeed = 60;
     bool postOnRight = true; //true for right false for left
-    followTape(robotSpeed,false,true);
+    followTape(robotSpeed,false,false);
     // if(detectJunction()){
     //     digitalWrite(LED_RED,HIGH);
     //     //update position variables
@@ -246,10 +246,8 @@ float LineFollow::getLinePositionError(bool followRightEdge)
 
 float LineFollow::getWeightedEdgeError(bool followRightEdge)
 {
-    float sum = 0;
     float weightedSum = 0;
     bool onBlack = false;
-    float maxVal = -1;
     int maxIndex = -1;
     if(followRightEdge){
         for(int i = numSensors-1; i > 0; i--){
@@ -257,7 +255,6 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
                 onBlack = true;
                 if(i == 0){
                     maxIndex = 0;
-                    maxVal = HI->QRD_Vals[i];
                     for(int i = 0; i < numSensors; i++){
                         weightedSum += HI->QRD_Vals[i]*positionVector[i];
                     }
@@ -280,7 +277,6 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
                 onBlack = true;
                 if(i == numSensors-1){
                     maxIndex = 0;
-                    maxVal = HI->QRD_Vals[i];
                     for(int i = 0; i < numSensors; i++){
                         weightedSum += HI->QRD_Vals[i]*positionVector[i];
                     }
@@ -326,12 +322,20 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollo
 
     //check for losing line on Left
     if(followRightEdge){
-        if(HI->errorHistory.back() - HI->errorHistory.front() > HI->positionVector[1]*HI->QRD_Max[1]*QRD::QRD_Thresh - HI->positionVector[0]*HI->QRD_Max[0]*QRD::QRD_Thresh){
+        if(error > lineLostFactor){
+            lostLine = false;
+        }
+        if(lostLine || HI->errorHistory.back() - HI->errorHistory.front() > lineLostFactor){
             error = positionVector[0];
+            lostLine = true;
         }
     }else{ //check for losing line on right
-        if(HI->errorHistory.back() - HI->errorHistory.front() > HI->positionVector[numSensors-2]*HI->QRD_Max[numSensors-2]*QRD::QRD_Thresh - HI->positionVector[numSensors-1]*HI->QRD_Max[numSensors-2]*QRD::QRD_Thresh){
+        if(error < lineLostFactor){
+            lostLine = false;
+        }
+        if(lostLine || HI->errorHistory.back() - HI->errorHistory.front() < lineLostFactor){
             error = positionVector[numSensors-1];
+            lostLine = true;
         }
     }
 

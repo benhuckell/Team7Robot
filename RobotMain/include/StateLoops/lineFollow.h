@@ -38,6 +38,7 @@ namespace StateLoops{
             int LSpeed;
             int RSpeed;
             int robotSpeed = 35;
+            bool lostLine;
             float I_sum = 0; //cummulative sum
             HardwareInterface* HI;
 
@@ -45,9 +46,10 @@ namespace StateLoops{
             float P_gain = 1.9; // K_p
             float I_gain = 0; // K_i
             float D_gain = 16.5; // K_d
-            float P_gain_edge = 4;
-            float D_gain_edge = 40;
+            float P_gain_edge = 1.5;
+            float D_gain_edge = 15;
             static const int numSensors = 8;
+            const float lineLostFactor = 20*QRD::QRD_Thresh;
             float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
             const float maxISum = 2; //max sum to avoid integral windup
             const unsigned int ERROR_HISTORY_SIZE = 2; //max size of error queue
