@@ -39,6 +39,7 @@ namespace StateLoops{
             int RSpeed;
             int robotSpeed = 35;
             float I_sum = 0; //cummulative sum
+
             HardwareInterface* HI;
 
             //constant data
@@ -70,6 +71,9 @@ namespace StateLoops{
             bool returningToCentre;
             bool stoneCollected = false;
             bool postDetected;
+            int lineLostFactor = 15;
+            int lineFoundFactor = 20;
+            bool lostLine = false;
 
             // LEFT AND RIGHT WHEN LOOKING IN SAME DIRECTION AS ROBOT IN START POSITION 
             // GUIDE //

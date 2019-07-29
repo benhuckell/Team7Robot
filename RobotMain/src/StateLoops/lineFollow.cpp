@@ -49,9 +49,9 @@ void LineFollow::setup(){
 }
 void LineFollow::loop(){
     //setMotorSpeeds();
-    int robotSpeed = 43;
+    int robotSpeed = 50;
     bool postOnRight = true; //true for right' false for left
-    followTape(robotSpeed,true,true);
+    followTape(robotSpeed,false,true);
     // if(detectJunction()){
     //     digitalWrite(LED_RED,HIGH);
     //     //update position variables
@@ -314,6 +314,26 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollo
 
     if(edgeFollow){
         error = getWeightedEdgeError(followRightEdge);
+        //check for losing line on Left
+        // if(followRightEdge){
+        //     if(lostLine && error > lineFoundFactor){
+        //         lostLine = false;
+        //     }
+        //     if(lostLine || abs(HI->errorHistory.back() - HI->errorHistory.front()) > lineLostFactor){
+        //         error = positionVector[numSensors-1];
+        //         lostLine = true;
+        //     }
+        // }
+        // else{ //check for losing line on right
+        //     if(lostLine && error < -lineFoundFactor){
+        //         lostLine = false;
+        //     }
+        //     if(lostLine || abs(HI->errorHistory.back() - HI->errorHistory.front()) > lineLostFactor){
+        //         error = positionVector[0];
+        //         lostLine = true;
+        //     }
+        // }
+
         digitalWrite(LED_BLUE,HIGH);
     }
     else{
