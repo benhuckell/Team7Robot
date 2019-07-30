@@ -46,7 +46,7 @@ namespace StateLoops{
             HardwareInterface* HI;
 
             //constant data
-            const int edgeFollowTimeout = 500;
+            const unsigned int edgeFollowTimeout = 500;
             float P_gain = 1.9; // K_p
             float I_gain = 0; // K_i
             float D_gain = 16.5; // K_d

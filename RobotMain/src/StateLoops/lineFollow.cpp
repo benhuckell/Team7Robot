@@ -35,7 +35,8 @@ void LineFollow::setup(){
         }else{
             dir = CCW;
         }
-    }else if(destination == Post5 || destination == Post6){
+    }
+    else if(destination == Post5 || destination == Post6){
         if(startingPosition == LeftStart){
             dir = CCW;
         }else{
@@ -49,8 +50,7 @@ void LineFollow::setup(){
 
 void LineFollow::loop(){
     //setMotorSpeeds();
-    int robotSpeed = 50;
-    followTape(robotSpeed,false,true);
+    robotSpeed = 50;
     if(detectJunction()){
         digitalWrite(LED_RED,HIGH);
 
@@ -164,7 +164,6 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
        }
    }
 
-
    if(onBlack){
        return weightedSum;
    } else if(HI->errorHistory.back() < 0){
@@ -174,96 +173,6 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
    }
 
 }
-
-
-// Returns the current amount of line following error
-float LineFollow::getLinePositionError(bool followRightEdge)
-{
-   float QRD_Thresh = 0.4;
-   float returnError = 0.0;
-   float maxVal = 0;
-   int maxIndex = 0;
-   float secondMaxVal = 0;
-   int secondMaxIndex = 0;
-   if(followRightEdge){
-       for(int i = numSensors-1; i > 0; i--){
-           if(HI->QRD_Vals[i] > QRD_Thresh){
-               if(HI->QRD_Vals[i-1] < HI->QRD_Vals[i]){
-                   maxVal = HI->QRD_Vals[i];
-                   maxIndex = i;
-                   if(i == numSensors-1){
-                       secondMaxIndex = numSensors-2;
-                   }
-                   else{
-                       //secondMaxIndex = (HI->QRD_Vals[i+1] > HI->QRD_Vals[i-1]) ? i+1 : i-1;
-                       Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
-                       Serial.print("maxIndex: " + String(maxIndex));
-                       return (positionVector[maxIndex]+((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex+1]-positionVector[maxIndex])-((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex]-positionVector[maxIndex-1]));
-                   }
-                   secondMaxVal = HI->QRD_Vals[secondMaxIndex];
-                   break;
-               }
-               else if(i == 1){
-                   maxVal = HI->QRD_Vals[0];
-                   maxIndex = 0;
-                   secondMaxIndex = 1;
-                   secondMaxVal = HI->QRD_Vals[secondMaxIndex];
-                   break;
-               }
-           }
-       }
-   }else{//left edge
-       for(int i = 0; i < numSensors-1; i++){
-           if(HI->QRD_Vals[i] > QRD_Thresh){
-               if(HI->QRD_Vals[i+1] < HI->QRD_Vals[i]){
-                   maxVal = HI->QRD_Vals[i];
-                   maxIndex = i;
-                   if(i == 0){
-                       secondMaxIndex = 1;
-                   }
-                   else{
-                       //secondMaxIndex = (HI->QRD_Vals[i+1] > HI->QRD_Vals[i-1]) ? i+1 : i-1;
-                       Serial.println(String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
-                       Serial.print(maxIndex);
-                       return (positionVector[maxIndex]+((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex+1]-positionVector[maxIndex])-((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex]-positionVector[maxIndex-1]));
-                   }
-               }
-               else if(i == numSensors-2){
-                   maxVal = HI->QRD_Vals[numSensors-1];
-                   maxIndex = numSensors-1;
-                   secondMaxIndex = numSensors-2;
-                   secondMaxVal = HI->QRD_Vals[secondMaxIndex];
-                   break;
-               }
-           }
-       }
-   }
-   if(maxVal == 0 || secondMaxVal == 0){
-       if(HI->errorHistory.back()<0){
-           returnError = -30.5;
-       }
-       else if(HI->errorHistory.back()>0){
-           returnError = 30.5;
-       }
-       else{
-           returnError = 0;
-       }
-   }
-   else{
-       //Interpolate to find error, need to always find left most point and add
-       if(maxIndex < secondMaxIndex){ //if max index is less than second max index
-           returnError = positionVector[maxIndex] + ((secondMaxVal)/(maxVal+secondMaxVal))*(positionVector[secondMaxIndex]-positionVector[maxIndex]);
-       }
-       else{ //if max index is greater than second max index
-           returnError = positionVector[secondMaxIndex] + ((maxVal)/(maxVal+secondMaxVal))*(positionVector[maxIndex]-positionVector[secondMaxIndex]);
-       }
-   }
- 
- 
- 
-   return returnError;
-}
-
 
 //runs a PID to follow the tape
 void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollow){
@@ -440,14 +349,13 @@ void LineFollow::QRDTurn(bool turnRight){
 
 void LineFollow::junctionTurn(Turn turn){
     robotSpeed = 40;
+    unsigned int turnStartTime = millis();
     if(turn == LEdgeTurn){
-        int turnStartTime = millis();
         while(millis() - turnStartTime < edgeFollowTimeout){
             followTape(robotSpeed, false, true);//follow right edge
         }
     }
     else if(turn == REdgeTurn){
-        int turnStartTime = millis();
         while(millis() - turnStartTime < edgeFollowTimeout){
             followTape(robotSpeed, true, true);//follow right edge
         }
