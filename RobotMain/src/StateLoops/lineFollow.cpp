@@ -367,3 +367,19 @@ void LineFollow::junctionTurn(Turn turn){
         QRDTurn(true);//turn right
     }
 }
+
+void LineFollow::slewBrake(int robotSpeed, int duration){
+    int startTime = millis();
+    int time_elapsed = startTime;
+    while(time_elapsed-startTime < duration){
+        HI->LMotor->setSpeed(robotSpeed*(1-time_elapsed/duration));
+        HI->RMotor->setSpeed(robotSpeed*(1-time_elapsed/duration));
+        HI->LMotor->update();
+        HI->RMotor->update();
+        time_elapsed = millis();
+    }
+    HI->LMotor->setSpeed(0);
+    HI->RMotor->setSpeed(0);
+    HI->LMotor->update();
+    HI->RMotor->update();
+}

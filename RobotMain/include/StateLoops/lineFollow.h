@@ -35,6 +35,7 @@ namespace StateLoops{
             void turnOnLine();
             void stopMoving();
             void QRDTurn(bool turnRight);
+            void slewBrake(int robotSpeed, int duration);
 
             //varying data
             float error;
