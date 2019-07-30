@@ -56,7 +56,7 @@ namespace StateLoops{
             float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
             const float maxISum = 2; //max sum to avoid integral windup
             const unsigned int ERROR_HISTORY_SIZE = 2; //max size of error queue
-            const float straightLineCorrectionFactor = 1.4;
+            const float straightLineCorrectionFactor = 1.0;
             const float ticksPerAngle = 0.25;//HI->REncoder->ticksPerRotation/wheelCircumference/(wheelCircumference/360); // ticks/rot * rot/m * m/deg 
             const float wheelCircumference = PI*0.055; //metres
             const unsigned int edgeFollowTimeout = 300;
