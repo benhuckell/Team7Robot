@@ -15,6 +15,8 @@ namespace StateLoops{
             enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
             enum Direction {CCW, CW};
             Position startingPosition;
+            enum Turn {LEdgeTurn, REdgeTurn, QRD_Left, QRD_Right, PostTurn}; 
+
 
         private:
             float getLinePositionError(bool followRightEdge);
@@ -32,12 +34,14 @@ namespace StateLoops{
             void turnXDegrees(int angle);
             void turnOnLine();
             void stopMoving();
+            void junctionTurn(Turn turn);
+            void QRDTurn(bool turnDirection);
 
             //varying data
             float error;
             int LSpeed;
             int RSpeed;
-            int robotSpeed = 35;
+            int robotSpeed;
             float I_sum = 0; //cummulative sum
 
             HardwareInterface* HI;
@@ -55,8 +59,13 @@ namespace StateLoops{
             const float straightLineCorrectionFactor = 1.4;
             const float ticksPerAngle = 0.25;//HI->REncoder->ticksPerRotation/wheelCircumference/(wheelCircumference/360); // ticks/rot * rot/m * m/deg 
             const float wheelCircumference = PI*0.055; //metres
+            const unsigned int edgeFollowTimeout = 300;
 
             //NAVIGATION
+            //Path lists
+            //Turn path1[3] = {LEdgeTurn,LEdgeTurn,PostTurn};
+            //int turnStep = 0;
+
             
             Position PostPriority[6] = {Post1, Post2, Post3, Post5, Post6, Post4};
             
@@ -71,7 +80,7 @@ namespace StateLoops{
             bool returningToCentre;
             bool stoneCollected = false;
             bool postDetected;
-            int lineLostFactor = 15;
+            int lineLostFactor = 22;
             int lineFoundFactor = 20;
             bool lostLine = false;
 

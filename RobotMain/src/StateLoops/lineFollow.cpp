@@ -12,46 +12,55 @@ void LineFollow::setup(){
     digitalWrite(LED_BLUE,LOW);
     digitalWrite(LED_RED,LOW);
 
-    //Calculate paths
-    currentPosition = startingPosition;
-    if(startingPosition == LeftStart){ //team == THANOS
-        for(int i = 0; i < 6; i++){
-            destinationList.push(PostPriority[i]);
-            destinationList.push(LeftIntersection);
-            destinationList.push(LeftGauntlet);
-        }
-    }else{ //team == METHANOS
-        for(int i = 0; i < 6; i++){
-            destinationList.push(PostPriority[i]);
-            destinationList.push(RightIntersection);
-            destinationList.push(RightGauntlet);
-        }
-    }
-    destination = destinationList.front();
+    //Push starting value to queue
+    HI->errorHistory.push(0);
 
-    if(destination <= Post4 && destination >= Post1){
-        if(startingPosition == LeftStart){
-            dir =  CW;
-        }else{
-            dir = CCW;
-        }
-    }else if(destination == Post5 || destination == Post6){
-        if(startingPosition == LeftStart){
-            dir = CCW;
-        }else{
-            dir = CW;
-        }
-    }
-    Serial.print(dir);
-    nextPos = nextPosition[currentPosition][dir][currentPosition == destination];
-    nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
-
+    //turnStep = 0;
 }
+
+void LineFollow::junctionTurn(Turn turn){
+    robotSpeed = 40;
+    if(turn == LEdgeTurn){
+        followTape(robotSpeed, false, true);//follow right edge
+    }
+    else if(turn == REdgeTurn){
+        followTape(robotSpeed, true, true);//follow right edge
+    }
+    else if(turn == QRD_Left){
+        //QRDTurn(false);//turn left
+    }
+    else if(turn == QRD_Right){
+        //QRDTurn(true);//turn right
+    }
+    // else if(turn == PostTurn){
+    //     stopMoving();
+    //     delay(5000);
+    // }
+}
+
 void LineFollow::loop(){
-    //setMotorSpeeds();
-    int robotSpeed = 50;
-    bool postOnRight = true; //true for right' false for left
-    followTape(robotSpeed,false,true);
+    int robotSpeed = 43;
+    int junctionHandling = false;
+
+    // if(detectJunction()){
+    //     followTape(40,false,true);
+    //     // junctionHandling = true;
+    //     // junctionTurn(path1[turnStep]);
+    // }
+    // else{
+    //     // if(junctionHandling){
+    //     //     junctionHandling = false;
+    //     //     turnStep++;
+    //     // }
+    //     followTape(robotSpeed,false,false);
+    // }
+    LSpeed = 60;
+    RSpeed = 60;
+    setMotorSpeeds();
+    
+
+
+
     // if(detectJunction()){
     //     digitalWrite(LED_RED,HIGH);
     //     //update position variables
@@ -313,34 +322,39 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollo
     float error = 0;
 
     if(edgeFollow){
+        digitalWrite(LED_BLUE,HIGH);
+        digitalWrite(LED_RED,LOW);
         error = getWeightedEdgeError(followRightEdge);
+
         //check for losing line on Left
         // if(followRightEdge){
         //     if(lostLine && error > lineFoundFactor){
         //         lostLine = false;
         //     }
         //     if(lostLine || abs(HI->errorHistory.back() - HI->errorHistory.front()) > lineLostFactor){
+
         //         error = positionVector[numSensors-1];
         //         lostLine = true;
         //     }
         // }
         // else{ //check for losing line on right
-        //     if(lostLine && error < -lineFoundFactor){
+        //     if(lostLine && error < (-1*lineFoundFactor)){
         //         lostLine = false;
         //     }
         //     if(lostLine || abs(HI->errorHistory.back() - HI->errorHistory.front()) > lineLostFactor){
-        //         error = positionVector[0];
+        //         digitalWrite(LED_RED,HIGH);
+        //         error = -30;
         //         lostLine = true;
         //     }
         // }
 
-        digitalWrite(LED_BLUE,HIGH);
     }
     else{
+        digitalWrite(LED_BLUE,LOW);
         digitalWrite(LED_RED,HIGH);
         error = HI->getWeightedError();
     }
-    Serial.println("error: " + String(error));
+ 
 
     HI->errorHistory.push(error); // add current error to errorQueue
     if(HI->errorHistory.size() > ERROR_HISTORY_SIZE){ // keep queue size at ERROR_HISTORY_SIZE
@@ -377,14 +391,6 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollo
 ///////////////////////////// PID END ////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-void LineFollow::findIR() {
-
-}
-
-void LineFollow::findGauntlet() {
-
-}
-
 //return true if any sensors detect black
 //return false otherwise
 bool LineFollow::detectLine(){
@@ -397,10 +403,9 @@ bool LineFollow::detectLine(){
 }
 
 bool LineFollow::detectJunction(){
-    digitalWrite(LED_BLUE,HIGH);
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.65){
+        if (HI->QRD_Vals[i] > 0.6){
             count++;
         }
     }
@@ -421,17 +426,4 @@ void LineFollow::stopMoving(){
     delay(150);
 }
 
-void LineFollow::turnOnLine(){
-    HI->RMotor->setSpeed(-50);
-    HI->LMotor->setSpeed(50);
-    HI->RMotor->update();
-    HI->LMotor->update();
 
-    while(detectLine()){}
-    while(!detectLine()){}
-    
-    HI->RMotor->setSpeed(0);
-    HI->LMotor->setSpeed(0);
-    HI->RMotor->update();
-    HI->LMotor->update();
-}

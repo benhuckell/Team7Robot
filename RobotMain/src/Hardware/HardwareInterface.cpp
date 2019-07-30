@@ -45,24 +45,24 @@ HardwareInterface::HardwareInterface(){
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 61, 594);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 56, 331);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 54, 284);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 53, 224);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 55, 353);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 54, 317);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 55, 193);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 60, 432);
+//    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 61, 594);
+//    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 56, 331);
+//    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 54, 284);
+//    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 53, 224);
+//    HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 55, 353);
+//    HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 54, 317);
+//    HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 55, 193);
+//    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 60, 432);
 
     //For calibrating
-//    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);
-//    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 0, 1000);
-//    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 0, 1000);
-//    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 0, 1000);
-//    HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 0, 1000);
-//    HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 0, 1000);
-//    HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 0, 1000);
-//    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 0, 1000);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 71, 711);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 59, 464);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 56, 421);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 55, 369);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 57, 480);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 57, 429);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 59, 371);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 72, 628);
 
    HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 
