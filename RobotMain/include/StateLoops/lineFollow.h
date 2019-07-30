@@ -14,6 +14,7 @@ namespace StateLoops{
             void setup();
             enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
             enum Direction {CCW, CW};
+            enum Turn {LEdgeTurn, REdgeTurn, QRD_Left, QRD_Right, PostTurn}; 
             Position startingPosition;
 
         private:
@@ -28,10 +29,12 @@ namespace StateLoops{
             bool detectJunction();
             bool detectIntersection();
             void intersectionTurn();
-            void turnTowardsPost();
+            void junctionTurn(Turn turn);
+            void turnToPost();
             void turnXDegrees(int angle);
             void turnOnLine();
             void stopMoving();
+            void QRDTurn(bool turnRight);
 
             //varying data
             float error;
@@ -43,6 +46,7 @@ namespace StateLoops{
             HardwareInterface* HI;
 
             //constant data
+            const int edgeFollowTimeout = 500;
             float P_gain = 1.9; // K_p
             float I_gain = 0; // K_i
             float D_gain = 16.5; // K_d
@@ -59,14 +63,15 @@ namespace StateLoops{
             //NAVIGATION
             
             Position PostPriority[6] = {Post1, Post2, Post3, Post5, Post6, Post4};
-            
+            Turn TurnTypes[5] = {LEdgeTurn, REdgeTurn, QRD_Left, QRD_Right,PostTurn};
+
             std::queue<Position> destinationList;
             Position destination;// = PostPriority[0];
             Direction dir = CW;//0 is CW, 1 is CCW
             Position prevPosition;
             Position currentPosition;
             Position nextPos;
-            int nextAngle;
+            Turn nextTurn;
             bool goingToGauntlet;
             bool returningToCentre;
             bool stoneCollected = false;
@@ -80,24 +85,23 @@ namespace StateLoops{
             //enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
             //enum dir {CCW, CW};
             
-            
             //!!WARNING!! DO NOT USE WHEN nextPos == destination && destination is a post. In this case the turn angle will be found automatically. 
             //  ^^This case is not covered by this array and may return an incorrect value
             //nextTurnAngle[currentPosition][dir][nextPos == destination]   
-                 //CCW//    //CW//
-            int nextTurnAngle[12][2][2] = 
-                {{{-40,0},{-37,0}},             //LeftStart
-                {{-15,-15},{-7,-7}},            //LeftGauntlet
-                {{-10,-110},{10,-140}},         //LeftIntersection
-                {{-110,20},{-10,-110}},          //Post1
-                {{-10,90},{-10,-90}},           //Post2
-                {{-10,90},{10,-90}},            //Post3
-                {{10,90},{110,-30}},            //Post4
-                {{-10,90},{-10,120}},           //Post5
-                {{-120,5},{-10,-90}},           //Post6
-                {{-10,120},{10,120}},           //RightIntersection
-                {{45,45},{-20,-20}},            //RightGauntlet
-                {{60,-5},{60,-5}}};             //RightStart*/
+                        //CCW//                 //CW//
+            Turn nextTurnType[12][2][2] = 
+                {{{LEdgeTurn,REdgeTurn},{LEdgeTurn,REdgeTurn}},             //LeftStart
+                {{REdgeTurn,REdgeTurn},{LEdgeTurn,LEdgeTurn}},            //LeftGauntlet
+                {{LEdgeTurn,QRD_Left},{REdgeTurn,QRD_Left}},         //LeftIntersection
+                {{QRD_Left,REdgeTurn},{REdgeTurn,PostTurn}},          //Post1
+                {{LEdgeTurn,PostTurn},{REdgeTurn,PostTurn}},           //Post2
+                {{LEdgeTurn,PostTurn},{REdgeTurn,PostTurn}},            //Post3
+                {{LEdgeTurn,PostTurn},{QRD_Right,LEdgeTurn}},            //Post4
+                {{LEdgeTurn,PostTurn},{QRD_Right,LEdgeTurn}},           //Post5
+                {{QRD_Left,REdgeTurn},{REdgeTurn,PostTurn}},           //Post6
+                {{LEdgeTurn,QRD_Right},{REdgeTurn,QRD_Right}},           //RightIntersection
+                {{REdgeTurn,REdgeTurn},{LEdgeTurn,LEdgeTurn}},            //RightGauntlet
+                {{REdgeTurn,LEdgeTurn},{REdgeTurn,LEdgeTurn}}};             //RightStart*/
 
             //nextPosition[currentPosition][dir][currentPosition == destination]
             Position nextPosition[12][2][2] = 
@@ -112,7 +116,7 @@ namespace StateLoops{
                 {{RightIntersection,Post6},{Post5,Post6}},                             //Post6
                 {{Post4,RightGauntlet},{Post6,RightGauntlet}},                         //RightIntersection
                 {{RightIntersection,RightGauntlet},{RightIntersection,RightGauntlet}}, //RightGauntlet
-                {{RightGauntlet,RightGauntlet},{RightGauntlet,RightGauntlet}}};        //RightStart*/
+                {{RightGauntlet,RightGauntlet},{RightGauntlet,RightGauntlet}}};        //RightStart
 
             //state data
             bool climbedRamp = false;
