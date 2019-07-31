@@ -15,13 +15,16 @@ namespace StateLoops{
             enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
             enum Direction {CCW, CW};
             Position startingPosition;
+            enum Turn {LEdgeTurn, REdgeTurn, QRD_Left, QRD_Right, PostTurn}; 
+
 
         private:
             float getLinePositionError(bool followRightEdge);
             float getWeightedError();
+            float getWeightedEdgeError(bool followRightEdge);
             void findIR();
             void findGauntlet();
-            void followTape(int robotSpeed, bool followRightEdge);
+            void followTape(int robotSpeed, bool followRightEdge, bool edgeFollow);
             void setMotorSpeeds();
             bool detectLine();
             bool detectJunction();
@@ -31,28 +34,38 @@ namespace StateLoops{
             void turnXDegrees(int angle);
             void turnOnLine();
             void stopMoving();
+            void junctionTurn(Turn turn);
+            void QRDTurn(bool turnDirection);
 
             //varying data
             float error;
             int LSpeed;
             int RSpeed;
-            int robotSpeed = 35;
+            int robotSpeed;
             float I_sum = 0; //cummulative sum
+
             HardwareInterface* HI;
 
             //constant data
             float P_gain = 1; // K_p
             float I_gain = 0; // K_i
             float D_gain = 16.5; // K_d
+            float P_gain_edge = 1.9;
+            float D_gain_edge = 13;
             static const int numSensors = 8;
             float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
             const float maxISum = 2; //max sum to avoid integral windup
             const unsigned int ERROR_HISTORY_SIZE = 2; //max size of error queue
-            const float straightLineCorrectionFactor = 1.4;
+            const float straightLineCorrectionFactor = 1.0;
             const float ticksPerAngle = 0.25;//HI->REncoder->ticksPerRotation/wheelCircumference/(wheelCircumference/360); // ticks/rot * rot/m * m/deg 
             const float wheelCircumference = PI*0.055; //metres
+            const unsigned int edgeFollowTimeout = 300;
 
             //NAVIGATION
+            //Path lists
+            //Turn path1[3] = {LEdgeTurn,LEdgeTurn,PostTurn};
+            //int turnStep = 0;
+
             
             Position PostPriority[6] = {Post1, Post2, Post3, Post5, Post6, Post4};
             
@@ -67,6 +80,9 @@ namespace StateLoops{
             bool returningToCentre;
             bool stoneCollected = false;
             bool postDetected;
+            int lineLostFactor = 22;
+            int lineFoundFactor = 20;
+            bool lostLine = false;
 
             // LEFT AND RIGHT WHEN LOOKING IN SAME DIRECTION AS ROBOT IN START POSITION 
             // GUIDE //
@@ -79,9 +95,9 @@ namespace StateLoops{
             //nextTurnAngle[currentPosition][dir][nextPos == destination]   
                  //CCW//    //CW//
             int nextTurnAngle[12][2][2] = 
-                {{{-40,0},{-40,0}},             //LeftStart
-                {{15,15},{-20,-20}},            //LeftGauntlet
-                {{-10,-110},{10,-110}},         //LeftIntersection
+                {{{-40,0},{-37,0}},             //LeftStart
+                {{-15,-15},{-7,-7}},            //LeftGauntlet
+                {{-10,-110},{10,-140}},         //LeftIntersection
                 {{-110,20},{-10,-110}},          //Post1
                 {{-10,90},{-10,-90}},           //Post2
                 {{-10,90},{10,-90}},            //Post3

@@ -8,63 +8,53 @@ LineFollow::LineFollow(){
 }
 
 void LineFollow::setup(){
-    //Calculate paths
-    currentPosition = startingPosition;
-    if(startingPosition == LeftStart){ //team == THANOS
-        for(int i = 0; i < 6; i++){
-            destinationList.push(PostPriority[i]);
-            destinationList.push(LeftIntersection);
-            destinationList.push(LeftGauntlet);
-        }
-    }else{ //team == METHANOS
-        for(int i = 0; i < 6; i++){
-            destinationList.push(PostPriority[i]);
-            destinationList.push(RightIntersection);
-            destinationList.push(RightGauntlet);
-        }
-    }
-    destination = destinationList.front();
+    //Turn off LEDs
+    digitalWrite(LED_BLUE,LOW);
+    digitalWrite(LED_RED,LOW);
 
-    if(destination <= Post4 && destination >= Post1){
-        if(startingPosition == LeftStart){
-            dir =  CW;
-        }else{
-            dir = CCW;
-        }
-    }else if(destination == Post5 || destination == Post6){
-        if(startingPosition == LeftStart){
-            dir = CCW;
-        }else{
-            dir = CW;
-        }
-    }
-    Serial.print(dir);
-    nextPos = nextPosition[currentPosition][dir][currentPosition == destination];
-    nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
+    //Push starting value to queue
+    HI->errorHistory.push(0);
 
+    //turnStep = 0;
 }
-void LineFollow::loop(){
-    Serial.println("looping");
-    
-    //////ENCODER DEBUG CODE
-    //Serial.println("LEN line: " + String(HI->LEncoder->getCount()));
-    //Serial.println("REN line: " + String(HI->REncoder->getCount()));
-    //Serial.println("");
-    ///////
-    
-        //setMotorSpeeds();
-    int robotSpeed = 100;
-    bool postOnRight = true; //true for right false for left
-    HI->LMotor->setSpeed(robotSpeed);
-    HI->RMotor->setSpeed(robotSpeed/1.4);
-    HI->LMotor->update();
-    HI->RMotor->update();
-    
-    // while(true){
-    //     delay(50);
+
+void LineFollow::junctionTurn(Turn turn){
+    robotSpeed = 40;
+    if(turn == LEdgeTurn){
+        followTape(robotSpeed, false, true);//follow right edge
+    }
+    else if(turn == REdgeTurn){
+        followTape(robotSpeed, true, true);//follow right edge
+    }
+    else if(turn == QRD_Left){
+        //QRDTurn(false);//turn left
+    }
+    else if(turn == QRD_Right){
+        //QRDTurn(true);//turn right
+    }
+    // else if(turn == PostTurn){
+    //     stopMoving();
+    //     delay(5000);
     // }
-   
-    //followTape(robotSpeed,false);
+}
+
+void LineFollow::loop(){
+    robotSpeed = 50;
+    int junctionHandling = false;
+    followTape(robotSpeed, false,true);
+    // if(detectJunction()){
+    //     followTape(40,false,true);
+    //     // junctionHandling = true;
+    //     // junctionTurn(path1[turnStep]);
+    // }
+    // else{
+    //     // if(junctionHandling){
+    //     //     junctionHandling = fa lse;
+    //     //     turnStep++;
+    //     // }
+    //     followTape(robotSpeed,false,false);
+    // }
+
 
     // if(detectJunction()){
     //     digitalWrite(LED_RED,HIGH);
@@ -90,8 +80,8 @@ void LineFollow::loop(){
     //         }
     //         //drive forwards slightly
     //         int time = millis();
-    //         while(millis()-time < 240){
-    //             followTape(robotSpeed,true);
+    //         while(millis()-time < 200){
+    //             followTape(robotSpeed,true,false);
     //             HI->update();
     //         }
     //         //brake and turn towards post
@@ -127,6 +117,7 @@ void LineFollow::loop(){
     //             HI->turn_single(angle*9, 1, 1, angle*12, 1);
     //         } 
     //         else{
+    //             stopMoving();
     //             HI->turn_single(abs(angle)*9, -1, 1, abs(angle)*12, 0.7);
     //         }
     //     }
@@ -154,7 +145,7 @@ void LineFollow::loop(){
     // else { 
     //     digitalWrite(LED_RED, LOW);
     //     Serial.println("following tape");
-    //     followTape(robotSpeed, true);
+    //     followTape(robotSpeed, true,true);
     // }
     return;
 }
@@ -174,102 +165,101 @@ void LineFollow::setMotorSpeeds(){
     HI->RMotor->setSpeed(RSpeed/straightLineCorrectionFactor);
 }
 
-// Returns the current amount of line following error
-float LineFollow::getLinePositionError(bool followRightEdge)
+float LineFollow::getWeightedEdgeError(bool followRightEdge)
 {
-    float QRD_Thresh = 0.4;
-    float returnError = 0.0;
-    float maxVal = 0;
-    int maxIndex = 0;
-    float secondMaxVal = 0;
-    int secondMaxIndex = 0;
-    Serial.print("getLine()");
-    if(followRightEdge){
-        for(int i = numSensors-1; i > 0; i--){
-            if(HI->QRD_Vals[i] > QRD_Thresh){
-                if(HI->QRD_Vals[i-1] < HI->QRD_Vals[i]){
-                    maxVal = HI->QRD_Vals[i];
-                    maxIndex = i;
-                    if(i == numSensors-1){
-                        secondMaxIndex = numSensors-2;
-                    }
-                    else{
-                        //secondMaxIndex = (HI->QRD_Vals[i+1] > HI->QRD_Vals[i-1]) ? i+1 : i-1;
-                        return (positionVector[maxIndex]+((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex+1]-positionVector[maxIndex])-((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex]-positionVector[maxIndex-1]));
-                    }
-                    secondMaxVal = HI->QRD_Vals[secondMaxIndex];
-                    break;
-                }
-                else if(i == 1){
-                    maxVal = HI->QRD_Vals[0];
-                    maxIndex = 0;
-                    secondMaxIndex = 1;
-                    secondMaxVal = HI->QRD_Vals[secondMaxIndex];
-                    break;
-                }
-            }
-        }
-    }else{//left edge
-        for(int i = 0; i < numSensors-1; i++){
-            if(HI->QRD_Vals[i] > QRD_Thresh){
-                if(HI->QRD_Vals[i+1] < HI->QRD_Vals[i]){
-                    maxVal = HI->QRD_Vals[i];
-                    maxIndex = i;
-                    if(i == 0){
-                        secondMaxIndex = 1;
-                    }
-                    else{
-                        //secondMaxIndex = (HI->QRD_Vals[i+1] > HI->QRD_Vals[i-1]) ? i+1 : i-1;
-                        return (positionVector[maxIndex]+((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex+1]-positionVector[maxIndex])-((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex]-positionVector[maxIndex-1]));
-                    }
-                    secondMaxVal = HI->QRD_Vals[secondMaxIndex];
-                    break;
-                }
-                else if(i == numSensors-2){
-                    maxVal = HI->QRD_Vals[numSensors-1];
-                    maxIndex = numSensors-1;
-                    secondMaxIndex = numSensors-2;
-                    secondMaxVal = HI->QRD_Vals[secondMaxIndex];
-                    break;
-                }
-            }
-        }
-    }
-    if(maxVal == 0 || secondMaxVal == 0){
-        if(HI->errorHistory.back()<0){
-            returnError = -30.5;
-        }
-        else if(HI->errorHistory.back()>0){
-            returnError = 30.5;
-        }
-        else{
-            returnError = 0;
-        }
-    }
-    else{
-        //Interpolate to find error, need to always find left most point and add
-        if(maxIndex < secondMaxIndex){ //if max index is less than second max index
-            returnError = positionVector[maxIndex] + ((secondMaxVal)/(maxVal+secondMaxVal))*(positionVector[secondMaxIndex]-positionVector[maxIndex]);
-        }
-        else{ //if max index is greater than second max index
-            returnError = positionVector[secondMaxIndex] + ((maxVal)/(maxVal+secondMaxVal))*(positionVector[maxIndex]-positionVector[secondMaxIndex]);
-        }
-    }
+   float weightedSum = 0;
+   bool onBlack = false;
+   int maxIndex = -1;
+   if(followRightEdge){
+       for(int i = numSensors-1; i >= 0; i--){
+           if(HI->QRD_Vals[i] > QRD::QRD_Thresh){
+               onBlack = true;
+               if(i == 0){
+                   for(int i = numSensors-1; i >= 0; i--){
+                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                   }
+                   break;
+               }
+               else if(HI->QRD_Vals[i-1] < HI->QRD_Vals[i]){
+                   maxIndex = i;
+                   for(int i = maxIndex-1; i < numSensors; i++){
+                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                   }
+                   break;
+               }
+           }
+       }
+   }
+   else{//left edge
+       for(int i = 0; i < numSensors; i++){
+           if(HI->QRD_Vals[i] > QRD::QRD_Thresh){
+               onBlack = true;
+               if(i == numSensors-1){
+                   for(int i = 0; i < numSensors; i++){
+                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                   }
+                   break;
+               }
+               else if(HI->QRD_Vals[i+1] < HI->QRD_Vals[i]){
+                   maxIndex = i;
+                   for(int i = maxIndex+1; i >= 0; i--){
+                       weightedSum += HI->QRD_Vals[i]*positionVector[i];
+                   }
+                   break;
+               }
+           }
+       }
+   }
 
 
+   if(onBlack){
+       return weightedSum;
+   } else if(HI->errorHistory.back() < 0){
+       return positionVector[0];
+   } else {
+       return positionVector[numSensors-1];
+   }
 
-    return returnError;
 }
 
 //runs a PID to follow the tape
-void LineFollow::followTape(int robotSpeed, bool followRightEdge){
-    P_gain = float(analogRead(CONTROL_POT_1))/float(200.0);
-    D_gain = float(analogRead(CONTROL_POT_2))/float(7.5);
+void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollow){
+    float error = 0;
 
-    float error = getLinePositionError(followRightEdge);
-    Serial.println("FULL ARRAY: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " " );
-    Serial.print("error: ");
-    Serial.print(error);
+    if(edgeFollow){
+        digitalWrite(LED_BLUE,HIGH);
+        digitalWrite(LED_RED,LOW);
+        error = getWeightedEdgeError(followRightEdge);
+
+        //check for losing line on Left
+        // if(followRightEdge){
+        //     if(lostLine && error > lineFoundFactor){
+        //         lostLine = false;
+        //     }
+        //     if(lostLine || abs(HI->errorHistory.back() - HI->errorHistory.front()) > lineLostFactor){
+
+        //         error = positionVector[numSensors-1];
+        //         lostLine = true;
+        //     }
+        // }
+        // else{ //check for losing line on right
+        //     if(lostLine && error < (-1*lineFoundFactor)){
+        //         lostLine = false;
+        //     }
+        //     if(lostLine || abs(HI->errorHistory.back() - HI->errorHistory.front()) > lineLostFactor){
+        //         digitalWrite(LED_RED,HIGH);
+        //         error = -30;
+        //         lostLine = true;
+        //     }
+        // }
+
+    }
+    else{
+        digitalWrite(LED_BLUE,LOW);
+        digitalWrite(LED_RED,HIGH);
+        error = HI->getWeightedError();
+    }
+ 
 
     HI->errorHistory.push(error); // add current error to errorQueue
     if(HI->errorHistory.size() > ERROR_HISTORY_SIZE){ // keep queue size at ERROR_HISTORY_SIZE
@@ -286,7 +276,13 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge){
 
     //adjust speed of both wheels to correct for error
     float speedAdj = 0;
-    speedAdj = P_gain*error + I_gain*I_sum + D_gain*D_error;
+
+    if(edgeFollow){
+        speedAdj = P_gain_edge*error + D_gain_edge*D_error;
+    }
+    else{
+        speedAdj = P_gain*error + I_gain*I_sum + D_gain*D_error;
+    }
 
     LSpeed = (robotSpeed + speedAdj);
     RSpeed = (robotSpeed - speedAdj);
@@ -295,18 +291,14 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge){
     // Serial.println(LSpeed);
     // Serial.println(RSpeed);
     setMotorSpeeds();
+
+    Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
+    Serial.print("Error: " + String(error));
+
 }
 //////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// PID END ////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-
-void LineFollow::findIR() {
-
-}
-
-void LineFollow::findGauntlet() {
-
-}
 
 //return true if any sensors detect black
 //return false otherwise
@@ -319,20 +311,10 @@ bool LineFollow::detectLine(){
     return false;
 }
 
-//turn at an intersection
-void LineFollow::intersectionTurn(){
-    if(dir == CW){
-        turnXDegrees(20);
-    }else{
-        turnXDegrees(-20);
-    }
-}
-
 bool LineFollow::detectJunction(){
-    digitalWrite(LED_BLUE,HIGH);
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.65){
+        if (HI->QRD_Vals[i] > 0.6){
             count++;
         }
     }
@@ -340,14 +322,6 @@ bool LineFollow::detectJunction(){
         return true;
     }
     return false;
-}
-
-void LineFollow::turnTowardsPost() {
-    if(dir){
-        turnXDegrees(-90);
-    }else{
-        turnXDegrees(90);
-    }
 }
 
 void LineFollow::stopMoving(){
@@ -361,17 +335,4 @@ void LineFollow::stopMoving(){
     delay(150);
 }
 
-void LineFollow::turnOnLine(){
-    HI->RMotor->setSpeed(-50);
-    HI->LMotor->setSpeed(50);
-    HI->RMotor->update();
-    HI->LMotor->update();
 
-    while(detectLine()){}
-    while(!detectLine()){}
-    
-    HI->RMotor->setSpeed(0);
-    HI->LMotor->setSpeed(0);
-    HI->RMotor->update();
-    HI->LMotor->update();
-}

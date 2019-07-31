@@ -16,7 +16,7 @@ void WinchEncoderInterrupt(){
 }
 
 HardwareInterface::HardwareInterface(){
-   Serial.begin(9600);
+   Serial.begin(115200);
 
    HardwareInterface::LMotor = new DriveMotor(LMOTOR_FORWARDS, LMOTOR_BACKWARDS);
    HardwareInterface::RMotor = new DriveMotor(RMOTOR_FORWARDS, RMOTOR_BACKWARDS);
@@ -43,14 +43,24 @@ HardwareInterface::HardwareInterface(){
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
    //attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 350, 84, 685);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 61, 518);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 170, 57, 471);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 135, 56, 402);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 180, 57, 494);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 165, 58, 467);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 130, 60, 414);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 300, 76, 632);
+//    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 61, 594);
+//    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 56, 331);
+//    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 54, 284);
+//    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 53, 224);
+//    HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 55, 353);
+//    HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 54, 317);
+//    HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 55, 193);
+//    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 60, 432);
+
+    //For calibrating
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 71, 711);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 59, 464);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 56, 421);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 55, 369);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 57, 480);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 57, 429);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 59, 371);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 72, 628);
 
    HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 
