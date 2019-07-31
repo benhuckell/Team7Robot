@@ -4,12 +4,10 @@ HardwareInterface* HardwareInterface::myInstance = NULL;
 
 
 void LEncoderInterrupt(){
-   //Serial.print(" InterruptingL... ");
    HardwareInterface::i()->LEncoder->ISR();
 }
 
 void REncoderInterrupt(){
-   //Serial.print(" InterruptingR... ");
    HardwareInterface::i()->REncoder->ISR();
 }
 
@@ -43,7 +41,7 @@ HardwareInterface::HardwareInterface(){
    pinMode(LED_BLUE, OUTPUT);
    attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
-   attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
+   //attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
 
    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 350, 84, 685);
    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 200, 61, 518);

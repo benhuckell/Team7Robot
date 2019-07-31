@@ -12,6 +12,7 @@ Debugging::Debugging(){
 }
 
 void Debugging::loop(){
+
     digitalWrite(LED_RED, LOW);
     HI->LMotor->setSpeed(0);
     HI->RMotor->setSpeed(0);
@@ -112,6 +113,12 @@ void Debugging::loop(){
     //HardwareInterface::i()->update();
 
     display.display();
+
+    /////ENCODER DEBUG CODE
+    // Serial.println("LEN: " + String(HI->LEncoder->getCount()));
+    // Serial.println("REN: " + String(HI->REncoder->getCount()));
+    // Serial.println("");
+    //////////////////
 
     return;
 }

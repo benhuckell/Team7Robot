@@ -45,10 +45,27 @@ void LineFollow::setup(){
 }
 void LineFollow::loop(){
     Serial.println("looping");
-    //setMotorSpeeds();
-    int robotSpeed = 60;
+    
+    //////ENCODER DEBUG CODE
+    //Serial.println("LEN line: " + String(HI->LEncoder->getCount()));
+    //Serial.println("REN line: " + String(HI->REncoder->getCount()));
+    //Serial.println("");
+    ///////
+    
+        //setMotorSpeeds();
+    int robotSpeed = 100;
     bool postOnRight = true; //true for right false for left
-    followTape(robotSpeed,false);
+    HI->LMotor->setSpeed(robotSpeed);
+    HI->RMotor->setSpeed(robotSpeed/1.4);
+    HI->LMotor->update();
+    HI->RMotor->update();
+    
+    // while(true){
+    //     delay(50);
+    // }
+   
+    //followTape(robotSpeed,false);
+
     // if(detectJunction()){
     //     digitalWrite(LED_RED,HIGH);
     //     //update position variables
