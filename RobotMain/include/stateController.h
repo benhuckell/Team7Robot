@@ -10,7 +10,7 @@ enum States{lineFollowing,avengerCollecting,avengerScoring,stoneCollecting,stone
 class MainState{
 public:
     static MainState* instance();
-
+    static int start_time_global;
     void setState(States newState);
     States getState();
 

@@ -25,7 +25,7 @@ void setup() {
   Serial.begin(115200);
   delay(3000);
 
-
+  Serial.println("started main");
     /* HardwareTimer Timer2 = HardwareTimer()
 
     Timer2.setPrescaleFactor(100);
@@ -51,34 +51,34 @@ void setup() {
   DefendGauntlet defend;
   Debugging debug;
 
-  display.begin(SSD1306_SWITCHCAPVCC,0x3C);
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0,0);
-  display.println("Working");
-  display.display();
+  // display.begin(SSD1306_SWITCHCAPVCC,0x3C);
+  // display.clearDisplay();
+  // display.setTextSize(1);
+  // display.setTextColor(WHITE);
+  // display.setCursor(0,0);
+  // display.println("Working");
+  // display.display();
 
-  MainState::instance()->setState(lineFollowing);
+  MainState::instance()->setState(debugging);
   // Serial.print(" state: ");
   // Serial.print(MainState::instance()->getState());
   int count = 0;
     for(;;) {
 
-      if(digitalRead(TOGGLE_SWITCH)){
-        MainState::instance()->setState(debugging);
-      }
-      else if(digitalRead(TOGGLE_SWITCH) == 0 && MainState::instance()->getState()==debugging){
-        lineFollow.startingPosition = lineFollow.LeftStart;
-        digitalWrite(LED_BLUE,LOW);
-        lineFollow.setup();
-        display.clearDisplay();
-        display.setCursor(0,0);
-        display.println("Line Following");
-        display.display();
-        MainState::instance()->setState(lineFollowing);
+      // if(digitalRead(TOGGLE_SWITCH)){
+      //   MainState::instance()->setState(debugging);
+      // }
+      // else if(digitalRead(TOGGLE_SWITCH) == 0 && MainState::instance()->getState()==debugging){
+      //   lineFollow.startingPosition = lineFollow.LeftStart;
+      //   digitalWrite(LED_BLUE,LOW);
+      //   lineFollow.setup();
+      //   display.clearDisplay();
+      //   display.setCursor(0,0);
+      //   display.println("Line Following");
+      //   display.display();
+      //   MainState::instance()->setState(lineFollowing);
       
-      }
+      // }
 
       //MainState::i()->getState().loop();
       switch(MainState::instance()->getState())

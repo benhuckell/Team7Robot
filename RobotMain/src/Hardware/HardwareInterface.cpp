@@ -14,11 +14,12 @@ void REncoderInterrupt(){
 }
 
 void WinchEncoderInterrupt(){
-    HardwareInterface::i()->WinchEncoder->ISR();
+    HardwareInterface::i()->WinchEncoder->ISR_winch();
 }
 
 HardwareInterface::HardwareInterface(){
    Serial.begin(115200);
+    timing_flag = false; // no time yet recorded
 
    HardwareInterface::LMotor = new DriveMotor(LMOTOR_FORWARDS, LMOTOR_BACKWARDS);
    HardwareInterface::RMotor = new DriveMotor(RMOTOR_FORWARDS, RMOTOR_BACKWARDS);
@@ -41,9 +42,9 @@ HardwareInterface::HardwareInterface(){
    pinMode(WINCH_ENC_2,INPUT_PULLUP);
    pinMode(LED_RED, OUTPUT);
    pinMode(LED_BLUE, OUTPUT);
-   attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
-   attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
-   attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
+   //attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
+   //attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
+   attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),WinchEncoderInterrupt,RISING);
 
    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 61, 594);
    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 56, 331);
@@ -55,14 +56,14 @@ HardwareInterface::HardwareInterface(){
    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 60, 432);
 
     //For calibrating
-//    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);
-//    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 0, 1000);
-//    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 0, 1000);
-//    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 0, 1000);
-//    HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 0, 1000);
-//    HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 0, 1000);
-//    HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 0, 1000);
-//    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 0, 1000);
+    //    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);
+    //    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 0, 1000);
+    //    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 0, 1000);
+    //    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 0, 1000);
+    //    HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 0, 1000);
+    //    HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 0, 1000);
+    //    HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 0, 1000);
+    //    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 0, 1000);
 
    HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 
@@ -371,24 +372,32 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
 }
 
 void HardwareInterface::moveIntake() {
+    float WinchSpeed = 0;
     //set the height that the winch raises the entire assembly to
     //need to use PID to get to the correct height
-    int tick_num=WinchEncoder->getCount();
-    int tickError=winchTickTarget-tick_num;
+        Serial.println("Encoder: Winch: " + String(WinchEncoder->getCount()));
+        int tickError=winchTickTarget-WinchEncoder->getCount();
+        WinchSpeed = Winch_P_gain*tickError;
+        //Serial.println(WinchSpeed);
+        
 
-    float WinchSpeed=0;
-    WinchSpeed = Winch_P_gain*tickError;
+        //to set what happens at edge cases
+        if(WinchSpeed>50){
+            WinchSpeed=50;
+        }
+        if(WinchSpeed<-50){
+            WinchSpeed=-50;
+        }
 
-    //to set what happens at edge cases
-    if(WinchSpeed>100){
-        WinchSpeed=100;
-    }
-    if(WinchSpeed<-100){
-        WinchSpeed=-100;
-    }
+        if(WinchSpeed>0){
+            WinchEncoder->winch_dir = 1;
+        }
+        else { WinchEncoder->winch_dir = -1;}
 
-    WinchMotor->setSpeed(WinchSpeed);
-    WinchMotor->update();
+        WinchMotor->setSpeed(WinchSpeed);
+        Serial.println("speed:" + String(WinchSpeed));
+        WinchMotor->update();
+        WinchEncoder->update();
 }
 
 void HardwareInterface::checkForRock(){

@@ -19,8 +19,8 @@
 #define CONTROL_POT_2 PA_5
 
 
-#define WINCH_UP PA_8 //winch inputs
-#define WINCH_DOWN PA_9
+#define WINCH_UP PB_0 //winch inputs
+#define WINCH_DOWN PA_7
 
 #define WINCH_ENC_1 PB10
 #define WINCH_ENC_2 PB1
@@ -32,9 +32,9 @@
 
 #define LENCODER_DIRECTION -1
 #define RENCODER_DIRECTION -1
-#define WINCH_ENCODER_DIRECTION -1
+#define WINCH_ENCODER_DIRECTION 1
 
-#define CLAW_SERVO PA_10
+#define CLAW_SERVO PB_8
 #define LIM_SWITCH_PIN PB11
 
 #define LED_RED PB9
@@ -81,6 +81,7 @@ class HardwareInterface {
 
      bool hasRock;
      int winchTickTarget = 0;
+     float Winch_P_gain;
 
      unsigned long previousMillis = 0;
      unsigned long currentMillis = millis();
@@ -93,7 +94,10 @@ class HardwareInterface {
      void turn_time(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
      void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
      void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);
-     
+     bool timing_flag;
+     int start_time_global;
+
+
   private:
      HardwareInterface();
      HardwareInterface(const HardwareInterface&);
@@ -111,7 +115,6 @@ class HardwareInterface {
       static const int POST_4_TICKS = 1;
       static const int POST_5_TICKS = 1;
       static const int POST_6_TICKS = 1;
-      float Winch_P_gain=1;
 
       //can hard code these values
       int clawFullyClosed;
@@ -119,6 +122,7 @@ class HardwareInterface {
       int clawWithRock;
 
       int clawCurrentAngle=clawFullyOpen;
-  };
+   
 
+  };
 #endif
