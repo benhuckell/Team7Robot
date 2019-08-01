@@ -21,11 +21,13 @@ void LineFollow::junctionTurn(Turn turn){
     if(turn == LEdgeTurn){
         while(millis()-startTime < 400){
             followTape(robotSpeed, false, true);//follow right edge
+            HI->update();
         }
     }
     else if(turn == REdgeTurn){
         while(millis()-startTime < 400){
             followTape(robotSpeed, true, true);//follow right edge
+            HI->update();
         }
     }
     else if(turn == QRD_Left){
