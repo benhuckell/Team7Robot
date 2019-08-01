@@ -227,6 +227,7 @@ void HardwareInterface::turn_single_backwards(int target, int timeout, float kdr
        update();
        errorHistory.pop();
        errorHistory.push(getWeightedError());
+
        net_time = millis() - start_time;
        int L_tics = LEncoder->getCount() - L_tics_start;
        int R_tics = REncoder->getCount() - R_tics_start;
@@ -243,21 +244,21 @@ void HardwareInterface::turn_single_backwards(int target, int timeout, float kdr
        if(target > 0){
            //right turn, R motor moves backwards
            tarL = 0;
+           tarR = -target;//negative so wheel moves backwards
            errorL = tarL - L_tics;
-           tarR = abs(target);
-           errorR = R_tics + tarR; //postive going to zero
+           errorR = tarR - R_tics; 
            motor_power_L =  k_p * errorL;
-           motor_power_R =  -k_p * errorR;
+           motor_power_R =  k_p * errorR;
 
        }
        else{
            //left turn, L motor moves backwards
            tarR = 0;
+           tarL = target;
            errorR = tarR - R_tics;
-           tarL = abs(target);
-           errorL = tarL + L_tics; //postive going to zero
-           motor_power_L =  -k_p * errorL;
-           motor_power_R =  -k_p * errorR;
+           errorL = tarL - L_tics; //postive going to zero
+           motor_power_L =  k_p * errorL;
+           motor_power_R =  k_p * errorR;
        }
         //Serial.println("Drift error: " + String(drift_error));
 
