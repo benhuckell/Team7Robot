@@ -43,19 +43,19 @@ void LineFollow::junctionTurn(Turn turn){
 void LineFollow::loop(){
     robotSpeed = 40;
     int junctionHandling = false;
-    followTape(robotSpeed, false,true);
-    // if(detectJunction()){
-    //     followTape(40,false,true);
-    //     // junctionHandling = true;
-    //     // junctionTurn(path1[turnStep]);
-    // }
-    // else{
-    //     // if(junctionHandling){
-    //     //     junctionHandling = fa lse;
-    //     //     turnStep++;
-    //     // }
-    //     followTape(robotSpeed,false,false);
-    // }
+    //followTape(robotSpeed,false,true);
+    if(detectJunction()){
+        //followTape(40,false,true);
+        junctionHandling = true;
+        junctionTurn(LEdgeTurn);
+    }
+    else{
+        if(junctionHandling){
+            junctionHandling = false;
+            turnStep++;
+        }
+        followTape(robotSpeed,false,true);
+    }
 
 
     // if(detectJunction()){
