@@ -50,8 +50,8 @@ namespace StateLoops{
             float P_gain = 1.8; // K_p
             float I_gain = 0; // K_i
             float D_gain = 15.5;//14; // K_d
-            float P_gain_edge = 1.45;
-            float D_gain_edge = 10.5;
+            float P_gain_edge = 1.4;
+            float D_gain_edge = 14.5;
             static const int numSensors = 8;
             float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
             const float maxISum = 2; //max sum to avoid integral windup

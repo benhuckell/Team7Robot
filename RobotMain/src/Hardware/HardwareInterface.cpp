@@ -418,7 +418,7 @@ float HardwareInterface::getWeightedError(){
         weightedSum += QRD_Vals[i]*positionVector[i];
     }
 
-    if(sum > 0.5){
+    if(sum > 0.45){
         onBlack = true;
     }
 

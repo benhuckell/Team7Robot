@@ -115,9 +115,9 @@ void Debugging::loop(){
     display.display();
 
     /////ENCODER DEBUG CODE
-    Serial.println("LEN: " + String(HI->LEncoder->getCount()));
-    Serial.println("REN: " + String(HI->REncoder->getCount()));
-    Serial.println("");
+    //Serial.println("LEN: " + String(HI->LEncoder->getCount()));
+    //Serial.println("REN: " + String(HI->REncoder->getCount()));
+    //Serial.println("");
     //////////////////
 
     return;
