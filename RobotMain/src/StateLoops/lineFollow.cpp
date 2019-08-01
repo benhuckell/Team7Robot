@@ -45,9 +45,9 @@ void LineFollow::loop(){
     int junctionHandling = false;
     //followTape(robotSpeed,false,true);
     if(detectJunction()){
-        //followTape(40,false,true);
-        junctionHandling = true;
-        junctionTurn(LEdgeTurn);
+        followTape(40,false,true);
+        //junctionHandling = true;
+        //junctionTurn(LEdgeTurn);
     }
     else{
         if(junctionHandling){
