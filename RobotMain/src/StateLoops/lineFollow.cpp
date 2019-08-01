@@ -51,26 +51,26 @@ void LineFollow::junctionTurn(Turn turn){
 
 void LineFollow::loop(){
     robotSpeed = 40;
-    HI->turn_single_backwards(-200,1000);
-    delay(1000);
-    HI->turn_single_backwards(-100,1000);
-    delay(1000);
-    HI->turn_single_backwards(-300,1000);
-    delay(1000);
+    // HI->turn_single_backwards(-200,1000);
+    // delay(1000);
+    // HI->turn_single_backwards(-100,1000);
+    // delay(1000);
+    // HI->turn_single_backwards(-300,1000);
+    // delay(1000);
     //followTape(robotSpeed,false,true);
-    // if(detectJunction()){
-    //     //followTape(40,false,true);
-    //     junctionHandling = true;
-    //     junctionTurn(path1[turnStep]);
-    // }
-    // else{
-    //     if(junctionHandling){
-    //         Serial.println(turnStep);
-    //         junctionHandling = false;
-    //         turnStep++;
-    //     }
-    //     followTape(robotSpeed,false,true);
-    // }
+    if(detectJunction()){
+        //followTape(40,false,true);
+        junctionHandling = true;
+        junctionTurn(path1[turnStep]);
+    }
+    else{
+        if(junctionHandling){
+            Serial.println(turnStep);
+            junctionHandling = false;
+            turnStep++;
+        }
+        followTape(robotSpeed,false,true);
+    }
     return;
 }
 
