@@ -25,13 +25,13 @@
 #define WINCH_ENC_1 PB10
 #define WINCH_ENC_2 PB1
 
-#define LENCODER_1 PB15 //encoder inputs
-#define LENCODER_2 PA11
-#define RENCODER_1 PA8 //switched
-#define RENCODER_2 PA12
+#define LENCODER_1 PB15 //interupt 
+#define LENCODER_2 PA11 //read
+#define RENCODER_1 PA8 //interupt
+#define RENCODER_2 PA12 //read
 
-#define LENCODER_DIRECTION -1
-#define RENCODER_DIRECTION -1
+#define LENCODER_DIRECTION 1
+#define RENCODER_DIRECTION 1
 #define WINCH_ENCODER_DIRECTION -1
 
 #define CLAW_SERVO PA_10

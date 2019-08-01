@@ -60,63 +60,66 @@ void setup() {
   display.display();
 
   MainState::instance()->setState(lineFollowing);
-  // Serial.print(" state: ");
-  // Serial.print(MainState::instance()->getState());
+  
+  if(digitalRead(TOGGLE_SWITCH) == 0){//switch is accidentally flipped upward
+    exit(0);
+  }
+
   int count = 0;
-    for(;;) {
+  for(;;) {
 
-      if(digitalRead(TOGGLE_SWITCH)){
-        MainState::instance()->setState(debugging);
-      }
-      else if(digitalRead(TOGGLE_SWITCH) == 0 && MainState::instance()->getState()==debugging){
-        lineFollow.startingPosition = lineFollow.LeftStart;
-        digitalWrite(LED_BLUE,LOW);
-        lineFollow.setup();
-        display.clearDisplay();
-        display.setCursor(0,0);
-        display.println("Line Following");
-        display.display();
-        MainState::instance()->setState(lineFollowing);
-      
-      }
-
-      //MainState::i()->getState().loop();
-      switch(MainState::instance()->getState())
-      {
-        case(lineFollowing):
-          lineFollow.loop();
-          break;
-        case(avengerCollecting):
-          avengerCollect.loop();
-          break;
-        case(avengerScoring):
-          avengerScore.loop();
-          break;
-        case(stoneCollecting):
-          stoneCollect.loop();
-          break;
-        case(stoneScoring):
-          stoneScore.loop();
-          break;
-        case(defending):
-          defend.loop();
-          break;
-        case(debugging):
-          debug.loop();
-          break;
-        default:
-          break;
-      }
-      HardwareInterface::i()->update();
-      count++;
-      //int push_Button = digitalRead(PUSHBUTTON);
-      //display.println(push_Button == 1 ? "Button Not Pushed":"Button Pushed"); 
-      //display.println("Main Looping");
-      
-      //display.print((String)mainState);
-      //delay(250);
-
+    if(digitalRead(TOGGLE_SWITCH)){
+      MainState::instance()->setState(debugging);
     }
+    else if(digitalRead(TOGGLE_SWITCH) == 0 && MainState::instance()->getState()==debugging){
+      lineFollow.startingPosition = lineFollow.LeftStart;
+      digitalWrite(LED_BLUE,LOW);
+      lineFollow.setup();
+      display.clearDisplay();
+      display.setCursor(0,0);
+      display.println("Line Following");
+      display.display();
+      MainState::instance()->setState(lineFollowing);
+    
+    }
+
+    //MainState::i()->getState().loop();
+    switch(MainState::instance()->getState())
+    {
+      case(lineFollowing):
+        lineFollow.loop();
+        break;
+      case(avengerCollecting):
+        avengerCollect.loop();
+        break;
+      case(avengerScoring):
+        avengerScore.loop();
+        break;
+      case(stoneCollecting):
+        stoneCollect.loop();
+        break;
+      case(stoneScoring):
+        stoneScore.loop();
+        break;
+      case(defending):
+        defend.loop();
+        break;
+      case(debugging):
+        debug.loop();
+        break;
+      default:
+        break;
+    }
+    HardwareInterface::i()->update();
+    count++;
+    //int push_Button = digitalRead(PUSHBUTTON);
+    //display.println(push_Button == 1 ? "Button Not Pushed":"Button Pushed"); 
+    //display.println("Main Looping");
+    
+    //display.print((String)mainState);
+    //delay(250);
+
+  }
 }
 
 void loop() {}
