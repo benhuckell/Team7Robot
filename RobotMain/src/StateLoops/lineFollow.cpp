@@ -32,16 +32,34 @@ void LineFollow::junctionTurn(Turn turn){
         }
     }
     else if(turn == QRD_Left){
-        //QRDTurn(false);//turn left
+        while(millis()-startTime < 250){
+            followTape(robotSpeed, true, true);//follow right edge
+            HI->update();
+        }
+        HI->QRDTurn(false);//turn left
     }
     else if(turn == QRD_Right){
-        //QRDTurn(true);//turn right
+        while(millis()-startTime < 250){
+            followTape(robotSpeed, false, true);//follow left edge
+            HI->update();
+        }
+        HI->QRDTurn(true);//turn right
     }
-    else if(turn == PostTurn){//Left post
+    else if(turn == PostTurnLeft){//Left post
         goForwardsSlightly(175, robotSpeed, false);
         slewBrake(robotSpeed, 100, -10);
         delay(1000);
         HI->turn_single_backwards(-200,750);
+        delay(6000);
+        HI->update();
+        // stopMoving();
+        // delay(5000);
+    }
+    else if(turn == PostTurnRight){//Right post
+        goForwardsSlightly(175, robotSpeed, true);
+        slewBrake(robotSpeed, 100, -10);
+        delay(1000);
+        HI->turn_single_backwards(200,750);
         delay(6000);
         HI->update();
         // stopMoving();
