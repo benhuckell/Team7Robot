@@ -21,7 +21,7 @@ void LineFollow::junctionTurn(Turn turn){
     int startTime = millis();
     if(turn == LEdgeTurn){
         while(millis()-startTime < 400){
-            followTape(robotSpeed, false, true);//follow right edge
+            followTape(robotSpeed, false, true);//follow left edge
             HI->update();
         }
     }
@@ -37,9 +37,13 @@ void LineFollow::junctionTurn(Turn turn){
     else if(turn == QRD_Right){
         //QRDTurn(true);//turn right
     }
-    else if(turn == PostTurn){
-        stopMoving();
-        delay(5000);
+    else if(turn == PostTurn){//Left post
+        goForwardsSlightly(175, robotSpeed, false);
+        slewBrake(robotSpeed, 100, -10);
+        delay(6000);
+        HI->update();
+        // stopMoving();
+        // delay(5000);
     }
 }
 
@@ -248,3 +252,33 @@ void LineFollow::stopMoving(){
 }
 
 
+void LineFollow::slewBrake(int startSpeed, int duration, int targetSpeed){
+    int startTime = millis();
+    int time_elapsed = startTime;
+    while(time_elapsed-startTime < duration){
+        HI->LMotor->setSpeed(startSpeed*(1-time_elapsed/duration) + targetSpeed*(time_elapsed/duration));
+        HI->RMotor->setSpeed( (startSpeed*(1-time_elapsed/duration) + targetSpeed*(time_elapsed/duration))/straightLineCorrectionFactor );
+        HI->LMotor->update();
+        HI->RMotor->update();
+        time_elapsed = millis();
+    }
+    HI->LMotor->setSpeed(0);
+    HI->RMotor->setSpeed(0);
+    HI->LMotor->update();
+    HI->RMotor->update();
+}
+
+void LineFollow::goForwardsSlightly(int targetTicks, int robotSpeed, bool postOnRight){
+    int LStartTicks = HI->LEncoder->getCount();
+    int RStartTicks = HI->REncoder->getCount();
+    HI->LMotor->setSpeed(40);
+    HI->RMotor->setSpeed(40);
+    HI->LMotor->update();
+    HI->RMotor->update();
+    delay(200);
+
+    while(HI->LEncoder->getCount() + HI->REncoder->getCount() - LStartTicks - RStartTicks < targetTicks){
+        followTape(robotSpeed, !postOnRight, false);
+        HI->update();
+    }
+}
