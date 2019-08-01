@@ -39,7 +39,7 @@ void LineFollow::junctionTurn(Turn turn){
 }
 
 void LineFollow::loop(){
-    robotSpeed = 50;
+    robotSpeed = 40;
     int junctionHandling = false;
     followTape(robotSpeed, false,true);
     // if(detectJunction()){
