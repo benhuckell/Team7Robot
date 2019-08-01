@@ -12,19 +12,21 @@ void LineFollow::setup(){
     digitalWrite(LED_BLUE,LOW);
     digitalWrite(LED_RED,LOW);
 
-    //Push starting value to queue
-    HI->errorHistory.push(0);
-
-    //turnStep = 0;
+    turnStep = 0;
 }
 
 void LineFollow::junctionTurn(Turn turn){
-    robotSpeed = 40;
+    robotSpeed = 30;
+    int startTime = millis();
     if(turn == LEdgeTurn){
-        followTape(robotSpeed, false, true);//follow right edge
+        while(millis()-startTime < 400){
+            followTape(robotSpeed, false, true);//follow right edge
+        }
     }
     else if(turn == REdgeTurn){
-        followTape(robotSpeed, true, true);//follow right edge
+        while(millis()-startTime < 400){
+            followTape(robotSpeed, true, true);//follow right edge
+        }
     }
     else if(turn == QRD_Left){
         //QRDTurn(false);//turn left
@@ -32,31 +34,35 @@ void LineFollow::junctionTurn(Turn turn){
     else if(turn == QRD_Right){
         //QRDTurn(true);//turn right
     }
-    // else if(turn == PostTurn){
-    //     stopMoving();
-    //     delay(5000);
-    // }
+    else if(turn == PostTurn){
+        stopMoving();
+        delay(5000);
+    }
 }
 
 void LineFollow::loop(){
-    int robotSpeed = 43;
-    int junctionHandling = false;
+    int robotSpeed = 35;
 
-    // if(detectJunction()){
-    //     followTape(40,false,true);
-    //     // junctionHandling = true;
-    //     // junctionTurn(path1[turnStep]);
-    // }
-    // else{
-    //     // if(junctionHandling){
-    //     //     junctionHandling = false;
-    //     //     turnStep++;
-    //     // }
-    //     followTape(robotSpeed,false,false);
-    // }
-    LSpeed = 60;
-    RSpeed = 60;
-    setMotorSpeeds();
+    if(detectJunction()){
+        Serial.println("Turn Step: " + String(turnStep));
+        int startTime = millis();
+        //junctionHandling = true;
+        //junctionTurn(LEdgeTurn);
+        while(millis()-startTime < 400){
+            followTape(robotSpeed, false, true);//follow right edge
+        }
+    }
+    else{
+        if(junctionHandling){
+            junctionHandling = false;
+            turnStep++;
+        }
+        followTape(robotSpeed,false,true);
+    }
+
+    // LSpeed = 60;
+    // RSpeed = 60;
+    // setMotorSpeeds();
     
 
 
@@ -248,8 +254,8 @@ float LineFollow::getLinePositionError(bool followRightEdge)
                    }
                    else{
                        //secondMaxIndex = (HI->QRD_Vals[i+1] > HI->QRD_Vals[i-1]) ? i+1 : i-1;
-                       Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
-                       Serial.print("maxIndex: " + String(maxIndex));
+                       //Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
+                       //Serial.print("maxIndex: " + String(maxIndex));
                        return (positionVector[maxIndex]+((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex+1]-positionVector[maxIndex])-((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex]-positionVector[maxIndex-1]));
                    }
                    secondMaxVal = HI->QRD_Vals[secondMaxIndex];
@@ -384,7 +390,7 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollo
     setMotorSpeeds();
 
     Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
-    Serial.print("Error: " + String(error));
+    Serial.println("Error: " + String(error));
 
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -395,7 +401,7 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollo
 //return false otherwise
 bool LineFollow::detectLine(){
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.6){
+        if (HI->QRD_Vals[i] > 0.4){
             return true;
         }
     }
@@ -405,7 +411,7 @@ bool LineFollow::detectLine(){
 bool LineFollow::detectJunction(){
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.6){
+        if (HI->QRD_Vals[i] > 0.75){
             count++;
         }
     }

@@ -47,11 +47,11 @@ namespace StateLoops{
             HardwareInterface* HI;
 
             //constant data
-            float P_gain = 1.9; // K_p
+            float P_gain = 1.6;//1.9; // K_p
             float I_gain = 0; // K_i
-            float D_gain = 16.5; // K_d
+            float D_gain = 12;//14; // K_d
             float P_gain_edge = 1.9;
-            float D_gain_edge = 13;
+            float D_gain_edge = 14;
             static const int numSensors = 8;
             float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
             const float maxISum = 2; //max sum to avoid integral windup
@@ -63,8 +63,9 @@ namespace StateLoops{
 
             //NAVIGATION
             //Path lists
-            //Turn path1[3] = {LEdgeTurn,LEdgeTurn,PostTurn};
-            //int turnStep = 0;
+            Turn path1[3] = {LEdgeTurn,LEdgeTurn,PostTurn};
+            int turnStep = 0;
+            int junctionHandling = false;
 
             
             Position PostPriority[6] = {Post1, Post2, Post3, Post5, Post6, Post4};
