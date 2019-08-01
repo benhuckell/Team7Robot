@@ -431,3 +431,24 @@ float HardwareInterface::getWeightedError(){
         return positionVector[NUM_QRD_SENSORS-1];
     }
 }
+
+void HardwareInterface::QRDTurn(bool turnRight){
+    if(turnRight){
+        while(errorHistory.back() - errorHistory.front() < 10.0){
+            LMotor->setSpeed(30);
+            RMotor->setSpeed(-30);
+            update();
+            errorHistory.push(getWeightedError());
+            errorHistory.pop();
+        }
+    }
+    else{//turn left
+        while(errorHistory.back() - errorHistory.front() < -10.0){
+            LMotor->setSpeed(-30);
+            RMotor->setSpeed(30);
+            update();
+            errorHistory.push(getWeightedError());
+            errorHistory.pop();
+        }
+    }
+}

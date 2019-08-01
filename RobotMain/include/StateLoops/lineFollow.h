@@ -15,7 +15,7 @@ namespace StateLoops{
             enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
             enum Direction {CCW, CW};
             Position startingPosition;
-            enum Turn {LEdgeTurn, REdgeTurn, QRD_Left, QRD_Right, PostTurn}; 
+            enum Turn {LEdgeTurn, REdgeTurn, QRD_Left, QRD_Right, PostTurnLeft, PostTurnRight}; 
 
 
         private:
@@ -35,7 +35,6 @@ namespace StateLoops{
             void turnOnLine();
             void stopMoving();
             void junctionTurn(Turn turn);
-            void QRDTurn(bool turnDirection);
             void slewBrake(int startSpeed, int duration, int targetSpeed);
             void goForwardsSlightly(int targetTicks, int robotSpeed, bool postOnRight);
 
@@ -65,7 +64,7 @@ namespace StateLoops{
 
             //NAVIGATION
             //Path lists
-            Turn path1[3] = {LEdgeTurn,LEdgeTurn,PostTurn};
+            Turn path1[3] = {LEdgeTurn,LEdgeTurn,PostTurnLeft};
             int turnStep = 0;
             int junctionHandling = false;
 
