@@ -452,3 +452,34 @@ void HardwareInterface::QRDTurn(bool turnRight){
         }
     }
 }
+
+void HardwareInterface::turn_single_constant(int target, unsigned int timeout, int robotSpeed){
+    int startTime = millis();
+    int LStartCount = LEncoder->getCount();
+    int RStartCount = REncoder->getCount();
+    while(millis() - startTime <= timeout){
+        if(target >= 0){
+            LMotor->setSpeed(0);
+            RMotor->setSpeed(-robotSpeed);
+            update();
+            if(REncoder->getCount() - RStartCount >= target){
+                LMotor->setSpeed(0);
+                RMotor->setSpeed(0);
+                update();
+                return;
+            }
+        }
+        else if(target < 0){
+            LMotor->setSpeed(-robotSpeed);
+            RMotor->setSpeed(0);
+            update();
+            Serial.
+            if(LEncoder->getCount() - LStartCount <= target){
+                LMotor->setSpeed(0);
+                RMotor->setSpeed(0);
+                update();
+                return;
+            }
+        }
+    }
+}

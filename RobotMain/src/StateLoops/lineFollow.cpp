@@ -46,10 +46,10 @@ void LineFollow::junctionTurn(Turn turn){
         HI->QRDTurn(true);//turn right
     }
     else if(turn == PostTurnLeft){//Left post
-        goForwardsSlightly(175, robotSpeed, false);
+        goForwardsSlightly(150, robotSpeed, false);
         slewBrake(robotSpeed, 100, -10);
         delay(1000);
-        HI->turn_single_backwards(-200,750);
+        HI->turn_single_constant(-250, 750, 30);
         delay(6000);
         HI->update();
         // stopMoving();
@@ -69,27 +69,23 @@ void LineFollow::junctionTurn(Turn turn){
 
 void LineFollow::loop(){
     robotSpeed = 40;
-    // HI->turn_single_backwards(-200,1000);
-    // delay(1000);
-    // HI->turn_single_backwards(-100,1000);
-    // delay(1000);
-    // HI->turn_single_backwards(-300,1000);
-    // delay(1000);
+    HI->turn_single_constant(-250, 750, 35);
+    delay(1000);
     //followTape(robotSpeed,false,false);
-    if(detectJunction()){
-        //followTape(40,false,true);
-        junctionHandling = true;
-        junctionTurn(path1[turnStep]);
-    }
-    else{
-        if(junctionHandling){
-            Serial.println(turnStep);
-            junctionHandling = false;
-            turnStep++;
-        }
-        followTape(robotSpeed,false,false);
-    }
-    return;
+    // if(detectJunction()){
+    //     //followTape(40,false,true);
+    //     junctionHandling = true;
+    //     junctionTurn(path1[turnStep]);
+    // }
+    // else{
+    //     if(junctionHandling){
+    //         Serial.println(turnStep);
+    //         junctionHandling = false;
+    //         turnStep++;
+    //     }
+    //     followTape(robotSpeed,false,false);
+    // }
+    // return;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -298,8 +294,8 @@ void LineFollow::goForwardsSlightly(int targetTicks, int robotSpeed, bool postOn
     int LStartTicks = HI->LEncoder->getCount();
     int RStartTicks = HI->REncoder->getCount();
 
-    HI->LMotor->setSpeed(40);
-    HI->RMotor->setSpeed(40);
+    HI->LMotor->setSpeed(robotSpeed);
+    HI->RMotor->setSpeed(robotSpeed);
     HI->LMotor->update();
     HI->RMotor->update();
     delay(50);
