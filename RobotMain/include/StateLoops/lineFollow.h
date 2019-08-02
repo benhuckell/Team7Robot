@@ -37,6 +37,7 @@ namespace StateLoops{
             void junctionTurn(Turn turn);
             void slewBrake(int startSpeed, int duration, int targetSpeed);
             void goForwardsSlightly(int targetTicks, int robotSpeed, bool postOnRight);
+            void QRDTurn(bool turnRight);
 
             //varying data
             float error;
@@ -50,14 +51,14 @@ namespace StateLoops{
             //constant data
             float P_gain = 1.9; // K_p
             float I_gain = 0; // K_i
-            float D_gain = 34.5;//14; // K_d
+            float D_gain = 40.0;//14; // K_d
             float P_gain_edge = 2.8;
             float D_gain_edge = 120.0;
             static const int numSensors = 8;
             float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
             const float maxISum = 2; //max sum to avoid integral windup
             const unsigned int ERROR_HISTORY_SIZE = 2; //max size of error queue
-            const float straightLineCorrectionFactor = 1.0;
+            const float straightLineCorrectionFactor = 1.05;
             const float ticksPerAngle = 0.25;//HI->REncoder->ticksPerRotation/wheelCircumference/(wheelCircumference/360); // ticks/rot * rot/m * m/deg 
             const float wheelCircumference = PI*0.055; //metres
             const unsigned int edgeFollowTimeout = 300;
@@ -65,6 +66,8 @@ namespace StateLoops{
             //NAVIGATION
             //Path lists
             Turn path1[3] = {LEdgeTurn,LEdgeTurn,PostTurnLeft};
+            Turn path2[3] = {LEdgeTurn,REdgeTurn,QRD_Left};
+            Turn path3[1] = {QRD_Left};
             int turnStep = 0;
             int junctionHandling = false;
 

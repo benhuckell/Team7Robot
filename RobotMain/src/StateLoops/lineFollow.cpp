@@ -36,14 +36,14 @@ void LineFollow::junctionTurn(Turn turn){
             followTape(robotSpeed, true, true);//follow right edge
             HI->update();
         }
-        HI->QRDTurn(false);//turn left
+        QRDTurn(false);//turn left
     }
     else if(turn == QRD_Right){
         while(millis()-startTime < 250){
             followTape(robotSpeed, false, true);//follow left edge
             HI->update();
         }
-        HI->QRDTurn(true);//turn right
+        QRDTurn(true);//turn right
     }
     else if(turn == PostTurnLeft){//Left post
         goForwardsSlightly(150, robotSpeed, false);
@@ -69,23 +69,20 @@ void LineFollow::junctionTurn(Turn turn){
 
 void LineFollow::loop(){
     robotSpeed = 40;
-    HI->turn_single_constant(-250, 750, 35);
-    delay(1000);
-    //followTape(robotSpeed,false,false);
-    // if(detectJunction()){
-    //     //followTape(40,false,true);
-    //     junctionHandling = true;
-    //     junctionTurn(path1[turnStep]);
-    // }
-    // else{
-    //     if(junctionHandling){
-    //         Serial.println(turnStep);
-    //         junctionHandling = false;
-    //         turnStep++;
-    //     }
-    //     followTape(robotSpeed,false,false);
-    // }
-    // return;
+    followTape(robotSpeed,false,false);
+    if(detectJunction()){
+        //followTape(40,false,true);
+        junctionHandling = true;
+        junctionTurn(path3[turnStep]);
+    }
+    else{
+        if(junctionHandling){
+            Serial.println(turnStep);
+            junctionHandling = false;
+            turnStep++;
+        }
+        followTape(robotSpeed,false,false);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -303,5 +300,28 @@ void LineFollow::goForwardsSlightly(int targetTicks, int robotSpeed, bool postOn
     while(HI->LEncoder->getCount() + HI->REncoder->getCount() - LStartTicks - RStartTicks < targetTicks){
         followTape(robotSpeed, !postOnRight, false);
         HI->update();
+    }
+}
+
+void LineFollow::QRDTurn(bool turnRight){
+    if(turnRight){
+        while(HI->errorHistory.back() - HI->errorHistory.front() < 10.0){
+            HI->LMotor->setSpeed(30);
+            HI->RMotor->setSpeed(-30/straightLineCorrectionFactor);
+            HI->update();
+            HI->errorHistory.push(HI->getWeightedError());
+            HI->errorHistory.pop();
+        }
+    }
+    else{//turn left
+        while(HI->errorHistory.back() - HI->errorHistory.front() > -10.0){
+            digitalWrite(LED_BLUE, HIGH);
+            HI->LMotor->setSpeed(-30);
+            HI->RMotor->setSpeed(30/straightLineCorrectionFactor);
+            HI->update();
+            HI->errorHistory.push(HI->getWeightedError());
+            HI->errorHistory.pop();
+        }
+        digitalWrite(LED_BLUE,LOW);
     }
 }

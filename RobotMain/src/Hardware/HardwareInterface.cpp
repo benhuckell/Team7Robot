@@ -432,29 +432,9 @@ float HardwareInterface::getWeightedError(){
     }
 }
 
-void HardwareInterface::QRDTurn(bool turnRight){
-    if(turnRight){
-        while(errorHistory.back() - errorHistory.front() < 10.0){
-            LMotor->setSpeed(30);
-            RMotor->setSpeed(-30);
-            update();
-            errorHistory.push(getWeightedError());
-            errorHistory.pop();
-        }
-    }
-    else{//turn left
-        while(errorHistory.back() - errorHistory.front() < -10.0){
-            LMotor->setSpeed(-30);
-            RMotor->setSpeed(30);
-            update();
-            errorHistory.push(getWeightedError());
-            errorHistory.pop();
-        }
-    }
-}
-
 void HardwareInterface::turn_single_constant(int target, unsigned int timeout, int robotSpeed){
     int startTime = millis();
+    update();
     int LStartCount = LEncoder->getCount();
     int RStartCount = REncoder->getCount();
     while(millis() - startTime <= timeout){
@@ -473,7 +453,11 @@ void HardwareInterface::turn_single_constant(int target, unsigned int timeout, i
             LMotor->setSpeed(-robotSpeed);
             RMotor->setSpeed(0);
             update();
-            Serial.
+            Serial.print(" LCount: ");
+            Serial.print(LEncoder->getCount());
+            Serial.print(target);
+            Serial.print(" LStartCount: ");
+            Serial.print(LStartCount);
             if(LEncoder->getCount() - LStartCount <= target){
                 LMotor->setSpeed(0);
                 RMotor->setSpeed(0);
@@ -482,4 +466,7 @@ void HardwareInterface::turn_single_constant(int target, unsigned int timeout, i
             }
         }
     }
+    LMotor->setSpeed(0);
+    RMotor->setSpeed(0);
+    update();
 }

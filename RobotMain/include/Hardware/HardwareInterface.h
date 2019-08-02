@@ -94,7 +94,6 @@ class HardwareInterface {
      void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 0.50);
      void turn_single_constant(int target, unsigned int timeout, int robotSpeed = 30);
      void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);
-     void QRDTurn(bool turnDirection);
      
   private:
      HardwareInterface();
