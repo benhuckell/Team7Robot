@@ -17,7 +17,7 @@ void LineFollow::setup(){
 
 void LineFollow::junctionTurn(Turn turn){
     Serial.println("junction");
-    robotSpeed = 30;
+    robotSpeed = 27;
     int startTime = millis();
     if(turn == LEdgeTurn){
         while(millis()-startTime < 400){
@@ -56,7 +56,7 @@ void LineFollow::junctionTurn(Turn turn){
         // delay(5000);
     }
     else if(turn == PostTurnRight){//Right post
-        goForwardsSlightly(175, robotSpeed, true);
+        goForwardsSlightly(100, robotSpeed, true);
         slewBrake(robotSpeed, 100, -10);
         delay(1000);
         HI->turn_single_backwards(200,750);
@@ -75,7 +75,7 @@ void LineFollow::loop(){
     // delay(1000);
     // HI->turn_single_backwards(-300,1000);
     // delay(1000);
-    //followTape(robotSpeed,false,true);
+    //followTape(robotSpeed,false,false);
     if(detectJunction()){
         //followTape(40,false,true);
         junctionHandling = true;
@@ -87,7 +87,7 @@ void LineFollow::loop(){
             junctionHandling = false;
             turnStep++;
         }
-        followTape(robotSpeed,false,true);
+        followTape(robotSpeed,false,false);
     }
     return;
 }
@@ -302,7 +302,7 @@ void LineFollow::goForwardsSlightly(int targetTicks, int robotSpeed, bool postOn
     HI->RMotor->setSpeed(40);
     HI->LMotor->update();
     HI->RMotor->update();
-    delay(100);
+    delay(50);
 
     while(HI->LEncoder->getCount() + HI->REncoder->getCount() - LStartTicks - RStartTicks < targetTicks){
         followTape(robotSpeed, !postOnRight, false);
