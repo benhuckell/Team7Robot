@@ -4,12 +4,10 @@ HardwareInterface* HardwareInterface::myInstance = NULL;
 
 
 void LEncoderInterrupt(){
-   //Serial.print(" InterruptingL... ");
    HardwareInterface::i()->LEncoder->ISR();
 }
 
 void REncoderInterrupt(){
-   //Serial.print(" InterruptingR... ");
    HardwareInterface::i()->REncoder->ISR();
 }
 
@@ -42,28 +40,28 @@ HardwareInterface::HardwareInterface(){
    pinMode(WINCH_ENC_2,INPUT_PULLUP);
    pinMode(LED_RED, OUTPUT);
    pinMode(LED_BLUE, OUTPUT);
-   //attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
-   //attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
-   attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),WinchEncoderInterrupt,RISING);
+   attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
+   attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
+   //attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 61, 594);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 56, 331);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 54, 284);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 53, 224);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 55, 353);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 54, 317);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 55, 193);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 60, 432);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 69, 732);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 61, 570);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 58, 550);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 56, 491);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 57, 580);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 59, 556);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 59, 465);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 65, 627);
 
-    //For calibrating
-    //    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);
-    //    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 0, 1000);
-    //    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 0, 1000);
-    //    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 0, 1000);
-    //    HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 0, 1000);
-    //    HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 0, 1000);
-    //    HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 0, 1000);
-    //    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 0, 1000);
+//   //  For calibrating
+//    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);
+//    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 0, 1000);
+//    HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 0, 1000);
+//    HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 0, 1000);
+//    HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 0, 1000);
+//    HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 0, 1000);
+//    HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 0, 1000);
+//    HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 0, 1000);
 
    HardwareInterface::clawMotor = new ServoMotor(CLAW_SERVO);
 
@@ -80,6 +78,9 @@ HardwareInterface::HardwareInterface(){
    for(int i = 0; i < NUM_QRD_SENSORS; i++){
        QRD_Max[i] = QRD_Array[i]->getMax();
        QRD_Min[i] = QRD_Array[i]->getMin();
+       QRD_Vals[i] = float(QRD_Array[i]->getValue() - QRD_Min[i])/float(QRD_Max[i] - QRD_Min[i]);
+       //QRD_Prev[i] = QRD_Vals[i];
+       QRD_RAW[i] = QRD_Array[i]->getValue();
    }
 }
 
@@ -105,13 +106,17 @@ HardwareInterface* HardwareInterface::i(){
 void HardwareInterface::update(){
    //update QRD values
    for(int i = 0; i < NUM_QRD_SENSORS; i++){
-       QRD_Array[i]->update();
-       //QRD_Vals[i] = QRD_Array[i]->getValue();
-       //QRD_Thresh[i] = QRD_Array[i]->getThresh();
+       //QRD_Prev[i] = QRD_Vals[i];//get last normalized value
+
+       QRD_Array[i]->update();//then update vals
+       
        QRD_RAW[i] = QRD_Array[i]->getValue();
        QRD_Vals[i] = float(QRD_Array[i]->getValue() - QRD_Min[i])/float(QRD_Max[i] - QRD_Min[i]);
+       
+    //    if(QRD_Prev[i] == 0 && QRD_Vals[i] == 1.0){//filter out spikes in QRD_values
+    //        QRD_Vals[i] = 0;
+    //    }
    }
-
    //update Motor outputs
    LMotor->update();
    RMotor->update();
@@ -128,6 +133,8 @@ void HardwareInterface::update(){
    //Update servo output
    //clawMotor->update();
 }
+
+
 
 bool HardwareInterface::robotWasBumped(){
    // Serial.print("lastLSpeed: ");
@@ -230,6 +237,7 @@ void HardwareInterface::turn_single_backwards(int target, int timeout, float kdr
        update();
        errorHistory.pop();
        errorHistory.push(getWeightedError());
+
        net_time = millis() - start_time;
        int L_tics = LEncoder->getCount() - L_tics_start;
        int R_tics = REncoder->getCount() - R_tics_start;
@@ -246,21 +254,21 @@ void HardwareInterface::turn_single_backwards(int target, int timeout, float kdr
        if(target > 0){
            //right turn, R motor moves backwards
            tarL = 0;
+           tarR = -target;//negative so wheel moves backwards
            errorL = tarL - L_tics;
-           tarR = abs(target);
-           errorR = R_tics + tarR; //postive going to zero
+           errorR = tarR - R_tics; 
            motor_power_L =  k_p * errorL;
-           motor_power_R =  -k_p * errorR;
+           motor_power_R =  k_p * errorR;
 
        }
        else{
            //left turn, L motor moves backwards
            tarR = 0;
+           tarL = target;
            errorR = tarR - R_tics;
-           tarL = abs(target);
-           errorL = tarL + L_tics; //postive going to zero
-           motor_power_L =  -k_p * errorL;
-           motor_power_R =  -k_p * errorR;
+           errorL = tarL - L_tics; //postive going to zero
+           motor_power_L =  k_p * errorL;
+           motor_power_R =  k_p * errorR;
        }
         //Serial.println("Drift error: " + String(drift_error));
 
@@ -437,7 +445,7 @@ float HardwareInterface::getWeightedError(){
         weightedSum += QRD_Vals[i]*positionVector[i];
     }
 
-    if(sum > 0.7){
+    if(sum > 0.45){
         onBlack = true;
     }
 
@@ -448,4 +456,43 @@ float HardwareInterface::getWeightedError(){
     } else {
         return positionVector[NUM_QRD_SENSORS-1];
     }
+}
+
+void HardwareInterface::turn_single_constant(int target, unsigned int timeout, int robotSpeed){
+    int startTime = millis();
+    update();
+    int LStartCount = LEncoder->getCount();
+    int RStartCount = REncoder->getCount();
+    while(millis() - startTime <= timeout){
+        if(target >= 0){
+            LMotor->setSpeed(0);
+            RMotor->setSpeed(-robotSpeed/1.35);
+            update();
+            if(REncoder->getCount() - RStartCount >= target){
+                LMotor->setSpeed(0);
+                RMotor->setSpeed(0);
+                update();
+                return;
+            }
+        }
+        else if(target < 0){
+            LMotor->setSpeed(-robotSpeed);
+            RMotor->setSpeed(0);
+            update();
+            // Serial.print(" LCount: ");
+            // Serial.print(LEncoder->getCount());
+            // Serial.print(target);
+            // Serial.print(" LStartCount: ");
+            // Serial.print(LStartCount);
+            if(LEncoder->getCount() - LStartCount <= target){
+                LMotor->setSpeed(0);
+                RMotor->setSpeed(0);
+                update();
+                return;
+            }
+        }
+    }
+    LMotor->setSpeed(0);
+    RMotor->setSpeed(0);
+    update();
 }

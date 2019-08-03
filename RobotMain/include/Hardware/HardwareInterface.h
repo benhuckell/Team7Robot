@@ -25,14 +25,14 @@
 #define WINCH_ENC_1 PB10
 #define WINCH_ENC_2 PB1
 
-#define LENCODER_1 PB15 //encoder inputs
-#define LENCODER_2 PA11
-#define RENCODER_1 PA8 //switched
-#define RENCODER_2 PA12
+#define LENCODER_1 PB15 //interupt 
+#define LENCODER_2 PA11 //read
+#define RENCODER_1 PA8 //interupt
+#define RENCODER_2 PA12 //read
 
-#define LENCODER_DIRECTION -1
-#define RENCODER_DIRECTION -1
-#define WINCH_ENCODER_DIRECTION 1
+#define LENCODER_DIRECTION 1
+#define RENCODER_DIRECTION 1
+#define WINCH_ENCODER_DIRECTION -1
 
 #define CLAW_SERVO PB_1
 #define LIM_SWITCH_PIN PB11
@@ -71,6 +71,7 @@ class HardwareInterface {
 
      QRD* QRD_Array[NUM_QRD_SENSORS];
      float QRD_Vals[NUM_QRD_SENSORS];
+     int QRD_Prev[NUM_QRD_SENSORS];
      int QRD_RAW[NUM_QRD_SENSORS];
      int QRD_Thresh[NUM_QRD_SENSORS];
      int QRD_Max[NUM_QRD_SENSORS];
@@ -93,7 +94,8 @@ class HardwareInterface {
      void checkForRock();
      float getWeightedError();  
      void turn_time(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
-     void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 1.4);
+     void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 0.50);
+     void turn_single_constant(int target, unsigned int timeout, int robotSpeed = 30);
      void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);
      bool timing_flag;
      int start_time_global;
@@ -123,6 +125,8 @@ class HardwareInterface {
       int clawFullyClosed;
       int clawFullyOpen;
       int clawWithRock;
+
+
 
       int clawCurrentAngle=clawFullyOpen;
    

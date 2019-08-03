@@ -12,137 +12,83 @@ void LineFollow::setup(){
     digitalWrite(LED_BLUE,LOW);
     digitalWrite(LED_RED,LOW);
 
-    //Calculate paths
-    currentPosition = startingPosition;
-    if(startingPosition == LeftStart){ //team == THANOS
-        for(int i = 0; i < 6; i++){
-            destinationList.push(PostPriority[i]);
-            destinationList.push(LeftIntersection);
-            destinationList.push(LeftGauntlet);
-        }
-    }else{ //team == METHANOS
-        for(int i = 0; i < 6; i++){
-            destinationList.push(PostPriority[i]);
-            destinationList.push(RightIntersection);
-            destinationList.push(RightGauntlet);
-        }
-    }
-    destination = destinationList.front();
-
-    if(destination <= Post4 && destination >= Post1){
-        if(startingPosition == LeftStart){
-            dir =  CW;
-        }else{
-            dir = CCW;
-        }
-    }else if(destination == Post5 || destination == Post6){
-        if(startingPosition == LeftStart){
-            dir = CCW;
-        }else{
-            dir = CW;
-        }
-    }
-    Serial.print(dir);
-    nextPos = nextPosition[currentPosition][dir][currentPosition == destination];
-    nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
-
+    turnStep = 0;
+    junctionHandling = false;
 }
+
+void LineFollow::junctionTurn(Turn turn){
+    Serial.println("junction");
+    robotSpeed = 30;
+    int startTime = millis();
+    if(turn == LEdgeTurn){
+        while(millis()-startTime < 250){
+            followTape(robotSpeed, false, true);//follow left edge
+            HI->update();
+        }
+    }
+    else if(turn == REdgeTurn){
+        while(millis()-startTime < 250){
+            followTape(robotSpeed, true, true);//follow right edge
+            HI->update();
+        }
+    }
+    else if(turn == QRD_Left){
+        while(millis()-startTime < 250){
+            followTape(robotSpeed, true, true);//follow right edge
+            HI->update();
+        }
+        QRDTurn(false);//turn left
+    }
+    else if(turn == QRD_Right){
+        while(millis()-startTime < 250){
+            followTape(robotSpeed, false, true);//follow left edge
+            HI->update();
+        }
+        QRDTurn(true);//turn right
+    }
+    else if(turn == PostTurnLeft){//Left post
+        goForwardsSlightly(350, robotSpeed, false);
+        slewBrake(robotSpeed, 100, -5);
+        delay(1000);
+        HI->turn_single_constant(-190, 10000, 40);
+        delay(3000);
+        HI->update();
+
+        //Drive to post
+        drive_stop_seq(1,2500,25,0,40);
+
+        stopMoving();
+        delay(5000);
+    }
+    else if(turn == PostTurnRight){//Right post
+        goForwardsSlightly(500, robotSpeed, true);
+        slewBrake(robotSpeed, 100, -5);
+        delay(1000);
+        HI->turn_single_constant(175,3000,40);
+        delay(6000);
+        HI->update();
+        // stopMoving();
+        // delay(5000);
+    }
+}
+
 void LineFollow::loop(){
-    //setMotorSpeeds();
-    int robotSpeed = 50;
-    bool postOnRight = true; //true for right' false for left
-    followTape(robotSpeed,false,true);
-    // if(detectJunction()){
-    //     digitalWrite(LED_RED,HIGH);
-    //     //update position variables
-    //     prevPosition = currentPosition;
-    //     currentPosition = nextPos;
-    //     int angle = nextAngle;
-    //     //angle = 70;
-    //     bool destinationReached = (currentPosition == destination);
-    //     nextPos = nextPosition[currentPosition][dir][destinationReached];
-    //     nextAngle = nextTurnAngle[currentPosition][dir][(int)(nextPos == destination)];
+    robotSpeed = 45;
 
-    //     //check if current junction is a post
-    //     postDetected = (currentPosition <= Post6 && currentPosition >= Post1);
-
-    //     //condition to go to post
-    //     if(postDetected && destinationReached){
-    //         //find which side the post is on
-    //         if(HI->getWeightedError() >= 0){
-    //             postOnRight = true;
-    //         }else if(HI->getWeightedError() < 0){
-    //             postOnRight = false;
-    //         }
-    //         //drive forwards slightly
-    //         int time = millis();
-    //         while(millis()-time < 200){
-    //             followTape(robotSpeed,true,false);
-    //             HI->update();
-    //         }
-    //         //brake and turn towards post
-    //         stopMoving();
-    //         if(postOnRight){
-    //             HI->turn_single(240, -1, -1, 3000, 0.7);
-    //             delay(3000);
-    //         }else{
-    //             HI->turn_single(240,1,-1,3000,1);
-    //             delay(3000);
-    //         }
-    //         //drive to post
-    //         // while(!HI->robotHitPost()){
-    //         //     HI->LMotor->setSpeed(50);
-    //         //     HI->RMotor->setSpeed(50);
-    //         //     HI->LMotor->update();
-    //         //     HI->RMotor->update();
-    //         // }
-    //         stopMoving();
-            
-    //         for(int i = 0; i < 5; i ++){
-    //             digitalWrite(LED_RED, HIGH);
-    //             delay(300);
-    //             digitalWrite(LED_RED, LOW);
-    //             delay(300);
-    //         }
-    //         MainState::instance()->setState(stoneCollecting);
-    //     } 
-    //     else{
-    //         //turn at junction
-    //         stopMoving();
-    //         if(angle>0){
-    //             HI->turn_single(angle*9, 1, 1, angle*12, 1);
-    //         } 
-    //         else{
-    //             stopMoving();
-    //             HI->turn_single(abs(angle)*9, -1, 1, abs(angle)*12, 0.7);
-    //         }
-    //     }
-    //     if(destinationReached){
-    //         //update destination
-    //         destinationList.pop();
-    //         destination = destinationList.front();
-    //         //update dir
-    //         if(destination <= Post4 || destination >= Post1){
-    //             if(startingPosition == LeftGauntlet){
-    //                 dir =  CW;
-    //             }else{
-    //                 dir = CCW;
-    //             }
-    //         }else if(destination == Post5 || destination == Post6){
-    //             if(startingPosition == LeftGauntlet){
-    //                 dir = CCW;
-    //             }else{
-    //                 dir = CW;
-    //             }
-    //         }
-    //     }
-    //     HI->update();
-    // }
-    // else { 
-    //     digitalWrite(LED_RED, LOW);
-    //     Serial.println("following tape");
-    //     followTape(robotSpeed, true,true);
-    // }
+    //followTape(robotSpeed,false,false);
+    if(detectJunction()){
+        //followTape(40,false,true);
+        junctionHandling = true;
+        junctionTurn(path1[turnStep]);
+    }
+    else{
+        if(junctionHandling){
+            Serial.println(turnStep);
+            junctionHandling = false;
+            turnStep++;
+        }
+        followTape(robotSpeed,false,false);
+    }
     return;
 }
 
@@ -218,129 +164,44 @@ float LineFollow::getWeightedEdgeError(bool followRightEdge)
 
 }
 
-
-// Returns the current amount of line following error
-float LineFollow::getLinePositionError(bool followRightEdge)
-{
-   float QRD_Thresh = 0.4;
-   float returnError = 0.0;
-   float maxVal = 0;
-   int maxIndex = 0;
-   float secondMaxVal = 0;
-   int secondMaxIndex = 0;
-   if(followRightEdge){
-       for(int i = numSensors-1; i > 0; i--){
-           if(HI->QRD_Vals[i] > QRD_Thresh){
-               if(HI->QRD_Vals[i-1] < HI->QRD_Vals[i]){
-                   maxVal = HI->QRD_Vals[i];
-                   maxIndex = i;
-                   if(i == numSensors-1){
-                       secondMaxIndex = numSensors-2;
-                   }
-                   else{
-                       //secondMaxIndex = (HI->QRD_Vals[i+1] > HI->QRD_Vals[i-1]) ? i+1 : i-1;
-                       Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
-                       Serial.print("maxIndex: " + String(maxIndex));
-                       return (positionVector[maxIndex]+((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex+1]-positionVector[maxIndex])-((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex]-positionVector[maxIndex-1]));
-                   }
-                   secondMaxVal = HI->QRD_Vals[secondMaxIndex];
-                   break;
-               }
-               else if(i == 1){
-                   maxVal = HI->QRD_Vals[0];
-                   maxIndex = 0;
-                   secondMaxIndex = 1;
-                   secondMaxVal = HI->QRD_Vals[secondMaxIndex];
-                   break;
-               }
-           }
-       }
-   }else{//left edge
-       for(int i = 0; i < numSensors-1; i++){
-           if(HI->QRD_Vals[i] > QRD_Thresh){
-               if(HI->QRD_Vals[i+1] < HI->QRD_Vals[i]){
-                   maxVal = HI->QRD_Vals[i];
-                   maxIndex = i;
-                   if(i == 0){
-                       secondMaxIndex = 1;
-                   }
-                   else{
-                       //secondMaxIndex = (HI->QRD_Vals[i+1] > HI->QRD_Vals[i-1]) ? i+1 : i-1;
-                       Serial.println(String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
-                       Serial.print(maxIndex);
-                       return (positionVector[maxIndex]+((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex+1]-positionVector[maxIndex])-((HI->QRD_Vals[maxIndex+1])/(HI->QRD_Vals[maxIndex]+HI->QRD_Vals[maxIndex+1]))*(positionVector[maxIndex]-positionVector[maxIndex-1]));
-                   }
-               }
-               else if(i == numSensors-2){
-                   maxVal = HI->QRD_Vals[numSensors-1];
-                   maxIndex = numSensors-1;
-                   secondMaxIndex = numSensors-2;
-                   secondMaxVal = HI->QRD_Vals[secondMaxIndex];
-                   break;
-               }
-           }
-       }
-   }
-   if(maxVal == 0 || secondMaxVal == 0){
-       if(HI->errorHistory.back()<0){
-           returnError = -30.5;
-       }
-       else if(HI->errorHistory.back()>0){
-           returnError = 30.5;
-       }
-       else{
-           returnError = 0;
-       }
-   }
-   else{
-       //Interpolate to find error, need to always find left most point and add
-       if(maxIndex < secondMaxIndex){ //if max index is less than second max index
-           returnError = positionVector[maxIndex] + ((secondMaxVal)/(maxVal+secondMaxVal))*(positionVector[secondMaxIndex]-positionVector[maxIndex]);
-       }
-       else{ //if max index is greater than second max index
-           returnError = positionVector[secondMaxIndex] + ((maxVal)/(maxVal+secondMaxVal))*(positionVector[maxIndex]-positionVector[secondMaxIndex]);
-       }
-   }
- 
- 
- 
-   return returnError;
-}
-
-
 //runs a PID to follow the tape
 void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollow){
     float error = 0;
 
     if(edgeFollow){
+        digitalWrite(LED_BLUE,HIGH);
+        digitalWrite(LED_RED,LOW);
         error = getWeightedEdgeError(followRightEdge);
+
         //check for losing line on Left
         // if(followRightEdge){
         //     if(lostLine && error > lineFoundFactor){
         //         lostLine = false;
         //     }
         //     if(lostLine || abs(HI->errorHistory.back() - HI->errorHistory.front()) > lineLostFactor){
+
         //         error = positionVector[numSensors-1];
         //         lostLine = true;
         //     }
         // }
         // else{ //check for losing line on right
-        //     if(lostLine && error < -lineFoundFactor){
+        //     if(lostLine && error < (-1*lineFoundFactor)){
         //         lostLine = false;
         //     }
         //     if(lostLine || abs(HI->errorHistory.back() - HI->errorHistory.front()) > lineLostFactor){
-        //         error = positionVector[0];
+        //         digitalWrite(LED_RED,HIGH);
+        //         error = -30;
         //         lostLine = true;
         //     }
         // }
 
-        digitalWrite(LED_BLUE,HIGH);
     }
     else{
+        digitalWrite(LED_BLUE,LOW);
         digitalWrite(LED_RED,HIGH);
         error = HI->getWeightedError();
     }
-    Serial.println("error: " + String(error));
+ 
 
     HI->errorHistory.push(error); // add current error to errorQueue
     if(HI->errorHistory.size() > ERROR_HISTORY_SIZE){ // keep queue size at ERROR_HISTORY_SIZE
@@ -367,29 +228,115 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollo
 
     LSpeed = (robotSpeed + speedAdj);
     RSpeed = (robotSpeed - speedAdj);
+    // Serial.println(speedAdj);
+    // Serial.println(LSpeed);
+    // Serial.println(RSpeed);
     setMotorSpeeds();
 
-    Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
-    Serial.print("Error: " + String(error));
+    //Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
+    //Serial.println("Error: " + String(error));
 
 }
 //////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// PID END ////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-void LineFollow::findIR() {
+void LineFollow::drive_stop(int direction, int timeout, float delta_trip, float kdrift, int maxpower){
+    
+    //must set 
+    //delta trip is speed of encoder to trip
+    delay(30); //needed to accumlate encoder tics for speed
+    if(!drive_stop_START_TIME_INIT){
+        Serial.println("init of stop");
+        drive_stop_START_TIME = millis();
+        digitalWrite(LED_BLUE,LOW);
+        drive_stop_START_TIME_INIT = true;
+    }
 
-}
+    float ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2;
+    int net_time = millis() - drive_stop_START_TIME;
+    int drift = HI->LEncoder->getCount() - HI->REncoder->getCount();
 
-void LineFollow::findGauntlet() {
+    Serial.println("ave speed" + String(ave_speed));
 
-}
+    if(net_time < 400){
+        //get moving for some small time
+        HI->LMotor->setSpeed( (direction*maxpower) - (drift * kdrift));
+        HI->RMotor->setSpeed( (direction*maxpower) + (drift * kdrift)/1.45);
+    }
+    else if((ave_speed < delta_trip) || (net_time > timeout)){
+        Serial.println("exit reached!");
+        //exit: detected post
+        HI->LMotor->setSpeed(0);
+        HI->RMotor->setSpeed(0);
+        HI->LMotor->update();
+        HI->RMotor->update();
+
+        //change state here
+        MainState::instance()->setState(stoneCollecting);
+
+        //reset START_TIME_INIT
+        drive_stop_START_TIME_INIT = false;
+        digitalWrite(LED_BLUE,HIGH); // for testing
+    }
+    else{
+        //continue moving in dir
+        Serial.println("continue in dir");
+        HI->LMotor->setSpeed( (direction*maxpower) - (drift * kdrift));
+        HI->RMotor->setSpeed( (direction*maxpower) + (drift * kdrift));
+    }
+
+  }
+
+void LineFollow::drive_stop_seq(int direction, int timeout, float delta_trip, float kdrift, int maxpower){
+    
+    //must set 
+    //delta trip is speed of encoder to trip
+
+    int drift;
+    float ave_speed;
+
+    int start_time = millis();
+    while(millis() - start_time < 800){
+        HI->LMotor->setSpeed( (direction*maxpower) );
+        HI->RMotor->setSpeed( (direction*maxpower) );
+        HI->update();
+        ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2;
+        drift = HI->LEncoder->getCount() - HI->REncoder->getCount();
+    }
+
+    while((ave_speed > delta_trip) && ((millis()-start_time) < timeout)){
+
+    ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2;
+    drift = HI->LEncoder->getCount() - HI->REncoder->getCount();
+
+    Serial.println("ave speed" + String(ave_speed));
+    HI->LMotor->setSpeed( (direction*maxpower) - (drift * kdrift));
+    HI->RMotor->setSpeed( (direction*maxpower) + (drift * kdrift)/1.45);
+    HI-> update();
+    delay(30);
+    }
+    Serial.println("exit reached!");
+
+    HI->LMotor->setSpeed(0);
+    HI->RMotor->setSpeed(0);
+    HI->LMotor->update();
+    HI->RMotor->update();
+
+    MainState::instance()->setState(stoneCollecting);
+
+  }
+
+
+
+
+
 
 //return true if any sensors detect black
 //return false otherwise
 bool LineFollow::detectLine(){
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.6){
+        if (HI->QRD_Vals[i] > 0.4){
             return true;
         }
     }
@@ -397,10 +344,9 @@ bool LineFollow::detectLine(){
 }
 
 bool LineFollow::detectJunction(){
-    digitalWrite(LED_BLUE,HIGH);
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.65){
+        if (HI->QRD_Vals[i] > 0.8){
             count++;
         }
     }
@@ -421,17 +367,58 @@ void LineFollow::stopMoving(){
     delay(150);
 }
 
-void LineFollow::turnOnLine(){
-    HI->RMotor->setSpeed(-50);
-    HI->LMotor->setSpeed(50);
-    HI->RMotor->update();
-    HI->LMotor->update();
 
-    while(detectLine()){}
-    while(!detectLine()){}
-    
-    HI->RMotor->setSpeed(0);
+void LineFollow::slewBrake(int startSpeed, int duration, int targetSpeed){
+    int startTime = millis();
+    int time_elapsed = startTime;
+    while(time_elapsed-startTime < duration){
+        HI->LMotor->setSpeed(startSpeed*(1-float(time_elapsed-startTime)/float(duration)) + targetSpeed*(float(time_elapsed-startTime)/float(duration)));
+        HI->RMotor->setSpeed(startSpeed*(1-float(time_elapsed-startTime)/float(duration)) + targetSpeed*(float(time_elapsed-startTime)/float(duration)));
+        HI->LMotor->update();
+        HI->RMotor->update();
+        time_elapsed = millis();
+    }
     HI->LMotor->setSpeed(0);
-    HI->RMotor->update();
+    HI->RMotor->setSpeed(0);
     HI->LMotor->update();
+    HI->RMotor->update();
+}
+
+void LineFollow::goForwardsSlightly(int targetTicks, int robotSpeed, bool postOnRight){
+    int LStartTicks = HI->LEncoder->getCount();
+    int RStartTicks = HI->REncoder->getCount();
+
+    HI->LMotor->setSpeed(robotSpeed);
+    HI->RMotor->setSpeed(robotSpeed);
+    HI->LMotor->update();
+    HI->RMotor->update();
+    delay(50);
+
+    while(HI->LEncoder->getCount() + HI->REncoder->getCount() - LStartTicks - RStartTicks < targetTicks){
+        followTape(robotSpeed, !postOnRight, false);
+        HI->update();
+    }
+}
+
+void LineFollow::QRDTurn(bool turnRight){
+    if(turnRight){
+        while(HI->errorHistory.back() - HI->errorHistory.front() < 10.0){
+            HI->LMotor->setSpeed(30);
+            HI->RMotor->setSpeed(-30);
+            HI->update();
+            HI->errorHistory.push(HI->getWeightedError());
+            HI->errorHistory.pop();
+        }
+    }
+    else{//turn left
+        while(HI->errorHistory.back() - HI->errorHistory.front() > -10.0){
+            digitalWrite(LED_BLUE, HIGH);
+            HI->LMotor->setSpeed(-30);
+            HI->RMotor->setSpeed(30);
+            HI->update();
+            HI->errorHistory.push(HI->getWeightedError());
+            HI->errorHistory.pop();
+        }
+        digitalWrite(LED_BLUE,LOW);
+    }
 }

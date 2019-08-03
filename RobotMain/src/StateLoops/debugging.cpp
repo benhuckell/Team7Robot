@@ -12,32 +12,32 @@ Debugging::Debugging(){
 }
 
 void Debugging::loop(){
+
+    digitalWrite(LED_RED, LOW);
     HI->LMotor->setSpeed(0);
     HI->RMotor->setSpeed(0);
-    Serial.println("debugging");
 
-    // HI->WinchMotor->setSpeed(80);
-    // HI->WinchMotor->update();
-    // Serial.println(HI->WinchEncoder->getCount());
-    if(HI->timing_flag == false){
-        HI->start_time_global = millis();
-        HI->timing_flag = true;
-    } 
+    pinMode(PUSH_BUTTON_1, INPUT_PULLDOWN);
+    pinMode(PUSH_BUTTON_2, INPUT_PULLDOWN);
 
-    // HI->clawMotor->clawSetPos(200);
-    // delay(1000);
-    // HI->clawMotor->clawSetPos(100);
-    // delay(1000);
+    display.clearDisplay();
+    display.setCursor(0,0);
 
+    count++;
 
-    //moving up to the height of the pole
-    if (millis()  - HI->start_time_global < 3000){
-        HI-> winchTickTarget=250;
-        HI-> Winch_P_gain=1.3;
-        HI->WinchEncoder->winch_dir=1;
-        HI->moveIntake();
-        Serial.println("en: " + String(HI->WinchEncoder->getCount()));
-        Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));        
+    display.println(count);
+    display.print("PB1: ");
+    display.println(digitalRead(PUSH_BUTTON_1));
+    display.print("PB2: ");
+    display.println(digitalRead(PUSH_BUTTON_2));
+    display.print("k_p: ");
+    display.println(float(analogRead(CONTROL_POT_1))/float(200.0));
+    display.print("k_d: ");
+    display.println(float(analogRead(CONTROL_POT_2))/float(7.5));
+
+    if(digitalRead(PUSH_BUTTON_2) && calibrateMode == false){ 
+        delay(1000);
+        calibrateMode = true;
     }
    
     //closing the claw around the rock
@@ -177,6 +177,12 @@ void Debugging::loop(){
     // //HardwareInterface::i()->update();
 
     // display.display();
+
+    /////ENCODER DEBUG CODE
+    //Serial.println("LEN: " + String(HI->LEncoder->getCount()));
+    //Serial.println("REN: " + String(HI->REncoder->getCount()));
+    //Serial.println("");
+    //////////////////
 
     return;
 }

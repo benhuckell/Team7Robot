@@ -13,7 +13,20 @@ Encoder::Encoder(int encoder_port_1, int encoder_port_2, int encoder_orientation
 
 //gets called on every rising edge of the encoder output
 void Encoder::ISR(){
+   //digitalWrite(PB9, HIGH);
    dir = digitalRead(encoder_port_2);
+   if(dir > 0){
+       count = count + (encoder_orientation); // counts 1 up (allegedly)
+   }
+   else{
+       count = count - (encoder_orientation); // counts 1 down (allegedly)
+   }
+   //digitalWrite(PB9, LOW);
+}
+
+void Encoder::ISR_winch(){
+    digitalWrite(PA15, HIGH);
+     dir = winch_dir;
    //Serial.print("encoder Port1: "+ String (encoder_port_1) + " | ");
    //Serial.println("encoder Port2: "+ String (encoder_port_2));
    //Serial.println("dir: "+ String( dir));
@@ -25,6 +38,7 @@ void Encoder::ISR(){
        count = count - (encoder_orientation); // counts 1 down (allegedly)
        //Serial.println("-1 " + String(count));
    }
+   digitalWrite(PA15, LOW);
 }
 
 void Encoder::ISR_winch(){
