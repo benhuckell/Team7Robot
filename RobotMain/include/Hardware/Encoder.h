@@ -12,7 +12,7 @@ class Encoder {
        void update();
 
        void ISR_winch();
-       volatile int winch_dir;
+       volatile int winch_dir = 1;
       
        const float ticksPerRotation = 90;
    private:

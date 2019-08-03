@@ -75,6 +75,16 @@ void LineFollow::junctionTurn(Turn turn){
 void LineFollow::loop(){
     robotSpeed = 45;
 
+        //debug
+        while(true){
+            delay(50);
+            Serial.println("wEn: " + String(HI->WinchEncoder->getCount()));
+
+        }
+
+
+
+        delay(10000000);
     //followTape(robotSpeed,false,false);
     if(detectJunction()){
         //followTape(40,false,true);
