@@ -42,7 +42,7 @@ HardwareInterface::HardwareInterface(){
    pinMode(LED_BLUE, OUTPUT);
    attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
-   //attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
+   attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),WinchEncoderInterrupt,RISING);
 
    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 69, 732);
    HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 61, 570);

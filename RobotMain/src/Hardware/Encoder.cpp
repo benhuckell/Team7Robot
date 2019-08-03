@@ -25,8 +25,8 @@ void Encoder::ISR(){
 }
 
 void Encoder::ISR_winch(){
-    digitalWrite(PA15, HIGH);
-     dir = winch_dir;
+    //digitalWrite(PA15, HIGH);
+    dir = winch_dir;
    //Serial.print("encoder Port1: "+ String (encoder_port_1) + " | ");
    //Serial.println("encoder Port2: "+ String (encoder_port_2));
    //Serial.println("dir: "+ String( dir));
@@ -38,7 +38,7 @@ void Encoder::ISR_winch(){
        count = count - (encoder_orientation); // counts 1 down (allegedly)
        //Serial.println("-1 " + String(count));
    }
-   digitalWrite(PA15, LOW);
+   //digitalWrite(PA15, LOW);
 }
 
 void Encoder::update(){
