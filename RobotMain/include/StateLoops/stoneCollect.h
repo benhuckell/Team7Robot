@@ -18,6 +18,5 @@ namespace StateLoops {
             void returnToTape();
             void getStone();
             void getStone_const_speed();
-            HardwareInterface* HI;
     };
 }

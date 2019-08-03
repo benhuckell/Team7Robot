@@ -11,9 +11,6 @@ class Encoder {
        int getCount();
        void resetCount(); //Be Careful!!!
        void update();
-
-       void ISR_winch();
-       volatile int winch_dir;
       
        const float ticksPerRotation = 90;
        volatile int winch_dir;
