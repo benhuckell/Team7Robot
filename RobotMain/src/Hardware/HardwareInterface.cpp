@@ -479,3 +479,13 @@ void HardwareInterface::turn_single_constant(int target, unsigned int timeout, i
     RMotor->setSpeed(0);
     update();
 }
+
+void HardwareInterface::moveIntake_const_speed(){
+    Serial.println("Encoder: Winch: " + String(WinchEncoder->getCount()));
+    WinchSpeed = 40;
+
+    WinchMotor->setSpeed(WinchSpeed);
+    Serial.println("speed:" + String(WinchSpeed));
+    WinchMotor->update();
+    WinchEncoder->update();
+}

@@ -8,6 +8,7 @@ namespace StateLoops {
         public:
             StoneCollect();
             void loop();
+            void getStone_const_speed();
         private:
             HardwareInterface* HI;
             enum stoneCollectStates{} stoneCollectState;
