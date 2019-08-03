@@ -20,6 +20,8 @@ namespace StateLoops{
             bool drive_stop_START_TIME_INIT = false;
             int drive_stop_START_TIME;
 
+            void drive_stop_seq(int direction, int timeout, float delta_trip, float kdrift, int maxpower);
+
 
         private:
             float getLinePositionError(bool followRightEdge);
@@ -54,9 +56,9 @@ namespace StateLoops{
             //constant data
             float P_gain = 1.6; // K_p
             float I_gain = 0; // K_i
-            float D_gain = 5;//14; // K_d 
-            float P_gain_edge = 3.0;
-            float D_gain_edge = 40;
+            float D_gain = 12;//14; // K_d 
+            float P_gain_edge = 1.4;
+            float D_gain_edge = 25;
             static const int numSensors = 8;
             float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
             const float maxISum = 2; //max sum to avoid integral windup

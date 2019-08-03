@@ -43,14 +43,14 @@ HardwareInterface::HardwareInterface(){
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
    //attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 56, 400);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 55, 252);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 54, 254);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 53, 194);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 54, 323);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 55, 297);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 55, 204);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 60, 381);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 69, 732);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 61, 570);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 58, 550);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 56, 491);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 57, 580);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 59, 556);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 59, 465);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 65, 627);
 
 //   //  For calibrating
 //    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);
@@ -388,11 +388,11 @@ void HardwareInterface::moveIntake() {
     WinchSpeed = Winch_P_gain*tickError;
 
     //to set what happens at edge cases
-    if(WinchSpeed>100){
-        WinchSpeed=100;
+    if(WinchSpeed>60){
+        WinchSpeed=60;
     }
-    if(WinchSpeed<-100){
-        WinchSpeed=-100;
+    if(WinchSpeed<-60){
+        WinchSpeed=-60;
     }
 
     WinchMotor->setSpeed(WinchSpeed);

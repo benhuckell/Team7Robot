@@ -95,6 +95,10 @@ class HardwareInterface {
      void turn_single_backwards(int target, int timeout = 1500, float kdrift = 0, float k_p = 0.50);
      void turn_single_constant(int target, unsigned int timeout, int robotSpeed = 30);
      void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);
+
+      float Winch_P_gain=1;
+      bool timing_flag = false;
+      int start_time_global;
      
   private:
      HardwareInterface();
@@ -113,12 +117,14 @@ class HardwareInterface {
       static const int POST_4_TICKS = 1;
       static const int POST_5_TICKS = 1;
       static const int POST_6_TICKS = 1;
-      float Winch_P_gain=1;
+      
 
       //can hard code these values
       int clawFullyClosed;
       int clawFullyOpen;
       int clawWithRock;
+
+
 
       int clawCurrentAngle=clawFullyOpen;
   };
