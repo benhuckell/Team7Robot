@@ -7,6 +7,7 @@ namespace StateLoops {
     
     void StoneCollect::loop(){
         display.println("Stone Collecting");
+        delay(10000);
     }
 
     void StoneCollect::goToPost(enum postNumbers) {

@@ -43,14 +43,14 @@ HardwareInterface::HardwareInterface(){
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
    //attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),REncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 61, 674);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 54, 311);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 52, 245);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 51, 152);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 52, 200);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 52, 239);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 53, 161);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 60, 484);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 56, 400);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 55, 252);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 54, 254);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 53, 194);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 54, 323);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 55, 297);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 55, 204);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 60, 381);
 
 //   //  For calibrating
 //    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);
@@ -77,6 +77,9 @@ HardwareInterface::HardwareInterface(){
    for(int i = 0; i < NUM_QRD_SENSORS; i++){
        QRD_Max[i] = QRD_Array[i]->getMax();
        QRD_Min[i] = QRD_Array[i]->getMin();
+       QRD_Vals[i] = float(QRD_Array[i]->getValue() - QRD_Min[i])/float(QRD_Max[i] - QRD_Min[i]);
+       //QRD_Prev[i] = QRD_Vals[i];
+       QRD_RAW[i] = QRD_Array[i]->getValue();
    }
 }
 
@@ -102,13 +105,17 @@ HardwareInterface* HardwareInterface::i(){
 void HardwareInterface::update(){
    //update QRD values
    for(int i = 0; i < NUM_QRD_SENSORS; i++){
-       QRD_Array[i]->update();
-       //QRD_Vals[i] = QRD_Array[i]->getValue();
-       //QRD_Thresh[i] = QRD_Array[i]->getThresh();
+       //QRD_Prev[i] = QRD_Vals[i];//get last normalized value
+
+       QRD_Array[i]->update();//then update vals
+       
        QRD_RAW[i] = QRD_Array[i]->getValue();
        QRD_Vals[i] = float(QRD_Array[i]->getValue() - QRD_Min[i])/float(QRD_Max[i] - QRD_Min[i]);
+       
+    //    if(QRD_Prev[i] == 0 && QRD_Vals[i] == 1.0){//filter out spikes in QRD_values
+    //        QRD_Vals[i] = 0;
+    //    }
    }
-
    //update Motor outputs
    LMotor->update();
    RMotor->update();
@@ -125,6 +132,8 @@ void HardwareInterface::update(){
    //Update servo output
    //clawMotor->update();
 }
+
+
 
 bool HardwareInterface::robotWasBumped(){
    // Serial.print("lastLSpeed: ");
@@ -440,7 +449,7 @@ void HardwareInterface::turn_single_constant(int target, unsigned int timeout, i
     while(millis() - startTime <= timeout){
         if(target >= 0){
             LMotor->setSpeed(0);
-            RMotor->setSpeed(-robotSpeed);
+            RMotor->setSpeed(-robotSpeed/1.35);
             update();
             if(REncoder->getCount() - RStartCount >= target){
                 LMotor->setSpeed(0);
@@ -453,11 +462,11 @@ void HardwareInterface::turn_single_constant(int target, unsigned int timeout, i
             LMotor->setSpeed(-robotSpeed);
             RMotor->setSpeed(0);
             update();
-            Serial.print(" LCount: ");
-            Serial.print(LEncoder->getCount());
-            Serial.print(target);
-            Serial.print(" LStartCount: ");
-            Serial.print(LStartCount);
+            // Serial.print(" LCount: ");
+            // Serial.print(LEncoder->getCount());
+            // Serial.print(target);
+            // Serial.print(" LStartCount: ");
+            // Serial.print(LStartCount);
             if(LEncoder->getCount() - LStartCount <= target){
                 LMotor->setSpeed(0);
                 RMotor->setSpeed(0);

@@ -13,11 +13,12 @@ void LineFollow::setup(){
     digitalWrite(LED_RED,LOW);
 
     turnStep = 0;
+    junctionHandling = false;
 }
 
 void LineFollow::junctionTurn(Turn turn){
     Serial.println("junction");
-    robotSpeed = 27;
+    robotSpeed = 30;
     int startTime = millis();
     if(turn == LEdgeTurn){
         while(millis()-startTime < 400){
@@ -46,20 +47,28 @@ void LineFollow::junctionTurn(Turn turn){
         QRDTurn(true);//turn right
     }
     else if(turn == PostTurnLeft){//Left post
-        goForwardsSlightly(150, robotSpeed, false);
-        slewBrake(robotSpeed, 100, -10);
+        goForwardsSlightly(350, robotSpeed, false);
+        slewBrake(robotSpeed, 100, -5);
         delay(1000);
-        HI->turn_single_constant(-250, 750, 30);
-        delay(6000);
+        HI->turn_single_constant(-190, 10000, 40);
+        delay(3000);
         HI->update();
+
+        //Drive to post
+        startTime = millis();
+        while(millis()-startTime < 5000){
+            drive_stop(1,1000,15,0,40);
+            HI->update();
+        }
+
         // stopMoving();
         // delay(5000);
     }
     else if(turn == PostTurnRight){//Right post
-        goForwardsSlightly(100, robotSpeed, true);
-        slewBrake(robotSpeed, 100, -10);
+        goForwardsSlightly(500, robotSpeed, true);
+        slewBrake(robotSpeed, 100, -5);
         delay(1000);
-        HI->turn_single_backwards(200,750);
+        HI->turn_single_constant(175,3000,40);
         delay(6000);
         HI->update();
         // stopMoving();
@@ -68,12 +77,13 @@ void LineFollow::junctionTurn(Turn turn){
 }
 
 void LineFollow::loop(){
-    robotSpeed = 40;
-    followTape(robotSpeed,false,false);
+    robotSpeed = 45;
+
+    //followTape(robotSpeed,false,false);
     if(detectJunction()){
         //followTape(40,false,true);
         junctionHandling = true;
-        junctionTurn(path3[turnStep]);
+        junctionTurn(path1[turnStep]);
     }
     else{
         if(junctionHandling){
@@ -221,19 +231,66 @@ void LineFollow::followTape(int robotSpeed, bool followRightEdge, bool edgeFollo
 
     LSpeed = (robotSpeed + speedAdj);
     RSpeed = (robotSpeed - speedAdj);
-    // Serial.print(error);
     // Serial.println(speedAdj);
     // Serial.println(LSpeed);
     // Serial.println(RSpeed);
     setMotorSpeeds();
 
-    //Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
-    //Serial.println("Error: " + String(error));
+    Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
+    Serial.println("Error: " + String(error));
 
 }
 //////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// PID END ////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
+
+void LineFollow::drive_stop(int direction, int timeout, float delta_trip, float kdrift, int maxpower){
+    
+    //must set 
+    //delta trip is speed of encoder to trip
+    delay(30); //needed to accumlate encoder tics for speed
+    if(!drive_stop_START_TIME_INIT){
+        Serial.println("init of stop");
+        drive_stop_START_TIME = millis();
+        digitalWrite(LED_BLUE,LOW);
+        drive_stop_START_TIME_INIT = true;
+    }
+
+    float ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2;
+    int net_time = millis() - drive_stop_START_TIME;
+    int drift = HI->LEncoder->getCount() - HI->REncoder->getCount();
+
+    Serial.println("ave speed" + String(ave_speed));
+
+    if(net_time < 400){
+        //get moving for some small time
+        HI->LMotor->setSpeed( (direction*maxpower) - (drift * kdrift));
+        HI->RMotor->setSpeed( (direction*maxpower) + (drift * kdrift)/straightLineCorrectionFactor);
+    }
+    else if((ave_speed < delta_trip) || (net_time > timeout)){
+        Serial.println("exit reached!");
+        //exit: detected post
+        HI->LMotor->setSpeed(0);
+        HI->RMotor->setSpeed(0);
+        HI->LMotor->update();
+        HI->RMotor->update();
+
+        //change state here
+        MainState::instance()->setState(stoneCollecting);
+
+        //reset START_TIME_INIT
+        drive_stop_START_TIME_INIT = false;
+        digitalWrite(LED_BLUE,HIGH);
+        delay(100000); // for testing
+    }
+    else{
+        //continue moving in dir
+        Serial.println("continue in dir");
+        HI->LMotor->setSpeed( (direction*maxpower) - (drift * kdrift));
+        HI->RMotor->setSpeed( (direction*maxpower) + (drift * kdrift));
+    }
+
+  }
 
 //return true if any sensors detect black
 //return false otherwise
@@ -249,7 +306,7 @@ bool LineFollow::detectLine(){
 bool LineFollow::detectJunction(){
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.75){
+        if (HI->QRD_Vals[i] > 0.8){
             count++;
         }
     }
@@ -275,8 +332,8 @@ void LineFollow::slewBrake(int startSpeed, int duration, int targetSpeed){
     int startTime = millis();
     int time_elapsed = startTime;
     while(time_elapsed-startTime < duration){
-        HI->LMotor->setSpeed(startSpeed*(1-time_elapsed/duration) + targetSpeed*(time_elapsed/duration));
-        HI->RMotor->setSpeed( (startSpeed*(1-time_elapsed/duration) + targetSpeed*(time_elapsed/duration))/straightLineCorrectionFactor );
+        HI->LMotor->setSpeed(startSpeed*(1-float(time_elapsed-startTime)/float(duration)) + targetSpeed*(float(time_elapsed-startTime)/float(duration)));
+        HI->RMotor->setSpeed(startSpeed*(1-float(time_elapsed-startTime)/float(duration)) + targetSpeed*(float(time_elapsed-startTime)/float(duration)));
         HI->LMotor->update();
         HI->RMotor->update();
         time_elapsed = millis();
@@ -307,7 +364,7 @@ void LineFollow::QRDTurn(bool turnRight){
     if(turnRight){
         while(HI->errorHistory.back() - HI->errorHistory.front() < 10.0){
             HI->LMotor->setSpeed(30);
-            HI->RMotor->setSpeed(-30/straightLineCorrectionFactor);
+            HI->RMotor->setSpeed(-30);
             HI->update();
             HI->errorHistory.push(HI->getWeightedError());
             HI->errorHistory.pop();
@@ -317,7 +374,7 @@ void LineFollow::QRDTurn(bool turnRight){
         while(HI->errorHistory.back() - HI->errorHistory.front() > -10.0){
             digitalWrite(LED_BLUE, HIGH);
             HI->LMotor->setSpeed(-30);
-            HI->RMotor->setSpeed(30/straightLineCorrectionFactor);
+            HI->RMotor->setSpeed(30);
             HI->update();
             HI->errorHistory.push(HI->getWeightedError());
             HI->errorHistory.pop();

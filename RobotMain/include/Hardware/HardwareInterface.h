@@ -71,6 +71,7 @@ class HardwareInterface {
 
      QRD* QRD_Array[NUM_QRD_SENSORS];
      float QRD_Vals[NUM_QRD_SENSORS];
+     int QRD_Prev[NUM_QRD_SENSORS];
      int QRD_RAW[NUM_QRD_SENSORS];
      int QRD_Thresh[NUM_QRD_SENSORS];
      int QRD_Max[NUM_QRD_SENSORS];
