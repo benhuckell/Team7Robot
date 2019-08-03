@@ -59,7 +59,7 @@ void setup() {
   // display.println("Working");
   // display.display();
 
-  MainState::instance()->setState(debugging);
+  MainState::instance()->setState(stoneCollecting);
   // Serial.print(" state: ");
   // Serial.print(MainState::instance()->getState());
   int count = 0;

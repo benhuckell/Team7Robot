@@ -372,32 +372,40 @@ void HardwareInterface::turn_single(int target, int motor, int dir, int timeout,
 }
 
 void HardwareInterface::moveIntake() {
-    float WinchSpeed = 0;
     //set the height that the winch raises the entire assembly to
     //need to use PID to get to the correct height
         Serial.println("Encoder: Winch: " + String(WinchEncoder->getCount()));
         int tickError=winchTickTarget-WinchEncoder->getCount();
         WinchSpeed = Winch_P_gain*tickError;
         //Serial.println(WinchSpeed);
-        
 
         //to set what happens at edge cases
-        if(WinchSpeed>50){
-            WinchSpeed=50;
+        if(WinchSpeed>60){
+            WinchSpeed=60;
         }
-        if(WinchSpeed<-50){
-            WinchSpeed=-50;
+        if(WinchSpeed<-60){
+            WinchSpeed=-60;
         }
 
-        if(WinchSpeed>0){
-            WinchEncoder->winch_dir = 1;
-        }
-        else { WinchEncoder->winch_dir = -1;}
+        // if(WinchSpeed>0){
+        //     WinchEncoder->winch_dir = 1;
+        // }
+        // else { WinchEncoder->winch_dir = -1;}
 
         WinchMotor->setSpeed(WinchSpeed);
         Serial.println("speed:" + String(WinchSpeed));
         WinchMotor->update();
         WinchEncoder->update();
+}
+
+void HardwareInterface::moveIntake_const_speed(){
+    Serial.println("Encoder: Winch: " + String(WinchEncoder->getCount()));
+    WinchSpeed = 40;
+
+    WinchMotor->setSpeed(WinchSpeed);
+    Serial.println("speed:" + String(WinchSpeed));
+    WinchMotor->update();
+    WinchEncoder->update();
 }
 
 void HardwareInterface::checkForRock(){

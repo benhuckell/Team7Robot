@@ -1,6 +1,7 @@
 #pragma once
 
 #include "StateLoops/State.h"
+#include "Hardware/HardwareInterface.h"
 
 namespace StateLoops {
     class StoneScore : public State {
@@ -13,5 +14,6 @@ namespace StateLoops {
             static void findHole(enum holeNumbers);
             static void placeStone();
             static void returnToTape();
+            //HardwareInterface* HI;
     };
 }

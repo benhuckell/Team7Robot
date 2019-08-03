@@ -34,7 +34,7 @@
 #define RENCODER_DIRECTION -1
 #define WINCH_ENCODER_DIRECTION 1
 
-#define CLAW_SERVO PB_8
+#define CLAW_SERVO PB_1
 #define LIM_SWITCH_PIN PB11
 
 #define LED_RED PB9
@@ -88,6 +88,7 @@ class HardwareInterface {
      bool robotWasBumped();
      bool robotHitPost();
      void moveIntake();
+     void moveIntake_const_speed();
      void clawSetPos(int clawAngle);
      void checkForRock();
      float getWeightedError();  
@@ -108,6 +109,8 @@ class HardwareInterface {
      static HardwareInterface* myInstance;
      const float bumpThresholdVal = 10.0;
      const float postThresholdVal = 0.5;
+
+     float WinchSpeed = 0;
 
       static const int POST_1_TICKS = 1;
       static const int POST_2_TICKS = 1;

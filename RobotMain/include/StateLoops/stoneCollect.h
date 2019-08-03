@@ -1,6 +1,7 @@
 #pragma once
 
 #include "StateLoops/State.h"
+#include "Hardware/HardwareInterface.h"
 
 namespace StateLoops {
     class StoneCollect : public State {
@@ -13,5 +14,8 @@ namespace StateLoops {
             void raiseIntake(enum postNumbers);
             void intakeStone();
             void returnToTape();
+            void getStone();
+            void getStone_const_speed();
+            HardwareInterface* HI;
     };
 }
