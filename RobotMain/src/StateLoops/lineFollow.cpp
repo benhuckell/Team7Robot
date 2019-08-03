@@ -50,7 +50,7 @@ void LineFollow::junctionTurn(Turn turn){
         goForwardsSlightly(350, robotSpeed, false);
         slewBrake(robotSpeed, 100, -5);
         delay(1000);
-        HI->turn_single_constant(-190, 10000, 40);
+        HI->turn_single_constant(-200, 10000, 40);
         delay(3000);
         HI->update();
 
@@ -59,6 +59,29 @@ void LineFollow::junctionTurn(Turn turn){
 
         stopMoving();
         delay(5000);
+        HI-> winchTickTarget = 325;
+        HI->WinchEncoder->winch_dir=-1;
+
+        while(HI->winchTickTarget - HI->WinchEncoder->getCount() > 5){
+            HI->moveIntake_const_speed();
+            Serial.println("en: " + String(HI->WinchEncoder->getCount()));
+            Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
+        }
+
+        HI->WinchMotor->setSpeed(0);
+        HI->WinchMotor->update();
+        delay(1000);
+        HI->clawMotor->clawSetPos(300);
+        delay(1000);
+
+        HI-> winchTickTarget = 338;
+        HI->WinchEncoder->winch_dir=-1;
+
+        while(HI->winchTickTarget - HI->WinchEncoder->getCount() > 5){
+            HI->moveIntake_const_speed();
+            Serial.println("en: " + String(HI->WinchEncoder->getCount()));
+            Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
+        }
     }
     else if(turn == PostTurnRight){//Right post
         goForwardsSlightly(500, robotSpeed, true);
@@ -73,30 +96,29 @@ void LineFollow::junctionTurn(Turn turn){
 }
 
 void LineFollow::loop(){
-    //robotSpeed = 43;
+    robotSpeed = 43;
     // HI->LMotor->setSpeed(50);
     // HI->RMotor->setSpeed(50/straightLineCorrectionFactor);
 
     //followTape(robotSpeed,false,false);
     
-    HI->clawMotor->clawSetPos(300);
-    delay(1000);
-    HI->clawMotor->clawSetPos(200);
-    delay(1000);
+    
 
-    // if(detectJunction()){
-    //     //followTape(40,false,true);
-    //     junctionHandling = true;
-    //     junctionTurn(path1[turnStep]);
-    // }
-    // else{
-    //     if(junctionHandling){
-    //         Serial.println(turnStep);
-    //         junctionHandling = false;
-    //         turnStep++;
-    //     }
-    //     followTape(robotSpeed,false,false);
-    // }
+ 
+
+    if(detectJunction()){
+        //followTape(40,false,true);
+        junctionHandling = true;
+        junctionTurn(path1[turnStep]);
+    }
+    else{
+        if(junctionHandling){
+            Serial.println(turnStep);
+            junctionHandling = false;
+            turnStep++;
+        }
+        followTape(robotSpeed,false,false);
+    }
     return;
 }
 
