@@ -54,11 +54,11 @@ namespace StateLoops{
             HardwareInterface* HI;
 
             //constant data
-            float P_gain = 1.6; // K_p
+            float P_gain = 1.45; // K_p
             float I_gain = 0; // K_i
-            float D_gain = 12;//14; // K_d 
-            float P_gain_edge = 1.4;
-            float D_gain_edge = 25;
+            float D_gain = 65;//14; // K_d 
+            float P_gain_edge = 1.9;
+            float D_gain_edge = 80;
             static const int numSensors = 8;
             float positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
             const float maxISum = 2; //max sum to avoid integral windup

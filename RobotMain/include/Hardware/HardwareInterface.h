@@ -19,8 +19,8 @@
 #define CONTROL_POT_2 PA_5
 
 
-#define WINCH_UP PA_8 //winch inputs
-#define WINCH_DOWN PA_9
+#define WINCH_UP PB_0 //winch inputs
+#define WINCH_DOWN PA_7
 
 #define WINCH_ENC_1 PB10
 #define WINCH_ENC_2 PB1
@@ -34,7 +34,7 @@
 #define RENCODER_DIRECTION 1
 #define WINCH_ENCODER_DIRECTION -1
 
-#define CLAW_SERVO PA_10
+#define CLAW_SERVO PB_1
 #define LIM_SWITCH_PIN PB11
 
 #define LED_RED PB9

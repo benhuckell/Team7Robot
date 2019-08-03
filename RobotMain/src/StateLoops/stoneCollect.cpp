@@ -91,10 +91,16 @@ namespace StateLoops {
             Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
         }
 
+        HI->WinchMotor->setSpeed(0);
+        HI->WinchMotor->update();
+
         //closing the claw around the rock
-        HI->clawMotor->clawSetPos(300);
-        delay(1000);
-        
+
+        int startClawTime = millis();
+        while(millis()- startClawTime < 700){
+            HI->clawMotor->clawSetPos(200);
+        }
+
         HI->WinchEncoder->winch_dir=1;
         HI-> winchTickTarget=270;
 
@@ -104,5 +110,8 @@ namespace StateLoops {
             Serial.println("en: " + String(HI->WinchEncoder->getCount()));
             Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
         }
+
+        HI->WinchMotor->setSpeed(0);
+        HI->WinchMotor->update();
     }
 }
