@@ -10,7 +10,8 @@ namespace StateLoops {
     }
     
     void StoneCollect::loop(){
-        intakeStone();
+        Serial.println("Stone Collecting");
+        getStone_const_speed();
     }
 
     void StoneCollect::goToPost(enum postNumbers) {
@@ -81,15 +82,19 @@ namespace StateLoops {
     }
 
     void StoneCollect::getStone_const_speed(){
-        HI-> winchTickTarget = 250;
-        HI->WinchEncoder->winch_dir=1;
+        HI-> winchTickTarget = 320;
+        HI->WinchEncoder->winch_dir=-1;
+
+        int startingTicks = HI->WinchEncoder->getCount();
 
         //raise intake
-        while(HI->winchTickTarget - HI->WinchEncoder->getCount() > 5){
+        while((HI->WinchEncoder->getCount() - startingTicks) < HI->winchTickTarget){
             HI->moveIntake_const_speed();
             Serial.println("en: " + String(HI->WinchEncoder->getCount()));
             Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
         }
+
+        Serial.println("Done first up");
 
         HI->WinchMotor->setSpeed(0);
         HI->WinchMotor->update();
@@ -97,21 +102,30 @@ namespace StateLoops {
         //closing the claw around the rock
 
         int startClawTime = millis();
-        while(millis()- startClawTime < 700){
+        while(millis()- startClawTime < 1400){
             HI->clawMotor->clawSetPos(200);
         }
 
-        HI->WinchEncoder->winch_dir=1;
-        HI-> winchTickTarget=270;
+        Serial.println("Closed claw");
+
+        delay(1000);
+
+        HI->WinchEncoder->winch_dir=-1;
+        HI-> winchTickTarget=370;
+
 
         //lifting up to make sure rock isn't still in the pole mount
-        while(HI->winchTickTarget - HI->WinchEncoder->getCount() > 5){
+        while((HI->WinchEncoder->getCount() - startingTicks) < HI->winchTickTarget){
             HI-> moveIntake_const_speed();
             Serial.println("en: " + String(HI->WinchEncoder->getCount()));
             Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
         }
 
+        Serial.println("Done");
+
         HI->WinchMotor->setSpeed(0);
         HI->WinchMotor->update();
+
+        delay(10000);
     }
 }

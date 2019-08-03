@@ -47,44 +47,19 @@ void LineFollow::junctionTurn(Turn turn){
         QRDTurn(true);//turn right
     }
     else if(turn == PostTurnLeft){//Left post
-        goForwardsSlightly(350, robotSpeed, false);
-        slewBrake(robotSpeed, 100, -5);
+        stopMoving();
         delay(1000);
-        HI->turn_single_constant(-200, 10000, 40);
+        HI->turn_single_constant(-75, 10000,40);
         delay(3000);
         HI->update();
 
         //Drive to post
-        drive_stop_seq(1,2500,25,0,40);
+        drive_stop_seq(1,2500,25,0,38);
 
-        stopMoving();
         delay(5000);
-        HI-> winchTickTarget = 325;
-        HI->WinchEncoder->winch_dir=-1;
-
-        while(HI->winchTickTarget - HI->WinchEncoder->getCount() > 5){
-            HI->moveIntake_const_speed();
-            Serial.println("en: " + String(HI->WinchEncoder->getCount()));
-            Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
-        }
-
-        HI->WinchMotor->setSpeed(0);
-        HI->WinchMotor->update();
-        delay(1000);
-        HI->clawMotor->clawSetPos(300);
-        delay(1000);
-
-        HI-> winchTickTarget = 338;
-        HI->WinchEncoder->winch_dir=-1;
-
-        while(HI->winchTickTarget - HI->WinchEncoder->getCount() > 5){
-            HI->moveIntake_const_speed();
-            Serial.println("en: " + String(HI->WinchEncoder->getCount()));
-            Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
-        }
     }
     else if(turn == PostTurnRight){//Right post
-        goForwardsSlightly(500, robotSpeed, true);
+        goForwardsSlightly(500, 50, true);
         slewBrake(robotSpeed, 100, -5);
         delay(1000);
         HI->turn_single_constant(175,3000,40);
@@ -96,15 +71,16 @@ void LineFollow::junctionTurn(Turn turn){
 }
 
 void LineFollow::loop(){
-    robotSpeed = 43;
+    robotSpeed = 50;
     // HI->LMotor->setSpeed(50);
     // HI->RMotor->setSpeed(50/straightLineCorrectionFactor);
 
     //followTape(robotSpeed,false,false);
     
-    
-
- 
+    // HI->clawMotor->clawSetPos(300);
+    // delay(1000);
+    // HI->clawMotor->clawSetPos(200);
+    // delay(1000);
 
     if(detectJunction()){
         //followTape(40,false,true);
@@ -297,10 +273,17 @@ void LineFollow::drive_stop(int direction, int timeout, float delta_trip, float 
     else if((ave_speed < delta_trip) || (net_time > timeout)){
         Serial.println("exit reached!");
         //exit: detected post
+
+        HI->RMotor->setSpeed(-35);
+        HI->LMotor->setSpeed(-35);
+        HI->LMotor->update();
+        HI->RMotor->update();
+        delay(130);
         HI->LMotor->setSpeed(0);
         HI->RMotor->setSpeed(0);
         HI->LMotor->update();
         HI->RMotor->update();
+
 
         //change state here
         MainState::instance()->setState(stoneCollecting);
@@ -329,7 +312,7 @@ void LineFollow::drive_stop_seq(int direction, int timeout, float delta_trip, fl
     int start_time = millis();
     while(millis() - start_time < 800){
         HI->LMotor->setSpeed( (direction*maxpower) );
-        HI->RMotor->setSpeed( (direction*maxpower) );
+        HI->RMotor->setSpeed( (direction*maxpower)/1.17 );
         HI->update();
         ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2;
         drift = HI->LEncoder->getCount() - HI->REncoder->getCount();
@@ -342,12 +325,18 @@ void LineFollow::drive_stop_seq(int direction, int timeout, float delta_trip, fl
 
     Serial.println("ave speed" + String(ave_speed));
     HI->LMotor->setSpeed( (direction*maxpower) - (drift * kdrift));
-    HI->RMotor->setSpeed( (direction*maxpower) + (drift * kdrift)/1.45);
+    HI->RMotor->setSpeed( ((direction*maxpower) + (drift * kdrift))/1.17);
     HI-> update();
     delay(30);
     }
     Serial.println("exit reached!");
 
+
+    HI->RMotor->setSpeed(-33);
+    HI->LMotor->setSpeed(-33);
+    HI->LMotor->update();
+    HI->RMotor->update();
+    delay(130);
     HI->LMotor->setSpeed(0);
     HI->RMotor->setSpeed(0);
     HI->LMotor->update();
@@ -376,7 +365,7 @@ bool LineFollow::detectLine(){
 bool LineFollow::detectJunction(){
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.8){
+        if (HI->QRD_Vals[i] > 0.7){
             count++;
         }
     }
