@@ -22,10 +22,8 @@ namespace StateLoops{
 
             void drive_stop_seq(int direction, int timeout, float delta_trip, float kdrift, int maxpower);
 
-
         private:
             float getLinePositionError(bool followRightEdge);
-            float getWeightedError();
             float getWeightedEdgeError(bool followRightEdge);
             void findIR();
             void findGauntlet();
@@ -69,8 +67,13 @@ namespace StateLoops{
             const unsigned int edgeFollowTimeout = 300;
 
             //NAVIGATION
-            //Path lists
-            Turn path1[3] = {LEdgeTurn,LEdgeTurn,PostTurnLeft};
+            //Path lists                                        /
+            Turn path1[5] = {LEdgeTurn,LEdgeTurn,PostTurnLeft, 
+                            //going back to gauntlet
+                                REdgeTurn, QRD_Left};
+            
+            
+            
             Turn path2[3] = {LEdgeTurn,REdgeTurn,QRD_Left};
             Turn path3[1] = {QRD_Left};
             int turnStep = 0;

@@ -33,11 +33,33 @@ void LineFollow::junctionTurn(Turn turn){
         }
     }
     else if(turn == QRD_Left){
-        while(millis()-startTime < 250){
+        while(millis()-startTime < 100){
             followTape(robotSpeed, true, true);//follow right edge
             HI->update();
         }
-        QRDTurn(false);//turn left
+        Serial.println("Tape follow extra end");
+        
+        HI->LMotor->setSpeed(0);
+        HI->RMotor->setSpeed(0);
+        HI->LMotor->update();
+        HI->RMotor->update();
+        delay(1000);
+        HI->QRDTurn_3_L();//turn left
+        Serial.println("QRD Turn complete");
+        
+        HI->LMotor->setSpeed(0);
+        HI->RMotor->setSpeed(0);
+        HI->LMotor->update();
+        HI->RMotor->update();
+        delay(1000);
+        //follow line for little more
+        while(millis()-startTime < 1000){
+            followTape(robotSpeed, false, false);
+            HI->update();
+        }
+        //go to detect guanlet
+        drive_stop_seq(1,2500,25,0,38);
+
     }
     else if(turn == QRD_Right){
         while(millis()-startTime < 250){
@@ -49,7 +71,7 @@ void LineFollow::junctionTurn(Turn turn){
     else if(turn == PostTurnLeft){//Left post
         stopMoving();
         delay(1000);
-        HI->turn_single_constant(-75, 10000,40);
+        HI->turn_single_constant(-76, 10000,40);
         delay(3000);
         HI->update();
 
@@ -71,6 +93,8 @@ void LineFollow::junctionTurn(Turn turn){
 }
 
 void LineFollow::loop(){
+
+
     robotSpeed = 50;
     // HI->LMotor->setSpeed(50);
     // HI->RMotor->setSpeed(50/straightLineCorrectionFactor);
@@ -85,6 +109,7 @@ void LineFollow::loop(){
     if(detectJunction()){
         //followTape(40,false,true);
         junctionHandling = true;
+        //junctionTurn(QRD_Left);
         junctionTurn(path1[turnStep]);
     }
     else{
