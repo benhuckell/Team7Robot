@@ -535,8 +535,8 @@ void HardwareInterface::QRDTurn_2(bool turnRight){
 
 //turn with QRD at end
 void HardwareInterface::QRDTurn_3_L(){
-    int speedL = -30;
-    int speedR = 30;
+    int speedL = -40;
+    int speedR = 40/1.35;
     Serial.println("QRD turn : left case");
     int start_time = millis();
     while(millis() - start_time < 900){
@@ -559,12 +559,17 @@ void HardwareInterface::QRDTurn_3_L(){
         Serial.println("QRD4: " + String(QRD_Vals[4]));
         }
     Serial.println("detected!");
+        RMotor->setSpeed(-speedR/2);
+        LMotor->setSpeed(-speedL/2);
+        RMotor->update();
+        LMotor->update();
+        delay(400);
         RMotor->setSpeed(0);
         LMotor->setSpeed(0);
         RMotor->update();
         LMotor->update();
-        delay(1000);
-    
+        delay(500);
+
     }
     
 

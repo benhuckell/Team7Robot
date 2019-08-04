@@ -33,7 +33,7 @@ void LineFollow::junctionTurn(Turn turn){
         }
     }
     else if(turn == QRD_Left){
-        while(millis()-startTime < 100){
+        while(millis()-startTime < 375){
             followTape(robotSpeed, true, true);//follow right edge
             HI->update();
         }
@@ -43,7 +43,7 @@ void LineFollow::junctionTurn(Turn turn){
         HI->RMotor->setSpeed(0);
         HI->LMotor->update();
         HI->RMotor->update();
-        delay(1000);
+        delay(500);
         HI->QRDTurn_3_L();//turn left
         Serial.println("QRD Turn complete");
         
@@ -51,14 +51,17 @@ void LineFollow::junctionTurn(Turn turn){
         HI->RMotor->setSpeed(0);
         HI->LMotor->update();
         HI->RMotor->update();
-        delay(1000);
+        delay(500);
+        startTime = millis();
         //follow line for little more
-        while(millis()-startTime < 1000){
-            followTape(robotSpeed, false, false);
+        while(millis()-startTime < 1500){
+            followTape(35, false, false);
             HI->update();
         }
+
         //go to detect guanlet
         drive_stop_seq(1,2500,25,0,38);
+        delay(100000);
 
     }
     else if(turn == QRD_Right){
@@ -71,7 +74,7 @@ void LineFollow::junctionTurn(Turn turn){
     else if(turn == PostTurnLeft){//Left post
         stopMoving();
         delay(1000);
-        HI->turn_single_constant(-76, 10000,40);
+        HI->turn_single_constant(-71, 10000,40);
         delay(3000);
         HI->update();
 
@@ -337,7 +340,7 @@ void LineFollow::drive_stop_seq(int direction, int timeout, float delta_trip, fl
     int start_time = millis();
     while(millis() - start_time < 800){
         HI->LMotor->setSpeed( (direction*maxpower) );
-        HI->RMotor->setSpeed( (direction*maxpower)/1.17 );
+        HI->RMotor->setSpeed( (direction*maxpower)/1.13 );
         HI->update();
         ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2;
         drift = HI->LEncoder->getCount() - HI->REncoder->getCount();
@@ -350,7 +353,7 @@ void LineFollow::drive_stop_seq(int direction, int timeout, float delta_trip, fl
 
     Serial.println("ave speed" + String(ave_speed));
     HI->LMotor->setSpeed( (direction*maxpower) - (drift * kdrift));
-    HI->RMotor->setSpeed( ((direction*maxpower) + (drift * kdrift))/1.17);
+    HI->RMotor->setSpeed( ((direction*maxpower) + (drift * kdrift))/1.13);
     HI-> update();
     delay(30);
     }
@@ -361,7 +364,7 @@ void LineFollow::drive_stop_seq(int direction, int timeout, float delta_trip, fl
     HI->LMotor->setSpeed(-33);
     HI->LMotor->update();
     HI->RMotor->update();
-    delay(130);
+    delay(110);
     HI->LMotor->setSpeed(0);
     HI->RMotor->setSpeed(0);
     HI->LMotor->update();

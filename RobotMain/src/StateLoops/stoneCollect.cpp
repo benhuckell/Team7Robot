@@ -8,7 +8,7 @@ namespace StateLoops {
     StoneCollect::StoneCollect(){
         StoneCollect::HI = HardwareInterface::i();
     }
-    
+
     void StoneCollect::loop(){
         Serial.println("Stone Collecting");
         getStone_const_speed();
@@ -56,7 +56,7 @@ namespace StateLoops {
     
         //closing the claw around the rock
         else if (millis()- HI->start_time_global>3000 && millis()- HI->start_time_global<4500){
-            HI->clawMotor->clawSetPos(300);
+            HI->clawMotor->clawSetPos(330); //was 300
             delay(1000);
             // HI->clawMotor->clawSetPos(100);
             // delay(3000);
