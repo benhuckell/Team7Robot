@@ -3,32 +3,52 @@
 
 namespace StateLoops {
     enum stoneCollectStates{} stoneCollectState;
-    enum postNumbers{postOne, postTwo, postThree} postNumber;
 
     StoneCollect::StoneCollect(){
         StoneCollect::HI = HardwareInterface::i();
+        nextPostNum = 0;
     }
 
-    void StoneCollect::loop(){
+    void StoneCollect::loop(){        
         Serial.println("Stone Collecting");
-        getStone_const_speed();
+
+        bool rightTurn;
+        int stoneHeight;
+
+        if(postList[nextPostNum] == post1 ){
+            rightTurn = (HI->team == HI->rightStart);
+            stoneHeight = 325;
+        }else if(postList[nextPostNum == post2]){
+
+        }else if(postList[nextPostNum == post3]){
+
+        }else if(postList[nextPostNum == post4]){
+
+        }else if(postList[nextPostNum == post5]){
+
+        }else if(postList[nextPostNum == post6]){
+            rightTurn = (HI->team == HI->leftStart);
+            stoneHeight = 325;
+        }
+        HI->getStone_const_speed(stoneHeight);
 
         delay(100);
         Serial.println("start backing out");
-        HI->jdubDrive(-1, 50, 40, 32, 3000, 0.4, 0.6, 1);
+        HI->jdubDrive(-1, 50, 40, 32, 3000, 0.4, 0.6, 0);
         delay(1500);
         Serial.println("QRD turn Hardware init");
-        HI->QRDTurn_3_L();
+        HI->QRDTurnNew(rightTurn);
         Serial.println("end turn ");
         delay(1500);
+        nextPostNum++;
         MainState::instance()->setState(lineFollowing);
     }
 
-    void StoneCollect::goToPost(enum postNumbers) {
+    void StoneCollect::goToPost(enum postNumber) {
         
     }
     
-    void StoneCollect::raiseIntake(enum postNumbers) {
+    void StoneCollect::raiseIntake(enum postNumber) {
 
     }
     
@@ -91,50 +111,5 @@ namespace StateLoops {
 
     }
 
-    void StoneCollect::getStone_const_speed(){
-        HI-> winchTickTarget = 325;
-        HI->WinchEncoder->winch_dir=-1;
-
-        int startingTicks = HI->WinchEncoder->getCount();
-
-        //raise intake1
-        while((HI->WinchEncoder->getCount() - startingTicks) < HI->winchTickTarget){
-            HI->moveIntake_const_speed();
-            //Serial.println("en: " + String(HI->WinchEncoder->getCount()));
-            //Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
-        }
-
-        Serial.println("Done first up");
-
-        HI->WinchMotor->setSpeed(0);
-        HI->WinchMotor->update();
-
-        //closing the claw around the rock
-
-        int startClawTime = millis();
-        while(millis()- startClawTime < 1400){
-            HI->clawMotor->clawSetPos(200);
-        }
-
-        Serial.println("Closed claw");
-
-        delay(1000);
-
-        HI->WinchEncoder->winch_dir=-1;
-        HI-> winchTickTarget=380;
-
-
-        //lifting up to make sure rock isn't still in the pole mount
-        while((HI->WinchEncoder->getCount() - startingTicks) < HI->winchTickTarget){
-            HI-> moveIntake_const_speed();
-            Serial.println("en: " + String(HI->WinchEncoder->getCount()));
-            Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
-        }
-
-        Serial.println("Done");
-
-        HI->WinchMotor->setSpeed(0);
-        HI->WinchMotor->update();
-    }
 }
 

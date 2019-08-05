@@ -44,7 +44,7 @@ void LineFollow::junctionTurn(Turn turn){
         HI->LMotor->update();
         HI->RMotor->update();
         delay(500);
-        HI->QRDTurn_3_L();//turn left
+        HI->QRDTurnNew(false);//turn left
         Serial.println("QRD Turn complete");
         
         HI->LMotor->setSpeed(0);
@@ -61,7 +61,10 @@ void LineFollow::junctionTurn(Turn turn){
 
         //go to detect guanlet
         drive_stop_seq(1,2500,25,0,38);
-        delay(100000);
+
+        //Score Stone
+        MainState::instance()->setState(stoneScoring);
+        delay(3000);
 
     }
     else if(turn == QRD_Right){
@@ -71,7 +74,7 @@ void LineFollow::junctionTurn(Turn turn){
         }
         QRDTurn(true);//turn right
     }
-    else if(turn == PostTurnLeft){//Left post
+    else if(turn == Post1Turn){//Left post
         stopMoving();
         delay(1000);
         HI->turn_single_constant(-71, 10000,40);
@@ -83,21 +86,24 @@ void LineFollow::junctionTurn(Turn turn){
 
         delay(5000);
     }
-    else if(turn == PostTurnRight){//Right post
-        goForwardsSlightly(500, 50, true);
-        slewBrake(robotSpeed, 100, -5);
+
+
+    else if(turn == Post6Turn){//Right post
+        stopMoving();
         delay(1000);
-        HI->turn_single_constant(175,3000,40);
-        delay(6000);
+        HI->turn_single_constant(71,3000,40);
+        delay(3000);
         HI->update();
+
+        drive_stop_seq(1,2500,25,0,38);
+
+        delay(5000);
         // stopMoving();
         // delay(5000);
     }
 }
 
 void LineFollow::loop(){
-
-
     robotSpeed = 50;
     // HI->LMotor->setSpeed(50);
     // HI->RMotor->setSpeed(50/straightLineCorrectionFactor);
@@ -112,19 +118,20 @@ void LineFollow::loop(){
     if(detectJunction()){
         //followTape(40,false,true);
         junctionHandling = true;
-        //junctionTurn(QRD_Left);
-        junctionTurn(path1[turnStep]);
+        junctionTurn(path16L[turnStep]);
     }
-    else{
-        if(junctionHandling){
+    else if(junctionHandling){
             Serial.println(turnStep);
             junctionHandling = false;
             turnStep++;
-        }
+    }
+    else{
         followTape(robotSpeed,false,false);
     }
     return;
 }
+
+
 
 //////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// PID START //////////////////////////////////////
@@ -360,7 +367,7 @@ void LineFollow::drive_stop_seq(int direction, int timeout, float delta_trip, fl
     Serial.println("exit reached!");
 
 
-    HI->RMotor->setSpeed(-33);
+    HI->RMotor->setSpeed(-33/straightLineCorrectionFactor);
     HI->LMotor->setSpeed(-33);
     HI->LMotor->update();
     HI->RMotor->update();

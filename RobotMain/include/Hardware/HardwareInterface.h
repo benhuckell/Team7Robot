@@ -83,11 +83,16 @@ class HardwareInterface {
      bool hasRock;
      int winchTickTarget = 0;
 
+     enum teamSelection {leftStart, rightStart};
+     teamSelection team = leftStart;
+    
+
      unsigned long previousMillis = 0;
      unsigned long currentMillis = millis();
      bool robotWasBumped();
      bool robotHitPost();
      void moveIntake();
+     void QRDTurnNew(bool rightTurn);
      void clawSetPos(int clawAngle);
      void checkForRock();
      float getWeightedError();  
@@ -97,6 +102,7 @@ class HardwareInterface {
      void turn_single(int target, int motor, int dir, int timeout = 2000, float k_p = 5);
      
      void moveIntake_const_speed();
+     void getStone_const_speed(int tickTarget);
       float Winch_P_gain=1;
       bool timing_flag = false;
       int start_time_global;

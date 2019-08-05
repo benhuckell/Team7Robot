@@ -43,14 +43,14 @@ HardwareInterface::HardwareInterface(){
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),WinchEncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 63, 725);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 55, 363);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 52, 298);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 51, 218);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 52, 324);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 53, 289);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 55, 279);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 63, 591);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 70, 777);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 59, 506);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 55, 460);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 54, 389);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 55, 474);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 56, 444);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 58, 394);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 70, 651);
 
 // //   //  For calibrating
 //    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);
@@ -451,7 +451,7 @@ void HardwareInterface::turn_single_constant(int target, unsigned int timeout, i
             LMotor->setSpeed(0);
             RMotor->setSpeed(-robotSpeed/1.35);
             update();
-            if(REncoder->getCount() - RStartCount >= target){
+            if(REncoder->getCount() - RStartCount <= -target){
                 LMotor->setSpeed(0);
                 RMotor->setSpeed(0);
                 update();
@@ -571,6 +571,58 @@ void HardwareInterface::QRDTurn_3_L(){
         delay(500);
 
     }
+
+//turn with QRD at end
+void HardwareInterface::QRDTurnNew(bool rightTurn){
+    int speedL;
+    int speedR;
+    
+    if(rightTurn){
+        speedL = 35;
+        speedR = -35/1.35;
+    }
+    else{
+        speedL = -35;
+        speedR = 35/1.35;
+    }
+
+    Serial.println("QRD turn : left case");
+    int start_time = millis();
+    while(millis() - start_time < 900){
+        RMotor->setSpeed(speedR);
+        LMotor->setSpeed(speedL);
+        RMotor->update();
+        LMotor->update();
+    }
+    
+    update();
+    Serial.println("QRD3i: " + String(QRD_Vals[3]));
+    Serial.println("QRD4i: " + String(QRD_Vals[4]));
+    Serial.println("Forced turn end");
+
+    while(QRD_Vals[3] < 0.8 && QRD_Vals[4] < 0.8){
+        RMotor->setSpeed(speedR);
+        LMotor->setSpeed(speedL);
+        //RMotor->update();
+        //LMotor->update();
+        update();
+        Serial.println("QRD3: " + String(QRD_Vals[3]));
+        Serial.println("QRD4: " + String(QRD_Vals[4]));
+        }
+    Serial.println("detected!");
+    // HI->RMotor->setSpeed(-speedR/2);
+    // HI->LMotor->setSpeed(-speedL/2);
+    // HI->RMotor->update();
+    // HI->LMotor->update();
+    // delay(400);
+    RMotor->setSpeed(0);
+    LMotor->setSpeed(0);
+    RMotor->update();
+    LMotor->update();
+    delay(500);
+
+    }
+
     
 
 
@@ -646,3 +698,46 @@ int HardwareInterface::motorcap(int input, int maxpower, int minpower){
     }
 }
 
+void HardwareInterface::getStone_const_speed(int tickTarget){
+        HI->WinchEncoder->winch_dir=-1;
+
+        int startingTicks = HI->WinchEncoder->getCount();
+
+        //raise intake1
+        while((HI->WinchEncoder->getCount() - startingTicks) < tickTarget){
+            HI->moveIntake_const_speed();
+            //Serial.println("en: " + String(HI->WinchEncoder->getCount()));
+            //Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
+        }
+
+        Serial.println("Done first up");
+
+        HI->WinchMotor->setSpeed(0);
+        HI->WinchMotor->update();
+
+        //closing the claw around the rock
+
+        int startClawTime = millis();
+        while(millis()- startClawTime < 1400){
+            HI->clawMotor->clawSetPos(200);
+        }
+
+        Serial.println("Closed claw");
+
+        delay(1000);
+
+        HI->WinchEncoder->winch_dir=-1;
+
+
+        //lifting up to make sure rock isn't still in the pole mount
+        while((HI->WinchEncoder->getCount() - startingTicks) < tickTarget + 50){
+            HI-> moveIntake_const_speed();
+            Serial.println("en: " + String(HI->WinchEncoder->getCount()));
+            Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
+        }
+
+        Serial.println("Done");
+
+        HI->WinchMotor->setSpeed(0);
+        HI->WinchMotor->update();
+    }

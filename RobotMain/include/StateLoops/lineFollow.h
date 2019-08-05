@@ -15,7 +15,7 @@ namespace StateLoops{
             enum Position {LeftStart, LeftGauntlet, LeftIntersection, Post1, Post2, Post3, Post4, Post5, Post6, RightIntersection, RightGauntlet, RightStart};
             enum Direction {CCW, CW};
             Position startingPosition;
-            enum Turn {LEdgeTurn, REdgeTurn, QRD_Left, QRD_Right, PostTurnLeft, PostTurnRight}; 
+            enum Turn {LEdgeTurn, REdgeTurn, QRD_Left, QRD_Right, Post1Turn, Post2Turn, Post3Turn, Post4Turn, Post5Turn, Post6Turn}; 
             void drive_stop(int direction, int timeout, float delta_trip, float kdrift, int maxpower);
             bool drive_stop_START_TIME_INIT = false;
             int drive_stop_START_TIME;
@@ -68,9 +68,15 @@ namespace StateLoops{
 
             //NAVIGATION
             //Path lists                                        /
-            Turn path1[5] = {LEdgeTurn,LEdgeTurn,PostTurnLeft, 
+            Turn path16L[9] = {LEdgeTurn,LEdgeTurn,Post1Turn, 
                             //going back to gauntlet
-                                REdgeTurn, QRD_Left};
+                                REdgeTurn, QRD_Left, 
+                            //socre gunalet, oging for second 
+                                REdgeTurn, Post6Turn, 
+                                //picked up stone
+                                LEdgeTurn, QRD_Left
+
+                                };
             
             
             
