@@ -80,6 +80,9 @@ void path1(){
 
     //go to detect guanlet
     drive_stop_seq(1,2500,25,0,38);
+
+    //line up to drop stone
+    
     
     delay(1000);
     
