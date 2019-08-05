@@ -176,7 +176,7 @@ void HardwareInterface::pushDriveSpeeds(int Lspeed, int Rspeed){
 }
 
 void HardwareInterface::pushWinchSpeed(int speed){
-    int final = motorcap(speed, 100, 0);
+    int final = motorcap(speed, 100, -100);
     WinchMotor->setSpeed(final);
     WinchMotor->update();
 }

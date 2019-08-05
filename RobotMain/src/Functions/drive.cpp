@@ -1,5 +1,6 @@
 #include "Functions/drive.h"
 #include "Hardware/HardwareInterface.h"
+#include "Functions/lineFollow.h"
 //#include "stateController.h"
 
 void drive_stop_seq(int direction, int timeout, float delta_trip, float kdrift, int maxpower){
@@ -21,19 +22,18 @@ void drive_stop_seq(int direction, int timeout, float delta_trip, float kdrift, 
     }
 
     while((ave_speed > delta_trip) && ((millis()-start_time) < timeout)){
+      ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2;
+      drift = HI->LEncoder->getCount() - HI->REncoder->getCount();
 
-    ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2;
-    drift = HI->LEncoder->getCount() - HI->REncoder->getCount();
-
-    Serial.println("ave speed" + String(ave_speed));
-    HI->LMotor->setSpeed( (direction*maxpower) - (drift * kdrift));
-    HI->RMotor->setSpeed( ((direction*maxpower) + (drift * kdrift))/1.13);
-    HI-> update();
-    delay(30);
+      Serial.println("ave speed" + String(ave_speed));
+      HI->LMotor->setSpeed( (direction*maxpower) - (drift * kdrift));
+      HI->RMotor->setSpeed( ((direction*maxpower) + (drift * kdrift))/1.13);
+      HI-> update();
+      delay(30);
     }
     Serial.println("exit reached!");
 
-    HI->pushDriveSpeeds(-33, -33);
+    HI->pushDriveSpeeds(-33, -33/straightLineCorrectionFactor);
     delay(110);
     HI->pushDriveSpeeds(0, 0);
 
@@ -41,7 +41,7 @@ void drive_stop_seq(int direction, int timeout, float delta_trip, float kdrift, 
 
 void stopMoving(){
     HardwareInterface* HI = HardwareInterface::i(); 
-    HI->pushDriveSpeeds(-35, -35);
+    HI->pushDriveSpeeds(-35, -35/straightLineCorrectionFactor);
     delay(200);
     HI->pushDriveSpeeds(0, 0);
     delay(150);
@@ -103,11 +103,33 @@ void jdubDrive(int direction, int target, int maxpower, int minpower, unsigned i
   }
 
 //turn with QRD at end
-void QRDTurn_3_L(int deadtime){
+void QRDTurn(bool rightTurn, int deadtime, bool followTapeVar, int followTapeDuration){
     HardwareInterface* HI = HardwareInterface::i(); 
-    int speedL = -38;
-    int speedR = 38/1.35;
-    Serial.println("QRD turn : left case");
+
+    if(followTapeVar){
+      int startTime = millis();
+      while(millis()-startTime < followTapeDuration){
+          followTape(ROBOTSPEED, true, true);//follow right edge
+          HI->update();
+          }
+      stopMoving();
+      Serial.println("Tape follow extra end");
+    }
+
+    int speedL;
+    int speedR;
+
+    if (rightTurn){
+        speedL = 35;
+        speedR = -35/straightLineCorrectionFactor;
+    }
+    else
+    {
+        speedL = -35;
+        speedR = 35/straightLineCorrectionFactor;
+    }
+    
+      Serial.println("QRD turn : left case");
     int start_time = millis();
     while(millis() - start_time < deadtime){
         HI->pushDriveSpeeds(speedL, speedR);
@@ -127,9 +149,7 @@ void QRDTurn_3_L(int deadtime){
         HI->pushDriveSpeeds(-speedL/2, -speedR/2);
         delay(400);
         HI->pushDriveSpeeds(0, 0);
-        
         delay(500);
-
     }
 
 

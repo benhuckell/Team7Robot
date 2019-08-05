@@ -43,11 +43,12 @@ void path1(){
             break;
         }
     }
-
+    //at post now
 
     //go for stone colleting
-    getStoneFromPillar1();
+    getStoneFromPillar(330,false,10000);
 
+    //on path ready to follow line
     //junction 4
     while(true){
         HI->update();
@@ -63,7 +64,7 @@ void path1(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRD_Left();
+            QRDTurn(false,900,true,375);
             break;
         }
     }
@@ -81,10 +82,14 @@ void path1(){
     drive_stop_seq(1,2500,25,0,38);
     
     delay(1000);
+    
+    //SCORE STONE AND LOWER
+    moveIntake(0,40,10000);
+    HI->clawMotor->clawSetPos(100);
 
     jdubDrive(-1, 30, 40, 32, 3000, 0.4, 0.6, 1);
 
-    QRDTurn_3_L(500);    
+    QRDTurn(false,500,false,0);    
 
     delay(1000);
 
@@ -112,7 +117,7 @@ void path1(){
     //on post now
 
     //go for stone colleting
-    getStoneFromPillar2();
+    getStoneFromPillar(330, true, 10000);
 
     //line follower to first Y
     while(true){
@@ -129,7 +134,7 @@ void path1(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRD_Left();
+            QRDTurn(false,900,true,375);
             break;
         }
     }

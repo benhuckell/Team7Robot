@@ -24,8 +24,6 @@ void lineFollowSetup();
 //junctions
 void LEdgeTurn();
 void REdgeTurn();
-void QRD_Left();
-void QRD_Right();
 void Post1Turn();
 void Post2Turn(); 
 

@@ -1,4 +1,3 @@
 #pragma once
 
-void getStoneFromPillar1();
-void getStoneFromPillar2();
+void getStoneFromPillar(int tickTargetWinch, bool rightTurnReturn, int turnTimeout);

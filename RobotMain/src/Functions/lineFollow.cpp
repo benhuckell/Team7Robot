@@ -53,7 +53,7 @@ void followTape(int robotSpeed, bool followRightEdge, bool edgeFollow){
     HI->pushDriveSpeeds(LSpeed, RSpeed/straightLineCorrectionFactor);
 
     //Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
-    Serial.println("Error: " + String(error));
+    //Serial.println("Error: " + String(error));
 
 }
 
@@ -140,28 +140,6 @@ void REdgeTurn(){
         }
 }
 
-void QRD_Left(){
-    int startTime = millis();
-    HardwareInterface* HI = HardwareInterface::i();
-     while(millis()-startTime < 375){
-            followTape(ROBOTSPEED, true, true);//follow right edge
-            HI->update();
-        }
-        Serial.println("Tape follow extra end");
-    
-        HI->pushDriveSpeeds(0, 0);
-        delay(500);
-        QRDTurn_3_L(900);//turn left
-        Serial.println("QRD Turn complete");
-        
-        HI->pushDriveSpeeds(0, 0);
-        delay(500);
-
-}
-
-void QRD_Right(){
-      //unknown!
-}
 
 void Post1Turn(){
     //first post, 
@@ -185,7 +163,7 @@ void Post2Turn(){
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
     delay(1000);
-    turn_single_constant(71, 10000,40);
+    turn_single_constant(80, 10000,40);
     delay(3000);
     HI->update();
 

@@ -1,8 +1,8 @@
 #pragma once
 
 void liftSetup();
-void moveIntake();
-void moveIntake_const_speed();
-void getStone_const_speed();
+void moveIntake(int abs_target, int speed, int timeout);
+void getStone(int winchTickTarget);
 
 float const Winch_P_gain = 1;
+

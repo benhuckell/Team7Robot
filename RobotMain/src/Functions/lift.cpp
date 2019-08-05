@@ -3,86 +3,57 @@
 
 //#include "stateController.h"
 int winchTickTarget;
+int currentHeight = 0;
 
 void liftSetup(){
     winchTickTarget = 0;
 }
-void moveIntake() {
+
+void moveIntake(int abs_target, int speed, int timeout){
     HardwareInterface* HI = HardwareInterface::i(); 
-    //set the height that the winch raises the entire assembly to
-    //need to use PID to get to the correct height
-    int tick_num=HI->WinchEncoder->getCount();
-    int tickError=winchTickTarget-tick_num;
+    
+    //target 
+    int relativeTarget = abs_target - currentHeight;
+    int startingTicks = HI->WinchEncoder->getCount();
+    
+    int direction;
 
-    float WinchSpeed=0;
-    WinchSpeed = Winch_P_gain*tickError;
+    if(relativeTarget > 0){
+        direction = 1;
+        //move up
+    }
+    else{
+        //move down
+        direction = -1;
+    }
 
-    //to set what happens at edge cases
-    if(WinchSpeed>60){
-        WinchSpeed=60;
+    HI->WinchEncoder->winch_dir = -direction;
+    
+    HI->pushWinchSpeed(speed*direction);
+    Serial.println("WINCH move relativeTar: " + String(relativeTarget));
+    Serial.println("WINCH move start: " + String(startingTicks));
+
+    while( abs(HI->WinchEncoder->getCount() - startingTicks) < abs(relativeTarget)){
+        delay(10);
     }
-    if(WinchSpeed<-60){
-        WinchSpeed=-60;
-    }
-    HI->pushWinchSpeed(WinchSpeed);
+    currentHeight = abs_target;
+    HI->WinchEncoder->winch_dir = 0;
+    HI->pushWinchSpeed(0);
 }
 
-void moveIntake_const_speed(){
-    HardwareInterface* HI = HardwareInterface::i(); 
-    //Serial.println("Encoder: Winch: " + String(WinchEncoder->getCount()));
-    int WinchSpeed = 40;
 
-    HI->WinchMotor->setSpeed(WinchSpeed);
-    //Serial.println("speed:" + String(WinchSpeed));
-    HI->WinchMotor->update();
-    HI->WinchEncoder->update();
+void getStone(int winchTickTarget){
+    HardwareInterface* HI = HardwareInterface::i();
+
+    //Move claw to stone height
+    moveIntake(winchTickTarget,40,10000);
+    delay(1000);
+
+    //Close claw
+    HI->clawMotor->clawSetPos(300);
+    delay(1000);
+
+    //Move claw up to clear stone
+    moveIntake(winchTickTarget+50,40,10000);
+    delay(1000);
 }
-
-void getStone_const_speed(){
-        HardwareInterface* HI = HardwareInterface::i(); 
-        winchTickTarget = 320;
-        HI->WinchEncoder->winch_dir=-1;
-
-        int startingTicks = HI->WinchEncoder->getCount();
-
-        //raise intake1
-        while((HI->WinchEncoder->getCount() - startingTicks) < winchTickTarget){
-            moveIntake_const_speed();
-            //Serial.println("en: " + String(HI->WinchEncoder->getCount()));
-            //Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
-        }
-
-        Serial.println("Done first up");
-
-        HI->WinchMotor->setSpeed(0);
-        HI->WinchMotor->update();
-
-        //closing the claw around the rock
-
-        int startClawTime = millis();
-        while(millis()- startClawTime < 1400){
-            HI->clawMotor->clawSetPos(200);
-        }
-
-        Serial.println("Closed claw");
-
-        delay(1000);
-
-        HI->WinchEncoder->winch_dir=-1;
-        winchTickTarget=380;
-
-
-        //lifting up to make sure rock isn't still in the pole mount
-        while((HI->WinchEncoder->getCount() - startingTicks) < winchTickTarget){
-            moveIntake_const_speed();
-            Serial.println("en: " + String(HI->WinchEncoder->getCount()));
-            Serial.println("winch dir: " + String(HI->WinchEncoder->winch_dir));
-        }
-
-        Serial.println("Done");
-
-        HI->WinchMotor->setSpeed(0);
-        HI->WinchMotor->update();
-    }
-
-
