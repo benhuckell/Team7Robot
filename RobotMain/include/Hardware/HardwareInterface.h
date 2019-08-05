@@ -101,6 +101,12 @@ class HardwareInterface {
       bool timing_flag = false;
       int start_time_global;
      
+      void QRDTurn_2(bool turnRight);
+
+      void jdubDrive(int direction, int target, int maxpower, int minpower, unsigned int timeout, float kaccel, float kdeaccel, float kdrift);
+      int motorcap(int input, int maxpower, int minpower);
+      void QRDTurn_3_L();
+      
   private:
      HardwareInterface();
      HardwareInterface(const HardwareInterface&);
