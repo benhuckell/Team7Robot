@@ -161,7 +161,7 @@ void turn_single_constant(int target, unsigned int timeout, int robotSpeed){
     int RStartCount = HI->REncoder->getCount();
     while(millis() - startTime <= timeout){
         if(target >= 0){
-            HI->pushDriveSpeeds(0, -robotSpeed/1.35);
+            HI->pushDriveSpeeds(0, -robotSpeed/straightLineCorrectionFactor);
             HI->update();
             if(HI->REncoder->getCount() - RStartCount <= -target){
                 HI->pushDriveSpeeds(0, 0);

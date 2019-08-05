@@ -9,6 +9,18 @@
 
 void path1(){
     HardwareInterface* HI = HardwareInterface::i();
+    
+    //debugging for lift - can delete
+    // moveIntake(320, 40, 10000);
+    // delay(500);
+    // moveIntake(0, 20, 10000);
+    // delay(500);
+    // moveIntake(320, 40, 10000);
+    // delay(500);
+    
+    // delay(10000000);
+    
+    
     int robotSpeed = 50;
     //junction1
     while(true){
@@ -46,7 +58,7 @@ void path1(){
     //at post now
 
     //go for stone colleting
-    getStoneFromPillar(330,false,10000);
+    getStoneFromPillar(335,false,10000);
 
     //on path ready to follow line
     //junction 4
@@ -64,7 +76,7 @@ void path1(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRDTurn(false,900,true,375);
+            QRDTurn(false,900,true,450);
             break;
         }
     }
@@ -86,9 +98,17 @@ void path1(){
     
     delay(1000);
     
+    //align 
+    turn_single_constant(90,5000,40);
+    delay(500);
+    turn_single_constant(-90,5000,40);
+    delay(500);
+    drive_stop_seq(1,2500,25,0,38);
+    delay(500);
+
     //SCORE STONE AND LOWER
-    moveIntake(0,40,10000);
-    HI->clawMotor->clawSetPos(100);
+    moveIntake(40,18,10000);
+    HI->clawMotor->clawSetPos(104);
 
     jdubDrive(-1, 30, 40, 32, 3000, 0.4, 0.6, 1);
 
@@ -120,7 +140,7 @@ void path1(){
     //on post now
 
     //go for stone colleting
-    getStoneFromPillar(330, true, 10000);
+    getStoneFromPillar(350, true, 10000);
 
     //line follower to first Y
     while(true){
@@ -137,7 +157,7 @@ void path1(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRDTurn(false,900,true,375);
+            QRDTurn(false,900,true,450);
             break;
         }
     }
@@ -154,6 +174,20 @@ void path1(){
     //go to detect guanlet
     drive_stop_seq(1,2500,25,0,38);
     
+    delay(1000);
+
+    //align 
+    turn_single_constant(-90,5000,40);
+    delay(500);
+    turn_single_constant(90,5000,40);
+    delay(500);
+    drive_stop_seq(1,2500,25,0,38);
+    delay(500);
+
+    
+    //SCORE STONE AND LOWER
+    moveIntake(40,18,10000);
+    HI->clawMotor->clawSetPos(104);
 
 
     delay(100000);
