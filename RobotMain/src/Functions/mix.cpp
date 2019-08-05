@@ -5,7 +5,7 @@
  #include "Hardware/HardwareInterface.h"
  #include "Functions/mix.h"
 //#include "stateController.h"
-void getStoneFromPillar(int tickTargetWinch, bool rightTurnReturn, int turnTimeout, ){
+void getStoneFromPillar(int tickTargetWinch, bool rightTurnReturn, int turnTimeout){
         HardwareInterface* HI = HardwareInterface::i(); 
         Serial.println("Stone Collecting");
         getStone(tickTargetWinch);
