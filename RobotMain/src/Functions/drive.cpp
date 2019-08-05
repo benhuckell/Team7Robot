@@ -103,13 +103,13 @@ void jdubDrive(int direction, int target, int maxpower, int minpower, unsigned i
   }
 
 //turn with QRD at end
-void QRDTurn_3_L(){
+void QRDTurn_3_L(int deadtime){
     HardwareInterface* HI = HardwareInterface::i(); 
-    int speedL = -40;
-    int speedR = 40/1.35;
+    int speedL = -38;
+    int speedR = 38/1.35;
     Serial.println("QRD turn : left case");
     int start_time = millis();
-    while(millis() - start_time < 900){
+    while(millis() - start_time < deadtime){
         HI->pushDriveSpeeds(speedL, speedR);
         }
     HI->update();
@@ -143,7 +143,7 @@ void turn_single_constant(int target, unsigned int timeout, int robotSpeed){
         if(target >= 0){
             HI->pushDriveSpeeds(0, -robotSpeed/1.35);
             HI->update();
-            if(HI->REncoder->getCount() - RStartCount >= target){
+            if(HI->REncoder->getCount() - RStartCount <= -target){
                 HI->pushDriveSpeeds(0, 0);
                 HI->update();
                 return;
@@ -153,12 +153,15 @@ void turn_single_constant(int target, unsigned int timeout, int robotSpeed){
 
             HI->pushDriveSpeeds(-robotSpeed, 0);
             HI->update();
-            // Serial.print(" LCount: ");
-            // Serial.print(LEncoder->getCount());
-            // Serial.print(target);
-            // Serial.print(" LStartCount: ");
-            // Serial.print(LStartCount);
+            Serial.println(" LCount net: " + String(HI->LEncoder->getCount() - LStartCount));
+            Serial.println(" Motor speed: " + String(robotSpeed));
+            //Serial.println(" LCount: " + String(HI->LEncoder->getCount()));
+            //Serial.print(HI->LEncoder->getCount());
+            //Serial.print(target);
+            //Serial.print(" LStartCount: ");
+            //Serial.print(LStartCount);
             if(HI->LEncoder->getCount() - LStartCount <= target){
+                Serial.println("hit");
                 HI->pushDriveSpeeds(0, 0);
                 HI->update();
                 return;

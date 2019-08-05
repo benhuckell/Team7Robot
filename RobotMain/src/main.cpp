@@ -29,9 +29,9 @@ void setup() {
 
 
 
-  // if(digitalRead(TOGGLE_SWITCH) == 0){//switch is accidentally flipped upward
-  //   exit(0);
-  // }
+  if(digitalRead(TOGGLE_SWITCH) == 0){//switch is accidentally flipped upward
+    exit(0);
+  }
 
   int count = 0;
   for(;;) {

@@ -15,7 +15,22 @@ void getStoneFromPillar1(){
         jdubDrive(-1, 50, 40, 32, 3000, 0.4, 0.6, 1);
         delay(1500);
         Serial.println("QRD turn Hardware init");
-        QRDTurn_3_L();
+        QRDTurn_3_L(500);
+        Serial.println("end turn ");
+        delay(1500);
+}
+
+void getStoneFromPillar2(){
+        HardwareInterface* HI = HardwareInterface::i(); 
+        Serial.println("Stone Collecting");
+        //getStone_const_speed();
+
+        delay(100);
+        Serial.println("start backing out");
+        jdubDrive(-1, 50, 40, 32, 3000, 0.4, 0.6, 1);
+        delay(1500);
+        Serial.println("QRD turn Hardware init");
+        QRDTurn_3_L(900);
         Serial.println("end turn ");
         delay(1500);
 }

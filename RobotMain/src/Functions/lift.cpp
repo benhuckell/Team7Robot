@@ -38,7 +38,6 @@ void moveIntake_const_speed(){
     HI->WinchEncoder->update();
 }
 
-
 void getStone_const_speed(){
         HardwareInterface* HI = HardwareInterface::i(); 
         winchTickTarget = 320;

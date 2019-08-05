@@ -44,14 +44,14 @@ HardwareInterface::HardwareInterface(){
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),WinchEncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 63, 725);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 55, 363);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 52, 298);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 51, 218);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 52, 324);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 53, 289);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 55, 279);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 63, 591);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 69, 729);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 58, 525);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 55, 449);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 54, 416);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 55, 484);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 56, 456);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 58, 410);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 69, 652);
 
 // //   //  For calibrating
 //    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);
@@ -167,8 +167,8 @@ int HardwareInterface::motorcap(int input, int maxpower, int minpower){
 }
 
 void HardwareInterface::pushDriveSpeeds(int Lspeed, int Rspeed){
-    int Lfinal = motorcap(Lspeed, 100, 0);
-    int Rfinal = motorcap(Rspeed, 100, 0);
+    int Lfinal = motorcap(Lspeed, 100, -100);
+    int Rfinal = motorcap(Rspeed, 100, -100);
     LMotor->setSpeed(Lfinal);
     RMotor->setSpeed(Rfinal);
     LMotor->update();

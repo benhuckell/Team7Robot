@@ -50,9 +50,9 @@ void followTape(int robotSpeed, bool followRightEdge, bool edgeFollow){
     // Serial.println(speedAdj);
     // Serial.println(LSpeed);
     // Serial.println(RSpeed);
-    HI->pushDriveSpeeds(LSpeed, RSpeed);
+    HI->pushDriveSpeeds(LSpeed, RSpeed/straightLineCorrectionFactor);
 
-    Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
+    //Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
     Serial.println("Error: " + String(error));
 
 }
@@ -125,7 +125,7 @@ void lineFollowSetup(){
 void LEdgeTurn(){
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();
-    while(millis()-startTime < 250){
+    while(millis()-startTime < 350){
         followTape(ROBOTSPEED, false, true);//follow left edge
         HI->update();
     }
@@ -134,7 +134,7 @@ void LEdgeTurn(){
 void REdgeTurn(){
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();
-    while(millis()-startTime < 250){
+    while(millis()-startTime < 350){
             followTape(ROBOTSPEED, true, true);//follow right edge
             HI->update();
         }
@@ -151,7 +151,7 @@ void QRD_Left(){
     
         HI->pushDriveSpeeds(0, 0);
         delay(500);
-        QRDTurn_3_L();//turn left
+        QRDTurn_3_L(900);//turn left
         Serial.println("QRD Turn complete");
         
         HI->pushDriveSpeeds(0, 0);
@@ -163,7 +163,8 @@ void QRD_Right(){
       //unknown!
 }
 
-void PostTurnLeft(){
+void Post1Turn(){
+    //first post, 
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
@@ -175,11 +176,23 @@ void PostTurnLeft(){
     //Drive to post
     drive_stop_seq(1,2500,25,0,38);
 
-    delay(4000);
+    delay(2000);
 }
 
-void PostTurnRight(){
-    //unknown!
+void Post2Turn(){
+        //first post, 
+    int startTime = millis();
+    HardwareInterface* HI = HardwareInterface::i();  
+    stopMoving();
+    delay(1000);
+    turn_single_constant(71, 10000,40);
+    delay(3000);
+    HI->update();
+
+    //Drive to post
+    drive_stop_seq(1,2500,25,0,38);
+
+    delay(2000);
     }
 
 bool detectJunction(){

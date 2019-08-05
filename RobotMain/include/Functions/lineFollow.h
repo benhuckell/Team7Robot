@@ -26,8 +26,8 @@ void LEdgeTurn();
 void REdgeTurn();
 void QRD_Left();
 void QRD_Right();
-void PostTurnLeft();
-void PostTurnRight(); 
+void Post1Turn();
+void Post2Turn(); 
 
 bool detectJunction();
 
