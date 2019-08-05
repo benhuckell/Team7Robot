@@ -44,14 +44,14 @@ HardwareInterface::HardwareInterface(){
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),WinchEncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 62, 497);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 61, 427);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 59, 466);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 58, 398);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 60, 535);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 62, 532);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 62, 465);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 73, 611);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 63, 725);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 55, 363);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 52, 298);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 51, 218);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 52, 324);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 53, 289);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 55, 279);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 63, 591);
 
 // //   //  For calibrating
 //    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);

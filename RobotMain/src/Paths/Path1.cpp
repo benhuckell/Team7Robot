@@ -9,7 +9,7 @@
 
 void path1(){
     HardwareInterface* HI = HardwareInterface::i();
-    int robotSpeed = 50;
+    int robotSpeed = 35;
     //junction1
     while(true){
         HI->update();
