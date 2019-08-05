@@ -82,7 +82,7 @@ namespace StateLoops {
     }
 
     void StoneCollect::getStone_const_speed(){
-        HI-> winchTickTarget = 320;
+        HI-> winchTickTarget = 325;
         HI->WinchEncoder->winch_dir=-1;
 
         int startingTicks = HI->WinchEncoder->getCount();

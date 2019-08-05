@@ -49,7 +49,7 @@ void LineFollow::junctionTurn(Turn turn){
     else if(turn == PostTurnLeft){//Left post
         stopMoving();
         delay(1000);
-        HI->turn_single_constant(-75, 10000,40);
+        HI->turn_single_constant(-73, 10000,40);
         delay(3000);
         HI->update();
 
