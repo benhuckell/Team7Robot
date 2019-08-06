@@ -1,6 +1,6 @@
 #include "Hardware/Encoder.h"
   
-Encoder::Encoder(int encoder_port_1, int encoder_port_2, int encoder_orientation_local) {
+Encoder::Encoder(int encoder_port_1, int encoder_port_2, int encoder_orientation_local, float divideFactor) {
    Encoder::encoder_port_1 = encoder_port_1;
    Encoder::encoder_port_2 = encoder_port_2;
    lastTime = millis();
@@ -52,17 +52,17 @@ void Encoder::update(){
        direction = -1;
    }
   
-   int ticks = count - lastCount;
-   lastCount = count;
-   speed = (float)1000*ticks/elapsedTime*direction;
+   int ticks = int((count/divideFactor) - lastCount);
+   lastCount = int(count/divideFactor);
+   speed = abs(float(1000*(ticks/elapsedTime)));
 }
 
-int Encoder::getSpeed() {
+float Encoder::getSpeed() {
    return speed;
 }
 
 int Encoder::getCount() {
-   return count;
+   return int(count/divideFactor);
 }
 
 

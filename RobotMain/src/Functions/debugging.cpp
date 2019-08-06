@@ -2,6 +2,8 @@
 #include "Hardware/HardwareInterface.h"
 #include "stateController.h"
 
+extern bool rightStart;
+
 HardwareInterface * HI;
 int count = 0;
 bool calibrateMode = false;
@@ -26,10 +28,12 @@ void debugging_loop(){
     count++;
 
     display.println(count);
-    display.print("PB1: ");
-    display.println(digitalRead(PUSH_BUTTON_1));
-    display.print("PB2: ");
-    display.println(digitalRead(PUSH_BUTTON_2));
+    // display.print("PB1: ");
+    // display.println(digitalRead(PUSH_BUTTON_1));
+    // display.print("PB2: ");
+    // display.println(digitalRead(PUSH_BUTTON_2));
+
+    display.println(rightStart);
     display.print("k_p: ");
     display.println(float(analogRead(CONTROL_POT_1))/float(200.0));
     display.print("k_d: ");

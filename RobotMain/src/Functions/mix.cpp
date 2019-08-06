@@ -12,10 +12,10 @@ void getStoneFromPillar(int tickTargetWinch, bool rightTurnReturn, int turnTimeo
 
         delay(100);
         Serial.println("start backing out");
-        jdubDrive(-1, 35, 40, 32, 3000, 0.4, 0.6, 1);
-        delay(1500);
+        jdubDrive(-1, 35, 40, 32, 3000, 0.4, 0.6, 0);
+        delay(200);
         Serial.println("QRD turn Hardware init");
-        QRDTurn(rightTurnReturn, 500,false,0);
+        QRDTurn(rightTurnReturn, 500, 38, false,0);
         Serial.println("end turn ");
-        delay(1500);
+        delay(800);
 }

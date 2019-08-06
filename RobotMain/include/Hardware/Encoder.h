@@ -4,9 +4,9 @@
 
 class Encoder {
    public:
-       Encoder(int encoder_port_1, int encoder_port_2, int encoder_orientation);
+       Encoder(int encoder_port_1, int encoder_port_2, int encoder_orientation, float divideFactor);
        void ISR();
-       int getSpeed();
+       float getSpeed();
        int getCount();
        void resetCount(); //Be Careful!!!
        void update();
@@ -16,6 +16,7 @@ class Encoder {
       
        const float ticksPerRotation = 90;
    private:
+       float divideFactor;
        int encoder_port_1;
        int encoder_port_2;
        unsigned int lastTime;

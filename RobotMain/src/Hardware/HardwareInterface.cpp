@@ -26,10 +26,10 @@ HardwareInterface::HardwareInterface(){
 
    HardwareInterface::WinchMotor = new DriveMotor(WINCH_UP, WINCH_DOWN);
 
-   HardwareInterface::LEncoder = new Encoder(LENCODER_1, LENCODER_2, LENCODER_DIRECTION);
-   HardwareInterface::REncoder = new Encoder(RENCODER_1, RENCODER_2, RENCODER_DIRECTION);
+   HardwareInterface::LEncoder = new Encoder(LENCODER_1, LENCODER_2, LENCODER_DIRECTION, 1.7);
+   HardwareInterface::REncoder = new Encoder(RENCODER_1, RENCODER_2, RENCODER_DIRECTION, 1);
 
-   HardwareInterface::WinchEncoder = new Encoder(WINCH_ENC_1, WINCH_ENC_2, WINCH_ENCODER_DIRECTION);
+   HardwareInterface::WinchEncoder = new Encoder(WINCH_ENC_1, WINCH_ENC_2, WINCH_ENCODER_DIRECTION, 1);
 
    pinMode(LENCODER_1,INPUT_PULLUP);
    pinMode(LENCODER_2,INPUT_PULLUP);
@@ -44,14 +44,14 @@ HardwareInterface::HardwareInterface(){
    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
    attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),WinchEncoderInterrupt,RISING);
 
-   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 69, 738);
-   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 58, 472);
-   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 55, 417);
-   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 54, 334);
-   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 55, 435);
-   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 56, 437);
-   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 58, 374);
-   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 69, 608);
+   HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 64, 725);
+   HardwareInterface::qrd1 = new QRD(QRD_IN, 1, 57, 455);
+   HardwareInterface::qrd2 = new QRD(QRD_IN, 2, 54, 423);
+   HardwareInterface::qrd3 = new QRD(QRD_IN, 3, 52, 360);
+   HardwareInterface::qrd4 = new QRD(QRD_IN, 4, 53, 464);
+   HardwareInterface::qrd5 = new QRD(QRD_IN, 5, 55, 428);
+   HardwareInterface::qrd6 = new QRD(QRD_IN, 6, 55, 353);
+   HardwareInterface::qrd7 = new QRD(QRD_IN, 7, 64, 615);
 
 // //   //  For calibrating
 //    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 0, 1000);

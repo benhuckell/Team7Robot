@@ -146,19 +146,19 @@ void Post1Turn(bool rightStart){
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
-    delay(1000);
+    delay(300);
     if(rightStart){
-        turn_single_constant(71, 10000, 40);
+        turn_single_constant(71, 10000, 42);
     }else{//leftStart
-        turn_single_constant(-71, 10000, 40);
+        turn_single_constant(-71, 10000, 42);
     }
-    delay(3000);
+    delay(800);
     HI->update();
 
     //Drive to post
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,600,2500,25,0,45);
 
-    delay(2000);
+    delay(800);
 }
 
 
@@ -170,15 +170,15 @@ void Post4Turn(bool rightStart){
     stopMoving();
     delay(1000);
     if(rightStart){
-        turn_single_constant(71, 10000, 40);
+        turn_single_constant(71, 10000, 42);
     }else{//leftStart
-        turn_single_constant(-71, 10000, 40);
+        turn_single_constant(-71, 10000, 42);
     }
     delay(3000);
     HI->update();
 
     //Drive to post
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
 
     delay(2000);
 }
@@ -190,15 +190,15 @@ void Post5Turn(bool rightStart){
     stopMoving();
     delay(1000);
     if(rightStart){
-        turn_single_constant(-84, 10000, 40);
+        turn_single_constant(-84, 10000, 42);
     }else{//leftStart
-        turn_single_constant(84, 10000, 40);
+        turn_single_constant(84, 10000, 42);
     }
     delay(3000);
     HI->update();
 
     //Drive to post
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
 
     delay(2000);
 }
@@ -210,15 +210,15 @@ void Post6Turn(bool rightStart){
     stopMoving();
     delay(1000);
     if(rightStart){
-        turn_single_constant(-84, 10000, 40);
+        turn_single_constant(-84, 10000, 42);
     }else{//leftStart
-        turn_single_constant(84, 10000, 40);
+        turn_single_constant(84, 10000, 42);
     }
     delay(3000);
     HI->update();
 
     //Drive to post
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
 
     delay(2000);
 }

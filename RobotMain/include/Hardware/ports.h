@@ -21,10 +21,10 @@
 #define LENCODER_1 PB15 //interupt 
 #define LENCODER_2 PA11 //read
 #define RENCODER_1 PA8 //interupt
-#define RENCODER_2 PA12 //read
+#define RENCODER_2 PA12 //read //swapped
 
 #define LENCODER_DIRECTION 1
-#define RENCODER_DIRECTION 1
+#define RENCODER_DIRECTION -1
 #define WINCH_ENCODER_DIRECTION -1
 
 #define CLAW_SERVO PB_1

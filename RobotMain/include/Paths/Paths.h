@@ -1,4 +1,5 @@
 #pragma once
 
-void path16L(bool rightStart);
-void path45R(bool rightStart);
+void path16L();
+void path45R();
+void path21L();

@@ -12,7 +12,9 @@
 #include "Hardware/ports.h"
 
 Adafruit_SSD1306 display(-1);
+
 bool rightStart;
+
 
 void setup() {
   Serial.begin(115200);
@@ -52,10 +54,10 @@ void setup() {
       display.display();
       
       if(rightStart){
-        path45R(rightStart);
+        path45R();
       }
       else{//leftStart
-        path16L(rightStart);
+        path16L();
       }
     }
     //HardwareInterface::i()->update();

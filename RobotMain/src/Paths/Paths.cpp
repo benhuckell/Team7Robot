@@ -7,9 +7,14 @@
  #include "Functions/lineFollow.h"
  #include "Functions/lift.h"
 
-void path16L(bool rightStart){
+void path16L(){
     HardwareInterface* HI = HardwareInterface::i();
-    
+
+    drive_stop_seq(1, 800, 10000, 25, 4, 50);
+
+    delay(10000);
+
+
     //debugging for lift - can delete
     // moveIntake(320, 40, 10000);
     // delay(500);
@@ -51,14 +56,14 @@ void path16L(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            Post1Turn(rightStart);
+            Post1Turn(false);
             break;
         }
     }
     //at post now
 
     //go for stone colleting
-    getStoneFromPillar(328,false,10000);
+    getStoneFromPillar(250,false,10000);
 
     //on path ready to follow line
     //junction 4
@@ -76,7 +81,7 @@ void path16L(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRDTurn(false,900,true,450);
+            QRDTurn(false,900, 38, true,450);
             break;
         }
     }
@@ -91,7 +96,7 @@ void path16L(bool rightStart){
     }
 
     //go to detect guanlet
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
 
     //line up to drop stone
     
@@ -103,16 +108,16 @@ void path16L(bool rightStart){
     delay(500);
     turn_single_constant(-90,5000,40);
     delay(500);
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
     delay(500);
 
     //SCORE STONE AND LOWER
     moveIntake(50,18,10000);
     HI->clawMotor->clawSetPos(104);
 
-    jdubDrive(-1, 30, 40, 32, 3000, 0.4, 0.6, 1);
+    jdubDrive(-1, 30, 40, 32, 3000, 0.4, 0.6, 0);
 
-    QRDTurn(false,500,false,0);    
+    QRDTurn(false,500, 38, false,0);    
 
     delay(1000);
 
@@ -133,14 +138,14 @@ void path16L(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            Post6Turn(rightStart);
+            Post6Turn(false);
             break;
         }
     }
     //on post now
 
     //go for stone colleting
-    getStoneFromPillar(357, true, 10000);
+    getStoneFromPillar(367, true, 10000);
 
     //line follower to first Y
     while(true){
@@ -157,7 +162,7 @@ void path16L(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRDTurn(false,900,true,450);
+            QRDTurn(false,900, 38, true,450);
             break;
         }
     }
@@ -172,7 +177,7 @@ void path16L(bool rightStart){
     }
 
     //go to detect guanlet
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
     
     delay(1000);
 
@@ -181,7 +186,7 @@ void path16L(bool rightStart){
     delay(500);
     turn_single_constant(90,5000,40);
     delay(500);
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
     delay(500);
 
     
@@ -194,7 +199,7 @@ void path16L(bool rightStart){
 
 }
 
-void path45R(bool rightStart){
+void path45R(){
     HardwareInterface* HI = HardwareInterface::i();
     
     //debugging for lift - can delete
@@ -238,7 +243,7 @@ void path45R(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            Post4Turn(rightStart);
+            Post4Turn(true);
             break;
         }
     }
@@ -263,7 +268,7 @@ void path45R(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRDTurn(true,900,true,450);
+            QRDTurn(true,900, 38, true,450);
             break;
         }
     }
@@ -278,7 +283,7 @@ void path45R(bool rightStart){
     }
 
     //go to detect guanlet
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
 
     //line up to drop stone
     
@@ -290,16 +295,16 @@ void path45R(bool rightStart){
     delay(500);
     turn_single_constant(-90,5000,40);
     delay(500);
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
     delay(500);
 
     //SCORE STONE AND LOWER
     moveIntake(50,18,10000);
     HI->clawMotor->clawSetPos(104);//open claw
 
-    jdubDrive(-1, 30, 40, 32, 3000, 0.4, 0.6, 1);
+    jdubDrive(-1, 30, 40, 32, 3000, 0.4, 0.6, 0);
 
-    QRDTurn(true,500,false,0);    
+    QRDTurn(true,500, 38, false,0);    
 
     delay(1000);
 
@@ -320,7 +325,7 @@ void path45R(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            Post5Turn(rightStart);
+            Post5Turn(true);
             break;
         }
     }
@@ -344,7 +349,7 @@ void path45R(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRDTurn(true,900,true,450);
+            QRDTurn(true,900, 38, true,450);
             break;
         }
     }
@@ -359,7 +364,7 @@ void path45R(bool rightStart){
     }
 
     //go to detect guanlet
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
     
     delay(1000);
 
@@ -368,7 +373,7 @@ void path45R(bool rightStart){
     delay(500);
     turn_single_constant(90,5000,40);
     delay(500);
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
     delay(500);
 
     
@@ -381,7 +386,7 @@ void path45R(bool rightStart){
 
 }
 
-void path21L(bool rightStart){
+void path21L(){
     HardwareInterface* HI = HardwareInterface::i();
     
     //debugging for lift - can delete
@@ -425,7 +430,7 @@ void path21L(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            Post4Turn(rightStart);
+            Post4Turn(false);
             break;
         }
     }
@@ -450,7 +455,7 @@ void path21L(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRDTurn(true,900,true,450);
+            QRDTurn(true,900, 38, true,450);
             break;
         }
     }
@@ -465,7 +470,7 @@ void path21L(bool rightStart){
     }
 
     //go to detect guanlet
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
 
     //line up to drop stone
     
@@ -477,16 +482,16 @@ void path21L(bool rightStart){
     delay(500);
     turn_single_constant(-90,5000,40);
     delay(500);
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,800,2500,25,0,45);
     delay(500);
 
     //SCORE STONE AND LOWER
     moveIntake(50,18,10000);
     HI->clawMotor->clawSetPos(104);//open claw
 
-    jdubDrive(-1, 30, 40, 32, 3000, 0.4, 0.6, 1);
+    jdubDrive(-1, 30, 40, 32, 3000, 0.4, 0.6, 0);
 
-    QRDTurn(true,500,false,0);    
+    QRDTurn(true,500, 38, false,0);    
 
     delay(1000);
 
@@ -507,7 +512,7 @@ void path21L(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            Post5Turn(rightStart);
+            Post5Turn(false);
             break;
         }
     }
@@ -531,7 +536,7 @@ void path21L(bool rightStart){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRDTurn(true,900,true,450);
+            QRDTurn(true,900, 38, true,450);
             break;
         }
     }
@@ -546,7 +551,7 @@ void path21L(bool rightStart){
     }
 
     //go to detect guanlet
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,2500,400,25,0,45);
     
     delay(1000);
 
@@ -555,7 +560,7 @@ void path21L(bool rightStart){
     delay(500);
     turn_single_constant(90,5000,40);
     delay(500);
-    drive_stop_seq(1,2500,25,0,38);
+    drive_stop_seq(1,2500,400,25,0,45);
     delay(500);
 
     
