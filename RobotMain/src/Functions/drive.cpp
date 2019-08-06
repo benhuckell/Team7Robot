@@ -150,6 +150,17 @@ void stopMoving(){
 }
 
 
+void stopMoving_Post1(){
+    HardwareInterface* HI = HardwareInterface::i(); 
+    HI->pushDriveSpeeds(0, 0);
+    delay(70);
+    HI->pushDriveSpeeds(-35, -37/straightLineCorrectionFactor);
+    delay(200);
+    HI->pushDriveSpeeds(0, 0);
+    delay(150);
+}
+
+
 void jdubDrive(int direction, int target, int maxpower, int minpower, unsigned int timeout, float kaccel, float kdeaccel, float kdrift){
   HardwareInterface* HI = HardwareInterface::i(); 
 
@@ -295,6 +306,53 @@ void turn_single_constant(int target, unsigned int timeout, int robotSpeed){
     HI->pushDriveSpeeds(0, 0);
     HI->update();
   }
+
+
+void turn_accel(int target, int boost, int boost_time, int power, int timeout){
+
+  HardwareInterface* HI = HardwareInterface::i(); 
+    int startTime = millis();
+    HI->update();
+    int LStartCount = HI->LEncoder->getCount();
+    int RStartCount = HI->REncoder->getCount();
+    
+    if(target>=0){
+      //right turn, right motor back
+      HI->pushDriveSpeeds(0, -boost);
+      while(millis() - startTime < boost_time){
+        delay(10);
+      }
+      HI->pushDriveSpeeds(0, -power);
+      while((millis()-startTime < timeout)){
+        if((HI->REncoder->getCount() - RStartCount <= -target) ){
+          break;
+        }
+         delay(10);
+      }
+      HI->pushDriveSpeeds(0, 0);
+      HI->update();
+              
+    }
+
+    else{
+      //left turn, left motor back
+      HI->pushDriveSpeeds(-boost,0);
+      while(millis() - startTime < boost_time){
+        delay(10);
+      }
+      HI->pushDriveSpeeds(-power,0);
+      while((millis()-startTime < timeout)){
+        if((HI->REncoder->getCount() - RStartCount <= -target)){
+          break;
+        }
+         delay(10);
+      }
+      HI->pushDriveSpeeds(0, 0);
+      HI->update();
+            
+    }
+
+}
 
 
   

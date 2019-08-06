@@ -11,7 +11,7 @@ void liftSetup(){
 
 void moveIntake(int abs_target, int speed, int timeout){
     HardwareInterface* HI = HardwareInterface::i(); 
-    
+    int startTime = millis();
     //target 
     int relativeTarget = abs_target - currentHeight;
     int startingTicks = HI->WinchEncoder->getCount();
@@ -33,7 +33,7 @@ void moveIntake(int abs_target, int speed, int timeout){
     Serial.println("WINCH move relativeTar: " + String(relativeTarget));
     Serial.println("WINCH move start: " + String(startingTicks));
 
-    while( abs(HI->WinchEncoder->getCount() - startingTicks) < abs(relativeTarget)){
+    while(( abs(HI->WinchEncoder->getCount() - startingTicks) < abs(relativeTarget))&& (millis() - startTime < timeout)){
         delay(10);
     }
     currentHeight = abs_target;
@@ -46,14 +46,14 @@ void getStone(int winchTickTarget, int winchTickTargetWinch_2){
     HardwareInterface* HI = HardwareInterface::i();
 
     //Move claw to stone height
-    moveIntake(winchTickTarget,45,10000);
+    moveIntake(winchTickTarget,48,3200); //was 45 power
     delay(1000);
 
     //Close claw
-    HI->clawMotor->clawSetPos(300);
+    HI->clawMotor->clawSetPos(200);
     delay(1000);
 
     //Move claw up to clear stone
-    moveIntake(winchTickTargetWinch_2,45,10000);//was +50
+    moveIntake(winchTickTargetWinch_2,48,3200);//was +50 // was 45power
     delay(1000);
 }
