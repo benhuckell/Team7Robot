@@ -10,10 +10,42 @@
 void path16L(){
     HardwareInterface* HI = HardwareInterface::i();
 
-    drive_stop_seq(1, 800, 10000, 25, 4, 50);
+    // int startLTicks = HI->LEncoder->getCount();
+    // int startRTicks = HI->REncoder->getCount();
+    // HI->pushDriveSpeeds(60,60/straightLineCorrectionFactor);
 
-    delay(10000);
+    // while(true){
+    //     delay(50);
+    //     Serial.println("LCount: " + String(HI->LEncoder->getCount()-startLTicks));
+    //     Serial.println("RCount: " + String(HI->REncoder->getCount()-startRTicks));
+    //     Serial.println("Lspeed: " + String(HI->LEncoder->getSpeed()));
+    //     Serial.println("Rspeed: " + String(HI->REncoder->getSpeed()));
+    //     Serial.println("");
+    //     HI->update();
+    // }
 
+    //right  turn : backwards
+        //turn_single_constant(-70, 100000, 45);//left turn (works with 28 also, but lag in wheel syart) (no lag with 45)
+        //turn_single_constant(-70, 100000, 38);//right turn 
+
+
+        //HI->pushDriveSpeeds(-48, 30); //turning left -> Quality enough
+        HI->pushDriveSpeeds(45, -35); //turning right -> quality enough =
+        int aveTicks = 0;
+        int target = 1000000000;
+        int startingTics = abs(HI->LEncoder->getCount()) + abs(HI->REncoder->getCount()) / 2;
+        int currentTics = abs(HI->LEncoder->getCount()) + abs(HI->REncoder->getCount()) / 2;
+        while(currentTics - startingTics < target){
+             currentTics = abs(HI->LEncoder->getCount()) + abs(HI->REncoder->getCount()) / 2;
+             delay(20);
+        }
+
+        HI->pushDriveSpeeds(0, 0);
+
+
+    delay(100000);
+
+drive_stop_seq(1, 800, 10000, 25, 1.4, 50);
 
     //debugging for lift - can delete
     // moveIntake(320, 40, 10000);

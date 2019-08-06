@@ -15,8 +15,8 @@ static const int numSensors = 8;
 float const positionVector[numSensors] = { -30.5 ,-18.0 ,-8.4, -1.75, 1.75, 8.4, 18.0, 30.5 };
 const float maxISum = 2; //max sum to avoid integral windup
 const unsigned int ERROR_HISTORY_SIZE = 2; //max size of error queue
-const float straightLineCorrectionFactor = 1.14;
-const float encoderCorrectionFactor = 1.7;
+const float straightLineCorrectionFactor = 1.11;
+
 
 
 float getWeightedEdgeError(bool followRightEdge);

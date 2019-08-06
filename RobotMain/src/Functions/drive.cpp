@@ -11,7 +11,7 @@ void drive_stop_seq(int direction, int deadtime, int timeout, float delta_trip, 
     //delta trip is speed of encoder to trip
 
     int drift = 0;
-    float ave_speed = 0;
+    float ave_speed = 0.0;
     int totalDriftError = 0;
 
     int Lpower = 0;
@@ -28,14 +28,17 @@ void drive_stop_seq(int direction, int deadtime, int timeout, float delta_trip, 
         local_start_tic_L = HI->LEncoder->getCount();  
         local_start_tic_R = HI->REncoder->getCount();  
         function_net_time = millis() - function_time_start;
+
+        Serial.println("countL : " + String(HI->LEncoder->getCount()));
+        Serial.println("countR: " + String(HI->REncoder->getCount()));
         delay(30);
         function_time_start = millis();
         drift = (HI->LEncoder->getCount() - local_start_tic_L) - (HI->REncoder->getCount() - local_start_tic_R);
         totalDriftError += drift;
-        ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2;
+        ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2.0;
 
-        Lpower = (direction*maxpower) - (drift * kdrift);
-        Rpower = ((direction*maxpower)/1.1) + (drift * kdrift);
+        Lpower = (direction*maxpower) - (totalDriftError * kdrift);
+        Rpower = ((direction*maxpower)/straightLineCorrectionFactor) + (totalDriftError * kdrift);
 
         HI->pushDriveSpeeds(Lpower, Rpower);
         Serial.println("ave speed" + String(ave_speed));
@@ -68,16 +71,17 @@ void drive_stop_seq(int direction, int deadtime, int timeout, float delta_trip, 
           drift = (HI->LEncoder->getCount() - local_start_tic_L) - (HI->REncoder->getCount() - local_start_tic_R);
           totalDriftError += drift;
 
-          ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2;
+          ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2.0;
 
-          Lpower = (direction*maxpower) - (drift * kdrift);
-          Rpower = ((direction*maxpower)/1.1) + (drift * kdrift);
+          Lpower = (direction*maxpower) - (totalDriftError * kdrift);
+          Rpower = ((direction*maxpower)/straightLineCorrectionFactor) + (totalDriftError * kdrift);
 
           HI->pushDriveSpeeds(Lpower, Rpower);
           Serial.println("ave speed" + String(ave_speed));
           Serial.println("Lspeed: " + String(Lpower));
           Serial.println("Rspeed: " + String(Rpower));
           Serial.println("dridf: "+ String(drift));
+          Serial.println("Total Drift Error: " + String(totalDriftError));
           Serial.println("");
         HI->update();
       }
@@ -205,6 +209,8 @@ void QRDTurn(bool rightTurn, int deadtime,int motorPower, bool followTapeVar, in
     }
 
 
+
+
 void turn_single_constant(int target, unsigned int timeout, int robotSpeed){
     HardwareInterface* HI = HardwareInterface::i(); 
     int startTime = millis();
@@ -243,3 +249,44 @@ void turn_single_constant(int target, unsigned int timeout, int robotSpeed){
     HI->pushDriveSpeeds(0, 0);
     HI->update();
   }
+
+
+  
+// void turn_single_constant_time(int target, unsigned int timeout, int robotSpeed){
+//     HardwareInterface* HI = HardwareInterface::i(); 
+//     int startTime = millis();
+//     HI->update();
+//     int LStartCount = HI->LEncoder->getCount();
+//     int RStartCount = HI->REncoder->getCount();
+//     while(millis() - startTime <= target){
+//         if(target >= 0){
+//             HI->pushDriveSpeeds(0, -robotSpeed/straightLineCorrectionFactor);
+//             HI->update();
+//             if(HI->REncoder->getCount() - RStartCount <= -target){
+//                 HI->pushDriveSpeeds(0, 0);
+//                 HI->update();
+//                 return;
+//             }
+//         }
+//         else if(target < 0){
+
+//             HI->pushDriveSpeeds(-robotSpeed, 0);
+//             HI->update();
+//             //Serial.println("turn LCount net: " + String(HI->LEncoder->getCount() - LStartCount));
+//             //Serial.println("turn Motor speed: " + String(robotSpeed));
+//             //Serial.println(" LCount: " + String(HI->LEncoder->getCount()));
+//             //Serial.print(HI->LEncoder->getCount());
+//             //Serial.print(target);
+//             //Serial.print(" LStartCount: ");
+//             //Serial.print(LStartCount);
+//             if(HI->LEncoder->getCount() - LStartCount <= target){
+//                 Serial.println("hit");
+//                 HI->pushDriveSpeeds(0, 0);
+//                 HI->update();
+//                 return;
+//             }
+//         }
+//     }
+//     HI->pushDriveSpeeds(0, 0);
+//     HI->update();
+//   }

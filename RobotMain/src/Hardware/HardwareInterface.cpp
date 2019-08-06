@@ -26,7 +26,7 @@ HardwareInterface::HardwareInterface(){
 
    HardwareInterface::WinchMotor = new DriveMotor(WINCH_UP, WINCH_DOWN);
 
-   HardwareInterface::LEncoder = new Encoder(LENCODER_1, LENCODER_2, LENCODER_DIRECTION, 1.7);
+   HardwareInterface::LEncoder = new Encoder(LENCODER_1, LENCODER_2, LENCODER_DIRECTION, 1);
    HardwareInterface::REncoder = new Encoder(RENCODER_1, RENCODER_2, RENCODER_DIRECTION, 1);
 
    HardwareInterface::WinchEncoder = new Encoder(WINCH_ENC_1, WINCH_ENC_2, WINCH_ENCODER_DIRECTION, 1);
@@ -40,8 +40,10 @@ HardwareInterface::HardwareInterface(){
    pinMode(WINCH_ENC_2,INPUT_PULLUP);
    pinMode(LED_RED, OUTPUT);
    pinMode(LED_BLUE, OUTPUT);
-   attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
-   attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
+   
+    attachInterrupt(digitalPinToInterrupt(LENCODER_1),LEncoderInterrupt,RISING);
+    attachInterrupt(digitalPinToInterrupt(RENCODER_1),REncoderInterrupt,RISING);
+   
    attachInterrupt(digitalPinToInterrupt(WINCH_ENC_1),WinchEncoderInterrupt,RISING);
 
    HardwareInterface::qrd0 = new QRD(QRD_IN, 0, 64, 725);
