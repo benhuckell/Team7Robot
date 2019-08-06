@@ -148,60 +148,60 @@ void Post1Turn(bool rightStart){
     stopMoving();
     delay(300);
     if(rightStart){
-        turn_single_constant(71, 10000, 42);
+        //turn_single_constant(92, 10000, 38);
     }else{//leftStart
-        turn_single_constant(-71, 10000, 42);
+        turn_single_constant(-73, 10000, 45); //turning to the left
     }
     delay(800);
     HI->update();
 
     //Drive to post
-    drive_stop_seq(1,600,2500,25,0,45);
+    drive_stop(49, 50/1.15, 70, 70/1.15, 400, 1000, 50);
 
     delay(800);
 }
 
 
 
-void Post4Turn(bool rightStart){
-    //first post, 
-    int startTime = millis();
-    HardwareInterface* HI = HardwareInterface::i();  
-    stopMoving();
-    delay(1000);
-    if(rightStart){
-        turn_single_constant(71, 10000, 42);
-    }else{//leftStart
-        turn_single_constant(-71, 10000, 42);
-    }
-    delay(3000);
-    HI->update();
+// void Post4Turn(bool rightStart){
+//     //first post, 
+//     int startTime = millis();
+//     HardwareInterface* HI = HardwareInterface::i();  
+//     stopMoving();
+//     delay(1000);
+//     if(rightStart){
+//         turn_single_constant(71, 10000, 42);
+//     }else{//leftStart
+//         turn_single_constant(-71, 10000, 42);
+//     }
+//     delay(3000);
+//     HI->update();
 
-    //Drive to post
-    drive_stop_seq(1,800,2500,25,0,45);
+//     //Drive to post
+//     drive_stop_seq(1,800,2500,25,0,45);
 
-    delay(2000);
-}
+//     delay(2000);
+// }
 
-void Post5Turn(bool rightStart){
-    //first post, 
-    int startTime = millis();
-    HardwareInterface* HI = HardwareInterface::i();  
-    stopMoving();
-    delay(1000);
-    if(rightStart){
-        turn_single_constant(-84, 10000, 42);
-    }else{//leftStart
-        turn_single_constant(84, 10000, 42);
-    }
-    delay(3000);
-    HI->update();
+// void Post5Turn(bool rightStart){
+//     //first post, 
+//     int startTime = millis();
+//     HardwareInterface* HI = HardwareInterface::i();  
+//     stopMoving();
+//     delay(1000);
+//     if(rightStart){
+//         turn_single_constant(-84, 10000, 42);
+//     }else{//leftStart
+//         turn_single_constant(84, 10000, 42);
+//     }
+//     delay(3000);
+//     HI->update();
 
-    //Drive to post
-    drive_stop_seq(1,800,2500,25,0,45);
+//     //Drive to post
+//     drive_stop_seq(1,800,2500,25,0,45);
 
-    delay(2000);
-}
+//     delay(2000);
+// }
 
 void Post6Turn(bool rightStart){
     //first post, 
@@ -210,15 +210,15 @@ void Post6Turn(bool rightStart){
     stopMoving();
     delay(1000);
     if(rightStart){
-        turn_single_constant(-84, 10000, 42);
+        //turn_single_constant(99, 10000, 45);
     }else{//leftStart
-        turn_single_constant(84, 10000, 42);
+        turn_single_constant(86, 10000, 38); //turn to right
     }
     delay(3000);
     HI->update();
 
     //Drive to post
-    drive_stop_seq(1,800,2500,25,0,45);
+    drive_stop(49, 50/1.15, 70, 70/1.15, 400, 1500, 50);
 
     delay(2000);
 }

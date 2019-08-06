@@ -54,7 +54,7 @@ void setup() {
       display.display();
       
       if(rightStart){
-        path45R();
+        //path45R();
       }
       else{//leftStart
         path16L();
