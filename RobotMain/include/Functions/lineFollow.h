@@ -24,8 +24,10 @@ void lineFollowSetup();
 //junctions
 void LEdgeTurn();
 void REdgeTurn();
-void Post1Turn();
-void Post2Turn(); 
+void Post1Turn(bool rightStart);
+void Post4Turn(bool rightStart); 
+void Post5Turn(bool rightStart); 
+void Post6Turn(bool rightStart);
 
 bool detectJunction();
 

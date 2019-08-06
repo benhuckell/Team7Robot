@@ -15,7 +15,7 @@ void drive_stop_seq(int direction, int timeout, float delta_trip, float kdrift, 
     int start_time = millis();
     while(millis() - start_time < 800){
         HI->LMotor->setSpeed( (direction*maxpower) );
-        HI->RMotor->setSpeed( (direction*maxpower)/1.13 );
+        HI->RMotor->setSpeed( (direction*maxpower)/1.15 );
         HI->update();
         ave_speed = (abs(HI->LEncoder->getSpeed()) + abs(HI->REncoder->getSpeed()))/2;
         drift = HI->LEncoder->getCount() - HI->REncoder->getCount();
@@ -27,7 +27,7 @@ void drive_stop_seq(int direction, int timeout, float delta_trip, float kdrift, 
 
       Serial.println("ave speed" + String(ave_speed));
       HI->LMotor->setSpeed( (direction*maxpower) - (drift * kdrift));
-      HI->RMotor->setSpeed( ((direction*maxpower) + (drift * kdrift))/1.13);
+      HI->RMotor->setSpeed( ((direction*maxpower) + (drift * kdrift))/1.15);
       HI-> update();
       delay(30);
     }
@@ -85,7 +85,7 @@ void jdubDrive(int direction, int target, int maxpower, int minpower, unsigned i
     int power_L = direction*HI->motorcap(minpower + boost*netpower, 100, 0) - (direction*encoder_error*kdrift);
     int power_R = direction*HI->motorcap(minpower + boost*netpower, 100, 0) + (direction*encoder_error*kdrift);
     
-    HI->pushDriveSpeeds(power_L, power_R);
+    HI->pushDriveSpeeds(power_L, power_R/straightLineCorrectionFactor);
 
     Serial.println("Ltics: " + String(Ltics));
     Serial.println("Rtics: " + String(Rtics));
@@ -103,6 +103,7 @@ void jdubDrive(int direction, int target, int maxpower, int minpower, unsigned i
   }
 
 //turn with QRD at end
+//choose whether to follow tape before or not
 void QRDTurn(bool rightTurn, int deadtime, bool followTapeVar, int followTapeDuration){
     HardwareInterface* HI = HardwareInterface::i(); 
 
@@ -190,4 +191,4 @@ void turn_single_constant(int target, unsigned int timeout, int robotSpeed){
     }
     HI->pushDriveSpeeds(0, 0);
     HI->update();
-    }
+  }

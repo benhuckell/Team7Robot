@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include "libs/Adafruit_GFX.h"
 #include "Hardware/HardwareInterface.h"
-#include "Paths/Path1.h"
+#include "Paths/Paths.h"
 #include "Functions/lift.h"
 #include "Functions/debugging.h"
 #include "Functions/lineFollow.h"
@@ -12,6 +12,7 @@
 #include "Hardware/ports.h"
 
 Adafruit_SSD1306 display(-1);
+bool rightStart;
 
 void setup() {
   Serial.begin(115200);
@@ -29,18 +30,19 @@ void setup() {
 
 
 
-  if(digitalRead(TOGGLE_SWITCH) == 0){//switch is accidentally flipped upward
-    exit(0);
+  if(digitalRead(TOGGLE_SWITCH) == LOW){//switch is accidentally flipped upward
+    rightStart = true;
+  }else if(digitalRead(TOGGLE_SWITCH) == HIGH){
+    rightStart = false;
   }
-
+  bool debugEntered = false;
   int count = 0;
   for(;;) {
-
-    if(digitalRead(TOGGLE_SWITCH)){
- 
+    if(digitalRead(TOGGLE_SWITCH) == HIGH){
       debugging_loop();
+      debugEntered = true;
     }
-    else if(digitalRead(TOGGLE_SWITCH) == 0){
+    else if(digitalRead(TOGGLE_SWITCH) == LOW && debugEntered){
       digitalWrite(LED_BLUE,LOW);
       lineFollowSetup();
       liftSetup();
@@ -49,9 +51,12 @@ void setup() {
       display.println("Line Following");
       display.display();
       
-    
-      path1();
-    
+      if(rightStart){
+        path45R(rightStart);
+      }
+      else{//leftStart
+        path16L(rightStart);
+      }
     }
     //HardwareInterface::i()->update();
     count++;

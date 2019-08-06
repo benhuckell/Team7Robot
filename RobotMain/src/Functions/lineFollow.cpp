@@ -135,19 +135,23 @@ void REdgeTurn(){
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();
     while(millis()-startTime < 350){
-            followTape(ROBOTSPEED, true, true);//follow right edge
-            HI->update();
-        }
+        followTape(ROBOTSPEED, true, true);//follow right edge
+        HI->update();
+    }
 }
 
 
-void Post1Turn(){
+void Post1Turn(bool rightStart){
     //first post, 
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
     delay(1000);
-    turn_single_constant(-71, 10000,40);
+    if(rightStart){
+        turn_single_constant(71, 10000, 40);
+    }else{//leftStart
+        turn_single_constant(-71, 10000, 40);
+    }
     delay(3000);
     HI->update();
 
@@ -157,13 +161,19 @@ void Post1Turn(){
     delay(2000);
 }
 
-void Post2Turn(){
-        //first post, 
+
+
+void Post4Turn(bool rightStart){
+    //first post, 
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
     delay(1000);
-    turn_single_constant(84, 10000,40);
+    if(rightStart){
+        turn_single_constant(71, 10000, 40);
+    }else{//leftStart
+        turn_single_constant(-71, 10000, 40);
+    }
     delay(3000);
     HI->update();
 
@@ -171,7 +181,47 @@ void Post2Turn(){
     drive_stop_seq(1,2500,25,0,38);
 
     delay(2000);
+}
+
+void Post5Turn(bool rightStart){
+    //first post, 
+    int startTime = millis();
+    HardwareInterface* HI = HardwareInterface::i();  
+    stopMoving();
+    delay(1000);
+    if(rightStart){
+        turn_single_constant(-84, 10000, 40);
+    }else{//leftStart
+        turn_single_constant(84, 10000, 40);
     }
+    delay(3000);
+    HI->update();
+
+    //Drive to post
+    drive_stop_seq(1,2500,25,0,38);
+
+    delay(2000);
+}
+
+void Post6Turn(bool rightStart){
+    //first post, 
+    int startTime = millis();
+    HardwareInterface* HI = HardwareInterface::i();  
+    stopMoving();
+    delay(1000);
+    if(rightStart){
+        turn_single_constant(-84, 10000, 40);
+    }else{//leftStart
+        turn_single_constant(84, 10000, 40);
+    }
+    delay(3000);
+    HI->update();
+
+    //Drive to post
+    drive_stop_seq(1,2500,25,0,38);
+
+    delay(2000);
+}
 
 bool detectJunction(){
     HardwareInterface* HI = HardwareInterface::i();
