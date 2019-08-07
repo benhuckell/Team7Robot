@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include "libs/Adafruit_GFX.h"
 #include "Hardware/HardwareInterface.h"
-#include "Paths/Paths.h"
+#include "Paths/Path621.h"
 #include "Functions/lift.h"
 #include "Functions/debugging.h"
 #include "Functions/lineFollow.h"
@@ -58,7 +58,7 @@ void setup() {
         path534_R();
       }
       else{//leftStart
-        path16L();
+        path621L();
       }
     }
     //HardwareInterface::i()->update();

@@ -1,11 +1,11 @@
-#include "Paths/Paths.h"
+#include "Paths/Path621.h"
 #include "Hardware/HardwareInterface.h"
 #include "Functions/mix.h"
 #include "Functions/drive.h"
 #include "Functions/lineFollow.h"
 #include "Functions/lift.h"
 
-void path16L(){
+void path621L(){
     HardwareInterface* HI = HardwareInterface::i();
     
     int robotSpeed = 50;
@@ -31,7 +31,7 @@ void path16L(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            LEdgeTurn();
+            REdgeTurn();
             break;
         }
     }
@@ -41,7 +41,7 @@ void path16L(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            Post1Turn(false);
+            Post6Turn(false);
             break;
         }
     }
@@ -49,7 +49,7 @@ void path16L(){
     //at post now, lined up
 
     //Collect Stone from Post 1
-    getStoneFromPillar(229, 300, false,10000); //was 225 //228, just barely low
+    getStoneFromPillar(339, 370, true, 10000); 
 
     //On path ready to follow line back to gauntlet
     //junction 4 -Y - Stone1 to gauntlet
@@ -57,7 +57,7 @@ void path16L(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            REdgeTurn();
+            LEdgeTurn();
             break;
         }
     }
@@ -101,7 +101,7 @@ void path16L(){
     delay(130);
 
     //Begin opening claw
-    HI->clawMotor->clawSetPos(10);
+    HI->clawMotor->clawSetPos(30);
 
     //Crawl to hole
     HI->pushDriveSpeeds(33, 33/1.13);
@@ -127,6 +127,15 @@ void path16L(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
+            LEdgeTurn();
+            break;
+        }
+    }
+
+    while(true){
+        HI->update();
+        followTape(robotSpeed, false, false);
+        if(detectJunction()){
             REdgeTurn();
             break;
         }
@@ -137,14 +146,21 @@ void path16L(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            Post6Turn(false);
+            Post2Turn(false);
             break;
         }
     }
     //at post, lined up
 
     //Collect Stone 2
-    getStoneFromPillar(339, 370, true, 10000); 
+    getStoneFromPillar(173, 245, false, 10000);
+
+    //T - stone 3 to gaunt
+    // startTime = millis();
+    //  while(millis()-startTime < 400){
+    //     HI->update();
+    //     followTape(robotSpeed, false, false);
+    // }
 
     //On path ready to follow line back to gauntlet
     //line follower to  Y - stone 2 to gaunt
@@ -153,6 +169,15 @@ void path16L(){
         followTape(robotSpeed, false, false);
         if(detectJunction()){
             LEdgeTurn();
+            break;
+        }
+    }
+
+    while(true){
+        HI->update();
+        followTape(robotSpeed, false, false);
+        if(detectJunction()){
+            REdgeTurn();
             break;
         }
     }
@@ -195,7 +220,7 @@ void path16L(){
     delay(130);
 
     //Begin to lower claw
-    HI->clawMotor->clawSetPos(10);
+    HI->clawMotor->clawSetPos(30);
 
     //Crawl forwards
     HI->pushDriveSpeeds(33, 33/1.13);
@@ -228,23 +253,13 @@ void path16L(){
         }
     }
 
-    //t_junction for turn - GO THROUGH - getting stone 3
-    while(true){
-        HI->update();
-        followTape(robotSpeed, false, false);
-        if(detectJunction()){
-            REdgeTurn();
-            break;
-        }
-    }
-
 
     //Line up with third post
     while(true){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            Post2Turn(false);
+            Post1Turn(false);
             break;
         }
     }
@@ -252,25 +267,9 @@ void path16L(){
     //At post, lined up
 
     //Retrieve stone from post
-    getStoneFromPillar(173, 245, false, 10000); 
+    getStoneFromPillar(229, 300, false,10000); //was 225 //228, just barely low
 
     //Collected stone, on line
-
-    //T - stone 3 to gaunt
-    startTime = millis();
-     while(millis()-startTime < 400){
-        HI->update();
-        followTape(robotSpeed, false, false);
-    }
-
-    while(true){
-        HI->update();
-        followTape(robotSpeed, false, false);
-        if(detectJunction()){
-            LEdgeTurn();
-            break;
-        }
-    }
 
     //line follower to  Y - stone 3 to gaunt
     while(true){
@@ -321,7 +320,7 @@ void path16L(){
     delay(130);
 
     //Begin to lower claw
-    HI->clawMotor->clawSetPos(10);
+    HI->clawMotor->clawSetPos(30);
 
     //Crawl forwards
     HI->pushDriveSpeeds(33, 33/1.13);
