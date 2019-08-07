@@ -1,5 +1,4 @@
 #include "Functions/lineFollow.h"
-//#include "stateController.h"
 #include "Hardware/HardwareInterface.h"
 #include "Functions/drive.h"
 
@@ -47,9 +46,6 @@ void followTape(int robotSpeed, bool followRightEdge, bool edgeFollow){
     int LSpeed = (robotSpeed + speedAdj);
     int RSpeed = (robotSpeed - speedAdj);
     
-    // Serial.println(speedAdj);
-    // Serial.println(LSpeed);
-    // Serial.println(RSpeed);
     HI->pushDriveSpeeds(LSpeed, RSpeed/straightLineCorrectionFactor);
 
     //Serial.println("QRD output: " + String(HI->QRD_Vals[0]) + " " + String(HI->QRD_Vals[1]) + " " + String(HI->QRD_Vals[2]) + " " + String(HI->QRD_Vals[3]) + " " + String(HI->QRD_Vals[4]) + " " + String(HI->QRD_Vals[5]) + " " + String(HI->QRD_Vals[6]) + " " + String(HI->QRD_Vals[7]) + " ");
@@ -142,127 +138,118 @@ void REdgeTurn(){
 
 
 void Post1Turn(bool rightStart){
-    //first post, 
-    int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
     delay(300);
     if(rightStart){
-        //turn_single_constant(92, 10000, 38);
-    }else{//leftStart
-        turn_single_constant(-89, 10000, 45); //turning to the left // was -76 //w as -80 //was 83(U) //was 87 (U) //89 U // 95 U //98 U
+        turn_single_constant(92, 10000, 38);
     }
-    delay(800);
+    else{ //leftStart
+        turn_single_constant(-89, 10000, 45);
+    }
+    delay(600);
     HI->update();
 
     //Drive to post
     drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1000, 50);
 
-    delay(800);
+    delay(600);
 }
 
  void Post2Turn(bool rightStart){
-    int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
-    delay(1000);
+    delay(300);
     if(rightStart){
-        //turn_single_constant(92, 10000, 38);
-    }else{//leftStart
-        turn_single_constant(-77, 10000, 45); //turning to the left //-73 not enough
+        turn_single_constant(77, 10000, 38);
     }
-    delay(800);
+    else{ //leftStart
+        turn_single_constant(-77, 10000, 45);
+    }
+    delay(600);
     HI->update();
 
     //Drive to post
-    drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1000, 50); // was 
+    drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1000, 50);
 
-    delay(800);
-
+    delay(600);
  }
 
 
 void Post3Turn(bool rightStart){
-//first post, 
-    int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
-    delay(1000);
+    delay(300);
     if(rightStart){
         turn_single_constant(78, 10000, 42);
     }else{//leftStart
-        //turn_single_constant(-71, 10000, 42);
+        turn_single_constant(-71, 10000, 42);
     }
-    delay(3000);
+    delay(600);
     HI->update();
 
     //Drive to post
-    //drive_stop_seq(1,800,2500,25,0,45);
     drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50);
 
-    delay(2000);
+    delay(600);
 
 }
 
 void Post4Turn(bool rightStart){
-    //first post, 
-    int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
-    delay(1000);
+    delay(300);
     if(rightStart){
         turn_single_constant(75, 10000, 42);
-    }else{//leftStart
-        //turn_single_constant(-71, 10000, 42);
     }
-    delay(750);
+    else{ //leftStart
+        turn_single_constant(-71, 10000, 42);
+    }
+    delay(600);
     HI->update();
 
-    //Drive to post
-    //drive_stop_seq(1,800,2500,25,0,45);
     drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50);
-    delay(2000);
+    delay(600);
 }
 
 void Post5Turn(bool rightStart){
-    //first post, 
-    int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
-    delay(1000);
+    delay(300);
     if(rightStart){
         turn_single_constant(-86, 10000, 42);
-    }else{//leftStart
-        //turn_single_constant(84, 10000, 42);
     }
-    delay(750);
+    else{ //leftStart
+        turn_single_constant(84, 10000, 42);
+    }
+    delay(600);
     HI->update();
 
     //Drive to post
-    //drive_stop_seq(1,800,2500,25,0,45);
     drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50);
 
-    delay(2000);
+    delay(600);
 }
 
 void Post6Turn(bool rightStart){
-    //first post, 
-    int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
-    delay(750);
+    delay(300);
+
     if(rightStart){
-        //turn_single_constant(99, 10000, 45);
-    }else{//leftStart
+        turn_single_constant(-78, 10000, 45);
+    }
+    else{ //leftStart
         turn_single_constant(78, 10000, 34); //turn to right // wsa 86 (O) //84 (O) //83 O
     }
-    delay(750);
+
+    delay(600);
     HI->update();
 
     //Drive to post
     drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50); //was 49 (too mich right)//similiar, 48
 
-    delay(800);
+    delay(600);
 }
 
 bool detectJunction(){

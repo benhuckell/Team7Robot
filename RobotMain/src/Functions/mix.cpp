@@ -1,9 +1,8 @@
-
- #include "Functions/drive.h"
- #include "Functions/lineFollow.h"
- #include "Functions/lift.h"
- #include "Hardware/HardwareInterface.h"
- #include "Functions/mix.h"
+#include "Functions/drive.h"
+#include "Functions/lineFollow.h"
+#include "Functions/lift.h"
+#include "Hardware/HardwareInterface.h"
+#include "Functions/mix.h"
 //#include "stateController.h"
 void getStoneFromPillar(int tickTargetWinch, int tickTargetWinch_2, bool rightTurnReturn, int turnTimeout){
         HardwareInterface* HI = HardwareInterface::i(); 
