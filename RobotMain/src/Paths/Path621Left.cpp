@@ -1,4 +1,4 @@
-#include "Paths/Path621.h"
+#include "Paths/Path621Left.h"
 #include "Hardware/HardwareInterface.h"
 #include "Functions/mix.h"
 #include "Functions/drive.h"
@@ -11,6 +11,13 @@ void path621L(){
     int robotSpeed = 50;
     int startTime = millis();
 
+    while(true){
+        HI->clawMotor->clawSetPos(290);
+        delay(1000);
+        HI->clawMotor->clawSetPos(145);
+        delay(1000);
+    }
+    delay(100000);
     //Start Following Tape until first Junction
     while(true){
         HI->update();
@@ -49,7 +56,7 @@ void path621L(){
     //at post now, lined up
 
     //Collect Stone from Post 1
-    getStoneFromPillar(339, 370, true, 10000); 
+    getStoneFromPillar(340, 375, true, 10000); 
 
     //On path ready to follow line back to gauntlet
     //junction 4 -Y - Stone1 to gauntlet
@@ -82,7 +89,7 @@ void path621L(){
     }
 
     //Drive until hit gauntlet
-     drive_stop(45, 45/1.13, 70, 70/1.13, 300, 1500, 50);
+     drive_stop(45, 45/1.13, 70, 70/1.13, 300, 1500, 50, -33);
 
     //line up to drop stone
     jiggle();
@@ -93,7 +100,7 @@ void path621L(){
     turn_single_constant(-28, 100000, 45);
 
     //Begin to move intake down
-    moveIntake(42,18,10000);
+    moveIntake(50,18,10000);
     delay(500);
 
     //Jolt Forwareds
@@ -110,6 +117,10 @@ void path621L(){
     //Stop moving once stone deposited
     HI->pushDriveSpeeds(0, 0);
     delay(800);
+
+    //Tighten slack
+    HI->pushWinchSpeed(25);
+    delay(900);
 
     //Stone Scored
 
@@ -153,7 +164,7 @@ void path621L(){
     //at post, lined up
 
     //Collect Stone 2
-    getStoneFromPillar(173, 245, false, 10000);
+    getStoneFromPillar(203, 280, false, 10000);
 
     //T - stone 3 to gaunt
     // startTime = millis();
@@ -201,7 +212,7 @@ void path621L(){
     }
 
     //Drive until hit gauntlet
-     drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1500, 50);
+     drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1500, 50, -33);
 
     //line up to drop stone
     jiggle();
@@ -212,7 +223,7 @@ void path621L(){
     turn_single_constant(34, 100000, 36);
 
     //Begin to lower intake
-    moveIntake(42,18,10000);
+    moveIntake(50,18,10000);
     delay(500);
 
     //Jolt forwards
@@ -229,6 +240,10 @@ void path621L(){
     //Stop moving
     HI->pushDriveSpeeds(0, 0);
     delay(800);
+
+    //Tighten slack
+    HI->pushWinchSpeed(25);
+    delay(900);
 
     //Stone 2 Scored!
 
@@ -267,7 +282,7 @@ void path621L(){
     //At post, lined up
 
     //Retrieve stone from post
-    getStoneFromPillar(229, 300, false,10000); //was 225 //228, just barely low
+    getStoneFromPillar(264, 335, false,10000); //was 225 //228, just barely low
 
     //Collected stone, on line
 
@@ -301,18 +316,18 @@ void path621L(){
     }
 
     //Drive until hit gauntlet
-    drive_stop(45, 45/1.13, 70, 70/1.13, 300, 1500, 50);
+    drive_stop(45, 45/1.13, 70, 70/1.13, 300, 1500, 50, -33);
 
     //line up to drop stone 3
     jiggle();
     delay(300);
 
     //Turn to line up with hole
-    turn_single_constant(-16, 100000, 36);
+    turn_single_constant(-16, 100000, 45);
 
 //
     //Begin to lower intake
-    moveIntake(42,18,10000);
+    moveIntake(57,18,10000);
     delay(500);
 
     //Jolt forwards

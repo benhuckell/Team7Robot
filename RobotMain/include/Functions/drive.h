@@ -1,7 +1,7 @@
 #pragma once
 
 void drive_stop_seq(int direction, int deadtime, int timeout, float delta_trip, float kdrift, int maxpower);
-void drive_stop(int powerL, int powerR, int powerL_dead, int powerR_dead, int deadtime, int timeout, float delta_trip);
+void drive_stop(int powerL, int powerR, int powerL_dead, int powerR_dead, int deadtime, int timeout, float delta_trip, int backSpeed);
 void stopMoving();
 void stopMoving_Post1();
 void jdubDrive(int direction, int target, int maxpower, int minpower, unsigned int timeout, float kaccel, float kdeaccel, float kdrift);

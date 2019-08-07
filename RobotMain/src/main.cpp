@@ -1,7 +1,10 @@
 #include <Wire.h>
 #include "libs/Adafruit_GFX.h"
 #include "Hardware/HardwareInterface.h"
-#include "Paths/Path621.h"
+#include "Paths/Path621Left.h"
+#include "Paths/Path534Right.h"
+#include "Paths/Path561Left.h"
+#include "Paths/Path654Right.h"
 #include "Functions/lift.h"
 #include "Functions/debugging.h"
 #include "Functions/lineFollow.h"
@@ -10,7 +13,7 @@
 #include "stm32/HardwareTimer.h"
 #include <servo.h>
 #include "Hardware/ports.h"
-#include "Paths/Path534.h"
+
 
 Adafruit_SSD1306 display(-1);
 
@@ -55,10 +58,10 @@ void setup() {
       display.display();
       
       if(rightStart){
-        path534_R();
+        path534R();
       }
       else{//leftStart
-        path621L();
+        path561L();
       }
     }
     //HardwareInterface::i()->update();

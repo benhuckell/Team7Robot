@@ -151,7 +151,7 @@ void Post1Turn(bool rightStart){
     HI->update();
 
     //Drive to post
-    drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1000, 50);
+    drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1000, 50, -33);
 
     delay(600);
 }
@@ -170,7 +170,7 @@ void Post1Turn(bool rightStart){
     HI->update();
 
     //Drive to post
-    drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1000, 50);
+    drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1000, 50, -33);
 
     delay(600);
  }
@@ -181,7 +181,7 @@ void Post3Turn(bool rightStart){
     stopMoving();
     delay(300);
     if(rightStart){
-        turn_single_constant(78, 10000, 42);
+        turn_single_constant(74, 10000, 42);
     }else{//leftStart
         turn_single_constant(-71, 10000, 42);
     }
@@ -189,7 +189,7 @@ void Post3Turn(bool rightStart){
     HI->update();
 
     //Drive to post
-    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50);
+    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50, -33);
 
     delay(600);
 
@@ -208,7 +208,7 @@ void Post4Turn(bool rightStart){
     delay(600);
     HI->update();
 
-    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50);
+    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50, -33);
     delay(600);
 }
 
@@ -226,7 +226,7 @@ void Post5Turn(bool rightStart){
     HI->update();
 
     //Drive to post
-    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50);
+    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50, -33);
 
     delay(600);
 }
@@ -247,7 +247,7 @@ void Post6Turn(bool rightStart){
     HI->update();
 
     //Drive to post
-    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50); //was 49 (too mich right)//similiar, 48
+    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50, -33); //was 49 (too mich right)//similiar, 48
 
     delay(600);
 }
@@ -256,7 +256,7 @@ bool detectJunction(){
     HardwareInterface* HI = HardwareInterface::i();
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.825){
+        if (HI->QRD_Vals[i] > 0.8){
             count++;
         }
     }

@@ -94,7 +94,7 @@ void drive_stop_seq(int direction, int deadtime, int timeout, float delta_trip, 
 
   }
 
-void drive_stop(int powerL, int powerR, int powerL_dead, int powerR_dead, int deadtime, int timeout, float delta_trip){
+void drive_stop(int powerL, int powerR, int powerL_dead, int powerR_dead, int deadtime, int timeout, float delta_trip, int backSpeed){
     HardwareInterface* HI = HardwareInterface::i();
     
     //must set 
@@ -223,7 +223,7 @@ void QRDTurn(bool rightTurn, int deadtime,int powerL, int powerR, bool followTap
     if(followTapeVar){
       int startTime = millis();
       while(millis()-startTime < followTapeDuration){
-          followTape(ROBOTSPEED, true, true);//follow right edge
+          followTape(ROBOTSPEED, !rightTurn, true);
           HI->update();
           }
       stopMoving();

@@ -7,6 +7,7 @@
 void getStoneFromPillar(int tickTargetWinch, int tickTargetWinch_2, bool rightTurnReturn, int turnTimeout){
         HardwareInterface* HI = HardwareInterface::i(); 
         Serial.println("Stone Collecting");
+
         getStone(tickTargetWinch, tickTargetWinch_2);
 
         delay(100);
@@ -19,10 +20,10 @@ void getStoneFromPillar(int tickTargetWinch, int tickTargetWinch_2, bool rightTu
         Serial.println("QRD turn Hardware init");
         
         if(rightTurnReturn){
-                QRDTurn(rightTurnReturn, 500, 42, -33, false, 0); //was 45, -35
+                QRDTurn(rightTurnReturn, 500, 36, -32, false, 0); //was 45, -35
         }
         else{
-                QRDTurn(rightTurnReturn, 500, -45, 30, false, 0); // was -45, 30
+                QRDTurn(rightTurnReturn, 500, -36, 32, false, 0); // was -45, 30
         }
         Serial.println("end turn ");
         delay(150);
