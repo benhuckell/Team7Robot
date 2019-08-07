@@ -10,6 +10,7 @@
 #include "stm32/HardwareTimer.h"
 #include <servo.h>
 #include "Hardware/ports.h"
+#include "Paths/Path534.h"
 
 Adafruit_SSD1306 display(-1);
 
@@ -54,7 +55,7 @@ void setup() {
       display.display();
       
       if(rightStart){
-        //path45R();
+        path534_R();
       }
       else{//leftStart
         path16L();

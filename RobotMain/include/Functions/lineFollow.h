@@ -27,6 +27,7 @@ void LEdgeTurn();
 void REdgeTurn();
 void Post1Turn(bool rightStart);
 void Post2Turn(bool rightStart);
+void Post3Turn(bool rightStart);
 void Post4Turn(bool rightStart); 
 void Post5Turn(bool rightStart); 
 void Post6Turn(bool rightStart);

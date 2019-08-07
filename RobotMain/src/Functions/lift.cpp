@@ -50,7 +50,7 @@ void getStone(int winchTickTarget, int winchTickTargetWinch_2){
     delay(1000);
 
     //Close claw
-    HI->clawMotor->clawSetPos(200);
+    HI->clawMotor->clawSetPos(210);
     delay(1000);
 
     //Move claw up to clear stone

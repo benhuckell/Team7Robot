@@ -125,7 +125,7 @@ void lineFollowSetup(){
 void LEdgeTurn(){
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();
-    while(millis()-startTime < 350){
+    while(millis()-startTime < 400){
         followTape(ROBOTSPEED, false, true);//follow left edge
         HI->update();
     }
@@ -134,7 +134,7 @@ void LEdgeTurn(){
 void REdgeTurn(){
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();
-    while(millis()-startTime < 350){
+    while(millis()-startTime < 400){
         followTape(ROBOTSPEED, true, true);//follow right edge
         HI->update();
     }
@@ -182,14 +182,14 @@ void Post1Turn(bool rightStart){
  }
 
 
-void Post3turn(bool rightStart){
+void Post3Turn(bool rightStart){
 //first post, 
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
     delay(1000);
     if(rightStart){
-        turn_single_constant(77, 10000, 42);
+        turn_single_constant(78, 10000, 42);
     }else{//leftStart
         //turn_single_constant(-71, 10000, 42);
     }
@@ -197,7 +197,8 @@ void Post3turn(bool rightStart){
     HI->update();
 
     //Drive to post
-    drive_stop_seq(1,800,2500,25,0,45);
+    //drive_stop_seq(1,800,2500,25,0,45);
+    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50);
 
     delay(2000);
 
@@ -210,16 +211,16 @@ void Post4Turn(bool rightStart){
     stopMoving();
     delay(1000);
     if(rightStart){
-        turn_single_constant(89, 10000, 42);
+        turn_single_constant(75, 10000, 42);
     }else{//leftStart
         //turn_single_constant(-71, 10000, 42);
     }
-    delay(3000);
+    delay(750);
     HI->update();
 
     //Drive to post
-    drive_stop_seq(1,800,2500,25,0,45);
-
+    //drive_stop_seq(1,800,2500,25,0,45);
+    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50);
     delay(2000);
 }
 
@@ -230,15 +231,16 @@ void Post5Turn(bool rightStart){
     stopMoving();
     delay(1000);
     if(rightStart){
-        turn_single_constant(-78, 10000, 42);
+        turn_single_constant(-86, 10000, 42);
     }else{//leftStart
         //turn_single_constant(84, 10000, 42);
     }
-    delay(3000);
+    delay(750);
     HI->update();
 
     //Drive to post
-    drive_stop_seq(1,800,2500,25,0,45);
+    //drive_stop_seq(1,800,2500,25,0,45);
+    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50);
 
     delay(2000);
 }
@@ -267,7 +269,7 @@ bool detectJunction(){
     HardwareInterface* HI = HardwareInterface::i();
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.715){
+        if (HI->QRD_Vals[i] > 0.825){
             count++;
         }
     }
