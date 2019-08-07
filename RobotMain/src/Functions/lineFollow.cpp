@@ -182,45 +182,66 @@ void Post1Turn(bool rightStart){
  }
 
 
-// void Post4Turn(bool rightStart){
-//     //first post, 
-//     int startTime = millis();
-//     HardwareInterface* HI = HardwareInterface::i();  
-//     stopMoving();
-//     delay(1000);
-//     if(rightStart){
-//         turn_single_constant(71, 10000, 42);
-//     }else{//leftStart
-//         turn_single_constant(-71, 10000, 42);
-//     }
-//     delay(3000);
-//     HI->update();
+void Post3turn(bool rightStart){
+//first post, 
+    int startTime = millis();
+    HardwareInterface* HI = HardwareInterface::i();  
+    stopMoving();
+    delay(1000);
+    if(rightStart){
+        turn_single_constant(77, 10000, 42);
+    }else{//leftStart
+        //turn_single_constant(-71, 10000, 42);
+    }
+    delay(3000);
+    HI->update();
 
-//     //Drive to post
-//     drive_stop_seq(1,800,2500,25,0,45);
+    //Drive to post
+    drive_stop_seq(1,800,2500,25,0,45);
 
-//     delay(2000);
-// }
+    delay(2000);
 
-// void Post5Turn(bool rightStart){
-//     //first post, 
-//     int startTime = millis();
-//     HardwareInterface* HI = HardwareInterface::i();  
-//     stopMoving();
-//     delay(1000);
-//     if(rightStart){
-//         turn_single_constant(-84, 10000, 42);
-//     }else{//leftStart
-//         turn_single_constant(84, 10000, 42);
-//     }
-//     delay(3000);
-//     HI->update();
+}
 
-//     //Drive to post
-//     drive_stop_seq(1,800,2500,25,0,45);
+void Post4Turn(bool rightStart){
+    //first post, 
+    int startTime = millis();
+    HardwareInterface* HI = HardwareInterface::i();  
+    stopMoving();
+    delay(1000);
+    if(rightStart){
+        turn_single_constant(89, 10000, 42);
+    }else{//leftStart
+        //turn_single_constant(-71, 10000, 42);
+    }
+    delay(3000);
+    HI->update();
 
-//     delay(2000);
-// }
+    //Drive to post
+    drive_stop_seq(1,800,2500,25,0,45);
+
+    delay(2000);
+}
+
+void Post5Turn(bool rightStart){
+    //first post, 
+    int startTime = millis();
+    HardwareInterface* HI = HardwareInterface::i();  
+    stopMoving();
+    delay(1000);
+    if(rightStart){
+        turn_single_constant(-78, 10000, 42);
+    }else{//leftStart
+        //turn_single_constant(84, 10000, 42);
+    }
+    delay(3000);
+    HI->update();
+
+    //Drive to post
+    drive_stop_seq(1,800,2500,25,0,45);
+
+    delay(2000);
+}
 
 void Post6Turn(bool rightStart){
     //first post, 
