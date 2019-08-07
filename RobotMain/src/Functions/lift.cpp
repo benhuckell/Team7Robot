@@ -46,7 +46,7 @@ void getStone(int winchTickTarget, int winchTickTargetWinch_2){
     HardwareInterface* HI = HardwareInterface::i();
 
     //Move claw to stone height
-    moveIntake(winchTickTarget,48,3200); //was 45 power
+    moveIntake(winchTickTarget,48,5000); //was 45 power
     delay(1000);
 
     //Close claw
@@ -54,6 +54,6 @@ void getStone(int winchTickTarget, int winchTickTargetWinch_2){
     delay(1000);
 
     //Move claw up to clear stone
-    moveIntake(winchTickTargetWinch_2,48,3200);//was +50 // was 45power
+    moveIntake(winchTickTargetWinch_2,45,5000);//was +50 // was 45power
     delay(1000);
 }

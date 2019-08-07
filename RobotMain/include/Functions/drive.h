@@ -7,3 +7,4 @@ void stopMoving_Post1();
 void jdubDrive(int direction, int target, int maxpower, int minpower, unsigned int timeout, float kaccel, float kdeaccel, float kdrift);
 void QRDTurn(bool rightTurn, int deadtime, int powerL, int powerR, bool followTapeVar, int followTapeDuration);
 void turn_single_constant(int target, unsigned int timeout, int robotSpeed);
+void jiggle();

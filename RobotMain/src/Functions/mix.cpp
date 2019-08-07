@@ -13,7 +13,7 @@ void getStoneFromPillar(int tickTargetWinch, int tickTargetWinch_2, bool rightTu
         delay(100);
         Serial.println("start backing out");
         //jdubDrive(-1, 35, 40, 32, 3000, 0.4, 0.6, 0);
-           HI->pushDriveSpeeds(-60, -60/1.15);
+           HI->pushDriveSpeeds(-60, -60/1.13);
         delay(230);
         HI->pushDriveSpeeds(0, 0);
         delay(200);
@@ -23,8 +23,8 @@ void getStoneFromPillar(int tickTargetWinch, int tickTargetWinch_2, bool rightTu
                 QRDTurn(rightTurnReturn, 500, 42, -33, false, 0); //was 45, -35
         }
         else{
-                QRDTurn(rightTurnReturn, 500, -42, 30, false, 0); // was -45, 30
+                QRDTurn(rightTurnReturn, 500, -45, 30, false, 0); // was -45, 30
         }
         Serial.println("end turn ");
-        delay(800);
+        delay(150);
 }

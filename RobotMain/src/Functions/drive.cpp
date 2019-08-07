@@ -394,3 +394,18 @@ void turn_accel(int target, int boost, int boost_time, int power, int timeout){
 //     HI->pushDriveSpeeds(0, 0);
 //     HI->update();
 //   }
+
+void jiggle(){
+    HardwareInterface* HI = HardwareInterface::i();
+    HI->pushDriveSpeeds(0, 60/1.13);
+    delay(100);
+     HI->pushDriveSpeeds(60, 0);
+    delay(100);
+       HI->pushDriveSpeeds(0, 60/1.13);
+    delay(100);
+     HI->pushDriveSpeeds(60, 0);
+    delay(100);
+       HI->pushDriveSpeeds(0, 0);
+    delay(100);
+    
+}

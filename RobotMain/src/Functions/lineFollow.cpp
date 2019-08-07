@@ -150,13 +150,13 @@ void Post1Turn(bool rightStart){
     if(rightStart){
         //turn_single_constant(92, 10000, 38);
     }else{//leftStart
-        turn_single_constant(-100, 10000, 45); //turning to the left // was -76 //w as -80 //was 83(U) //was 87 (U) //89 U // 95 U //98 U
+        turn_single_constant(-89, 10000, 45); //turning to the left // was -76 //w as -80 //was 83(U) //was 87 (U) //89 U // 95 U //98 U
     }
     delay(800);
     HI->update();
 
     //Drive to post
-    drive_stop(49, 50/1.15, 70, 70/1.15, 400, 1000, 50);
+    drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1000, 50);
 
     delay(800);
 }
@@ -169,13 +169,13 @@ void Post1Turn(bool rightStart){
     if(rightStart){
         //turn_single_constant(92, 10000, 38);
     }else{//leftStart
-        turn_single_constant(-80, 10000, 45); //turning to the left //-73 not enough
+        turn_single_constant(-77, 10000, 45); //turning to the left //-73 not enough
     }
     delay(800);
     HI->update();
 
     //Drive to post
-    drive_stop(48, 50/1.15, 70, 70/1.15, 400, 1000, 50); // was 
+    drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1000, 50); // was 
 
     delay(800);
 
@@ -227,26 +227,26 @@ void Post6Turn(bool rightStart){
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();  
     stopMoving();
-    delay(1000);
+    delay(750);
     if(rightStart){
         //turn_single_constant(99, 10000, 45);
     }else{//leftStart
-        turn_single_constant(82, 10000, 38); //turn to right // wsa 86 (O) //84 (O) //83 O
+        turn_single_constant(78, 10000, 34); //turn to right // wsa 86 (O) //84 (O) //83 O
     }
-    delay(3000);
+    delay(750);
     HI->update();
 
     //Drive to post
-    drive_stop(47, 50/1.15, 70, 70/1.15, 400, 1500, 50); //was 49 (too mich right)//similiar, 48
+    drive_stop(45, 45/1.13, 70, 70/1.13, 250, 1500, 50); //was 49 (too mich right)//similiar, 48
 
-    delay(2000);
+    delay(800);
 }
 
 bool detectJunction(){
     HardwareInterface* HI = HardwareInterface::i();
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.75){
+        if (HI->QRD_Vals[i] > 0.715){
             count++;
         }
     }

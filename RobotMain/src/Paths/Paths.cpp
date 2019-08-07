@@ -89,9 +89,17 @@ void path16L(){
     //junction1 - Gaunt - Getting stone 1
 
 
+    int startTime = millis();
+
+
+
     while(true){
         HI->update();
-        followTape(60, false, false);
+        if (millis() - startTime < 7000){
+            followTape(60, false, false);}
+        else{
+           followTape(45, false, false); 
+        }
         if(detectJunction()){
             Serial.println("J1 Detected!");
             Serial.println("-------------------------------------");
@@ -124,7 +132,7 @@ void path16L(){
     //at post now
 
     //go for stone colleting
-    getStoneFromPillar(229, 295, false,10000); //was 225 //228, just barely low
+    getStoneFromPillar(229, 300, false,10000); //was 225 //228, just barely low
 
     //on path ready to follow line
     //junction 4 -Y - Stone1 to gaunt
@@ -142,13 +150,13 @@ void path16L(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRDTurn(false,900, -48, 30, true,750);
+            QRDTurn(false,900, -48, 30, true,600);
             break;
         }
     }
 
     
-    int startTime = millis();
+    startTime = millis();
     //follow line for little more
     while(millis()-startTime < 1300){
         HI->update();
@@ -156,35 +164,46 @@ void path16L(){
     }
 
     //go to detect guanlet
-     drive_stop(49, 50/1.15, 70, 60/1.15, 300, 1500, 50);
+     drive_stop(45, 45/1.13, 70, 70/1.13, 300, 1500, 50);
 
     //line up to drop stone
-    
-    
-    delay(1000);
+    jiggle();
+    delay(300);
 
     
+    //old double turn
+    // //left
+    // turn_single_constant(101, 100000, 38); //right // was 107 // 105 (too muach) //103 toomuch 
+    // delay(750);
 
-    //left
-    turn_single_constant(102, 100000, 38); //right // was 107 // 105 (too muach) //103 toomuch 
-    delay(750);
+    // turn_single_constant(-106, 100000, 45);//left // was -103 //waas -104 U //105 U
+    // delay(750);
+    // drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1500, 50);
 
-    turn_single_constant(-106, 100000, 45);//left // was -103 //waas -104 U //105 U
-    delay(750);
-    drive_stop(49, 50/1.15, 70, 70/1.15, 300, 1500, 50);
+
+        // //left
+
+    turn_single_constant(-28, 100000, 45);//left
+    delay(500);
+    moveIntake(42,18,10000);
+    delay(500);
+    HI->pushDriveSpeeds(50, 50/1.13);
+    delay(130);
+    HI->clawMotor->clawSetPos(10);
+    HI->pushDriveSpeeds(33, 33/1.13);
+    delay(800);
 
     
     //SCORE STONE AND LOWER
-    moveIntake(50,18,10000);
-    HI->clawMotor->clawSetPos(10);
-    delay(500);
+    HI->pushDriveSpeeds(0, 0);
+    delay(800);
     //jdubDrive(-1, 30, 40, 32, 3000, 0.4, 0.6, 0);
-    HI->pushDriveSpeeds(-60, -60/1.15);
-    delay(100);
+    HI->pushDriveSpeeds(-60, -60/1.13);
+    delay(125);
     HI->pushDriveSpeeds(0, 0);
 
 
-    QRDTurn(false, 800, -48, 30, false,0);    
+    QRDTurn(false, 300, -40, 31, false,0);   // more right, less left 
 
     delay(500);
 
@@ -212,7 +231,7 @@ void path16L(){
     //on post now
 
     //go for stone colleting
-    getStoneFromPillar(324, 375, true, 10000); //355 (way over) //was 345 over //was 335 O //318 too low //323, barrley yo low
+    getStoneFromPillar(339, 370, true, 10000); //355 (way over) //was 345 over //was 335 O //318 too low //323, barrley yo low
 
     //line follower to  Y - stone 2 to gaunt
     while(true){
@@ -229,7 +248,7 @@ void path16L(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRDTurn(false,900, -48, 30, true,750);
+            QRDTurn(false,900, -48, 30, true,600);
             break;
         }
     }
@@ -244,43 +263,49 @@ void path16L(){
     }
 
        //go to detect guanlet
-     drive_stop(49, 50/1.15, 70, 60/1.15, 300, 1500, 50);
+     drive_stop(45, 45/1.13, 70, 70/1.13, 200, 1500, 50);
 
     //line up to drop stone
     
-    
-    delay(1000);
+    jiggle();
+    delay(800);
     
 
-//align 
-    turn_single_constant(-108, 100000, 45);//left 
-    delay(750);
-    turn_single_constant(106, 100000, 38); //right // was 107
-    delay(750);
-    drive_stop(48, 51/1.15, 70, 70/1.15, 400, 1500, 50); //was 49 on left //was 50 on right
-        //SCORE STONE AND LOWER
-    moveIntake(50,18,10000);
+    // turn_single_constant(-108, 100000, 45);//left
+    // delay(750);
+    // turn_single_constant(107, 100000, 38); //right
+    // delay(750);
+    // drive_stop(45, 45/1.13, 70, 70/1.13, 300, 1500, 50);
+    //   
+
+
+
+    turn_single_constant(34, 100000, 36); //right // was 107 // 105 (too muach) //103 toomuch 
+    moveIntake(42,18,10000);
+    delay(500);
+    HI->pushDriveSpeeds(50, 50/1.13);
+    delay(130);
     HI->clawMotor->clawSetPos(10);
+    HI->pushDriveSpeeds(33, 33/1.13);
+    delay(800);
+    HI->pushDriveSpeeds(0, 0);
+    delay(800);
+    // turn_single_constant(107, 100000, 38); //right
+    // delay(750);
+    // drive_stop(45, 45/1.13, 70, 70/1.13, 300, 1500, 50);
+    //       
 
-    delay(1000);
 
     //Stone 2 Scored!
 
-    HI->pushDriveSpeeds(-60, -60/1.15);
-    delay(550);
+    HI->pushDriveSpeeds(-58, -60/1.13);//slowed down left time
+    delay(450);//550;
     HI->pushDriveSpeeds(0, 0);
     delay(300);
-    
-        HI->pushDriveSpeeds(0, 60);
-     delay(600);
-    HI->pushDriveSpeeds(0, 0);
-    delay(300);
-    //turn_single_constant(-60, 2500, 45); // turn to assist QRD
 
+    QRDTurn(false, 450, -44, 38, false,0);    
 
-    QRDTurn(false, 50, -48, 30, false,0);    
-
-    delay(500);
+    delay(200);
 
 
     //moving to next pillar:
@@ -308,20 +333,26 @@ void path16L(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            moveIntake(250, 48, 2500);
+            //moveIntake(250, 48, 2500);
             Post2Turn(false);
             break;
         }
     }
 
-    getStoneFromPillar(164, 220, true, 10000);  // 165, too high
+    getStoneFromPillar(173, 245, false, 10000);  // 165, too high
 
     //T - stone 3 to gaunt
+    startTime = millis();
+     while(millis()-startTime < 400){
+        HI->update();
+        followTape(robotSpeed, false, false);
+    }
 
     while(true){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
+            LEdgeTurn();
             break;
         }
     }
@@ -341,7 +372,7 @@ void path16L(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            QRDTurn(false,900, -48, 30, true,675);
+            QRDTurn(false,900, -48, 30, true,600);
             break;
         }
     }
@@ -356,25 +387,43 @@ void path16L(){
     }
 
        //go to detect guanlet
-     drive_stop(49, 50/1.15, 70, 60/1.15, 300, 1500, 50);
+     drive_stop(45, 45/1.13, 70, 70/1.13, 300, 1500, 50);
 
     //line up to drop stone 3
-    
+     jiggle();
     
     delay(1000);
     
 
-        //align 
-    turn_single_constant(-108, 100000, 45);//left
-    delay(750);
-    turn_single_constant(107, 100000, 38); //right
-    delay(750);
-    drive_stop(49, 50/1.15, 70, 70/1.15, 300, 1500, 50);
+    
+    turn_single_constant(-16, 100000, 45);//left
+    delay(500);
+    
+
+    HI->pushDriveSpeeds(60, 60/1.13);
+    delay(350);
+    HI->pushDriveSpeeds(0, 0);
+    delay(100);
+
+
+    //     //align 
+    // turn_single_constant(-108, 100000, 45);//left
+    // delay(750);
+    // turn_single_constant(107, 100000, 38); //right
+    // delay(750);
+    // drive_stop(49, 50/1.15, 70, 70/1.15, 300, 1500, 50);
+
+
         //SCORE STONE AND LOWER
-    moveIntake(40,18,10000);
-    //HI->clawMotor->clawSetPos(104); //no claw release for final attempt!
+    moveIntake(42,18,10000);
+    //HI->clawMotor->clawSetPos(10);
+    
+    HI->pushDriveSpeeds(38, 38/1.13);
+    delay(300);
+    HI->pushDriveSpeeds(0, 0);
+    delay(800);
 
-    delay(1000);
+    delay(100000);
 
     //Stone 2 Scored!
 
