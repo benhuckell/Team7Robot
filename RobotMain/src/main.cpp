@@ -58,13 +58,27 @@ void setup() {
       display.display();
       
       if(rightStart){
-        path534R();
-        //path654R();
+        if(analogRead(CONTROL_POT_1) > 512){
+            Serial.println("1, >500");
+            path534R();
+        }
+        else{
+          Serial.println("1, <500");
+          path654R();
+        }
       }
+
       else{//leftStart
-        path621L();
-        //path561L();
+        if(analogRead(CONTROL_POT_2) > 512){
+           Serial.println("2, >500");
+          path621L();
       }
+      else{
+         Serial.println("2, <500");
+        path561L();
+      }
+      }
+    
     }
     //HardwareInterface::i()->update();
     count++;

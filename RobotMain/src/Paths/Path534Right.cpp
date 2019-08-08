@@ -6,6 +6,7 @@
 #include "Functions/lift.h"
 
 void path534R(){
+
     HardwareInterface* HI = HardwareInterface::i();
     
     int robotSpeed = 50;
@@ -94,10 +95,10 @@ void path534R(){
 
     //Line up with gauntlet hole
     //turn_single_constant(27, 100000, 36);
-    time_turn(false, 36, 470, 10);
+    time_turn(false, 36, 440, 10);
 
     //Lower intake 
-    moveIntake(37,18,5000);
+    moveIntake(43,18,5000); //was 37
     delay(500);
 
     //jolt forwards
@@ -217,7 +218,7 @@ void path534R(){
     
     //Line up with gauntlet hole
     //turn_single_constant(-26, 100000, 45);//left
-    time_turn(true, 46, 455, 10);
+    time_turn(true, 46, 430, 10);
     //Lower intake
     moveIntake(35,18,10000);//
     delay(500);
@@ -319,7 +320,7 @@ void path534R(){
     
     //Line up with gauntlet hole
     //turn_single_constant(-18, 100000, 45);//left
-    time_turn(true, 45, 410, 10);
+    time_turn(true, 45, 355, 10);
     delay(500);
 
     HI->pushDriveSpeeds(-33,-33/1.13);

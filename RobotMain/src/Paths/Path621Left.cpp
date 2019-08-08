@@ -6,6 +6,8 @@
 #include "Functions/lift.h"
 
 void path621L(){
+
+
     HardwareInterface* HI = HardwareInterface::i();
     
     int robotSpeed = 50;
@@ -17,7 +19,7 @@ void path621L(){
         if (millis() - startTime < 7000){
             followTape(60, false, false);}
         else{
-            followTape(50, false, false); 
+            followTape(40, false, false); 
         }
         if (detectBumpInRoad(0.35)){
             //do nothing
@@ -96,7 +98,7 @@ void path621L(){
     //turn_single_constant(-27, 100000, 45);
     time_turn(true, 46, 370, 10); 
     //Begin to move intake down
-    moveIntake(37,18,5000);
+    moveIntake(39,18,5000);
     delay(500);
 
     //Jolt Forwareds
@@ -108,7 +110,7 @@ void path621L(){
 
     //push stone into hole
     HI->pushDriveSpeeds(32, 32/1.13);
-    delay(800);
+    delay(200);
 
     //Stop moving once stone deposited
     HI->pushDriveSpeeds(0, 0);
@@ -162,7 +164,7 @@ void path621L(){
 
     //Collect Stone 2
     //getStoneTopDown(172, 151, 200, false, 10000);
-    getStoneMAXUPReset(550, 151, 200, false, 10000);
+    getStoneMAXUPReset(560, 151, 200, false, 10000);
     //On path ready to follow line back to gauntlet
     //line follower to  Y - stone 2 to gaunt
     while(true){
@@ -211,10 +213,10 @@ void path621L(){
 
     //Turn to line up with hole
     //turn_single_constant(27, 100000, 45);
-    time_turn(false, 36, 442, 10);
+    time_turn(false, 36, 410, 10);
 
     //Begin to lower intake
-    moveIntake(37,18,10000);
+    moveIntake(38,18,10000);
     delay(500);
 
     //Jolt forwards
@@ -272,7 +274,7 @@ void path621L(){
 
     //Go back a bit more
     HI->pushDriveSpeeds(-33,-33/1.13);
-    delay(150);
+    delay(130);
     HI->pushDriveSpeeds(0,0);
     
     //At post, lined up

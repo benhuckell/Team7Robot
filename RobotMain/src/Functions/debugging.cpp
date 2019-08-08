@@ -33,11 +33,24 @@ void debugging_loop(){
     // display.print("PB2: ");
     // display.println(digitalRead(PUSH_BUTTON_2));
 
-    display.println(rightStart);
-    display.print("k_p: ");
-    display.println(float(analogRead(CONTROL_POT_1))/float(200.0));
-    display.print("k_d: ");
-    display.println(float(analogRead(CONTROL_POT_2))/float(7.5));
+    if(rightStart){
+        if(analogRead(CONTROL_POT_1) > 512){
+            display.println("Path 534 - Right");
+        }
+        else{
+            display.println("Path 654 - Right");
+        }
+    }
+
+    else{//leftStart
+        if(analogRead(CONTROL_POT_2) > 512){
+            display.println("Path 621 - Left");
+
+      }
+      else{
+          display.println("Path 561 - Left");
+      }
+    }
 
     if(digitalRead(PUSH_BUTTON_2) && calibrateMode == false){ 
         delay(1000);

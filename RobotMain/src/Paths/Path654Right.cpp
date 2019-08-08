@@ -6,15 +6,18 @@
 #include "Functions/lift.h"
 
 void path654R(){
+
+
     HardwareInterface* HI = HardwareInterface::i();
     
     int robotSpeed = 50;
+    int robotSpeed_slow = 50;
     int startTime = millis();
 
     //Start Following Tape until first Junction
     while(true){
         HI->update();
-        if (millis() - startTime < 7500){
+        if (millis() - startTime < 7000){
             followTape(60, false, false);}
         else{
             followTape(38, false, false); 
@@ -24,6 +27,7 @@ void path654R(){
         }
         else if(detectJunction(0.85)){
             REdgeTurn();
+            //REdgeTurn_CUSTOM();
             break;
         }
     }
@@ -112,9 +116,9 @@ void path654R(){
     //Drop Stone 1
     //Turn to gauntlet hole angle
     //turn_single_constant(29, 5000, 36);
-    time_turn(false, 36, 470, 10);
+    time_turn(false, 36, 440, 10);
     //Begin to move intake down
-    moveIntake(42,18,10000);
+    moveIntake(43,18,10000);
     delay(500);
 
     //Jolt Forwareds
@@ -170,7 +174,7 @@ void path654R(){
 
     //Collect Stone 2
     //getStoneFromPillar(330, 357, false, 10000); 
-     getStoneMAXUPReset(1500, 348, 380, false, 10000);
+     getStoneMAXUPReset(1600, 348, 380, false, 10000);
 
     //On path ready to follow line back to gauntlet
     //line follower to  Y - stone 2 to gaunt
@@ -188,7 +192,7 @@ void path654R(){
         HI->update();
         followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(true,900, 33, -30, true,500);
+            QRDTurn(true,700, 33, -30, true,500);
             break;
         }
     }
@@ -210,7 +214,7 @@ void path654R(){
 
     //Turn to line up with hole
     //turn_single_constant(-28, 5000, 45);
-    time_turn(true, 46, 450, 10);
+    time_turn(true, 46, 430, 10);
     delay(500);
     //Begin to lower intake
     moveIntake(35,18,10000);
@@ -270,14 +274,14 @@ void path654R(){
 
     //Go back a bit more
     HI->pushDriveSpeeds(-33,-33/1.13);
-    delay(150);
+    delay(130);
     HI->pushDriveSpeeds(0,0);
     
     //At post, lined up
 
     //Retrieve stone from post
     //getStoneFromPillar(250, 285, true,10000); //was 225 //228, just barely low
-    getStoneMAXUPReset(1000, 237, 290, true, 10000);
+    getStoneMAXUPReset(1200, 237, 290, true, 10000);
     //Collected stone, on line
 
     //line follower to  Y - stone 3 to gaunt

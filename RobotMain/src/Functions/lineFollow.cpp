@@ -136,6 +136,15 @@ void REdgeTurn(){
     }
 }
 
+void REdgeTurn_CUSTOM(){
+    int startTime = millis();
+    HardwareInterface* HI = HardwareInterface::i();
+    while(millis()-startTime < 800){
+        followTape(ROBOTSPEED, true, true);//follow right edge
+        HI->update();
+    }
+}
+
 
 void Post1Turn(bool rightStart){
     HardwareInterface* HI = HardwareInterface::i();  
@@ -186,7 +195,7 @@ void Post3Turn(bool rightStart){
     delay(300);
     if(rightStart){
         //turn_single_constant(74, 10000, 38);
-        time_turn(false, 42, 680, 10);
+        time_turn(false, 42, 630, 10);
     }else{//leftStart
         //turn_single_constant(-71, 10000, 42);
         time_turn(true, 42, 685, 10);
@@ -226,7 +235,7 @@ void Post5Turn(bool rightStart){
     delay(300);
     if(rightStart){
         //turn_single_constant(-77, 10000, 38);
-        time_turn(true, 42, 770, 10);
+        time_turn(true, 42, 765, 10);
     }
     else{ //leftStart
         time_turn(false, 42, 580, 10);
@@ -252,7 +261,7 @@ void Post6Turn(bool rightStart){
     }
     else{ //leftStart
         //turn_single_constant(74, 10000, 42); //turn to right // wsa 86 (O) //84 (O) //83 O
-        time_turn(false, 42, 640, 10);
+        time_turn(false, 42, 630, 10);
     }
 
     delay(600);

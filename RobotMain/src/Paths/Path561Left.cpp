@@ -7,15 +7,6 @@
 
 void path561L(){
 
-    // while(true){
-    //     getStoneFromPillar(330,375,false,5000);
-    //     moveIntake(42,18,10000);
-    //     delay(500);
-    //     getStoneFromPillar(330,375,false,5000);
-    //     moveIntake(42,18,10000);
-    //     delay(500);
-    // }
-
 
 
 
@@ -30,7 +21,7 @@ void path561L(){
         if (millis() - startTime < 7000){
             followTape(60, false, false);}
         else{
-            followTape(50, false, false); 
+            followTape(40, false, false); 
         }
         if (detectBumpInRoad(0.35)){
             //do nothing

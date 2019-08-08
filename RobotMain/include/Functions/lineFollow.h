@@ -35,4 +35,5 @@ void Post6Turn(bool rightStart);
 bool detectJunction(float thres = 0.8);
 
 bool detectBumpInRoad(float thres);
+void REdgeTurn_CUSTOM();
 #endif
