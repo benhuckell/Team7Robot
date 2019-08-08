@@ -55,8 +55,8 @@ void path534R(){
     //go for stone colleting first post
     //getStoneFromPillar(328, 350, false, 10000);
     //new
-    getStoneTopDown(372, 348, 372, false, 10000);
-
+    //getStoneTopDown(372, 348, 372, false, 10000);
+     getStoneMAXUPReset(1000, 348, 380, false, 10000);
     //on path ready to follow line
     //junction 4 -Y - Stone1 to gaunt
     while(true){
@@ -93,14 +93,14 @@ void path534R(){
     delay(300);
 
     //Line up with gauntlet hole
-    turn_single_constant(27, 100000, 38);
+    turn_single_constant(27, 100000, 36);
 
     //Lower intake 
     moveIntake(37,18,5000);
     delay(500);
 
     //jolt forwards
-    HI->pushDriveSpeeds(45, 45/1.13);
+    HI->pushDriveSpeeds(50, 50/1.13);
     delay(130);
 
     //open claw to release stone
@@ -160,7 +160,8 @@ void path534R(){
 
     //go for stone colleting second post
     //getStoneFromPillar(156, 200, true, 10000);  
-    getStoneTopDown(170, 145, 200, true, 10000);
+    //getStoneTopDown(170, 145, 200, true, 10000);
+    getStoneMAXUPReset(550, 151, 200, true, 10000);
 
     // //line follower to  Y - stone 2 to gaunt
     // startTime = millis();
@@ -214,7 +215,7 @@ void path534R(){
     delay(800);
     
     //Line up with gauntlet hole
-    turn_single_constant(-27, 100000, 45);//left
+    turn_single_constant(-26, 100000, 45);//left
 
     //Lower intake
     moveIntake(35,18,10000);//
@@ -277,8 +278,8 @@ void path534R(){
     delay(105);
     HI->pushDriveSpeeds(0,0);
 
-    getStoneTopDown(265, 237, 290, true, 10000);
-
+    //getStoneTopDown(265, 237, 290, true, 10000);
+    getStoneMAXUPReset(950, 237, 290, true, 10000);
     //T - stone 3 to gaunt
     while(true){
         HI->update();
@@ -316,7 +317,7 @@ void path534R(){
     delay(800);
     
     //Line up with gauntlet hole
-    turn_single_constant(-17, 100000, 45);//left
+    turn_single_constant(-18, 100000, 45);//left
     delay(500);
 
     HI->pushDriveSpeeds(-33,-33/1.13);

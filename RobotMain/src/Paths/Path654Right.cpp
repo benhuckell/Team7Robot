@@ -17,9 +17,12 @@ void path654R(){
         if (millis() - startTime < 7500){
             followTape(60, false, false);}
         else{
-            followTape(45, false, false); 
+            followTape(50, false, false); 
         }
-        if(detectJunction()){
+        if (detectBumpInRoad(0.35)){
+            //do nothing
+        }
+        else if(detectJunction(0.85)){
             REdgeTurn();
             break;
         }
@@ -58,8 +61,8 @@ void path654R(){
     //at post now, lined up
 
     //Collect Stone from Post 1
-    getStoneFromPillar(330, 357, false, 10000); 
-
+    //getStoneFromPillar(330, 357, false, 10000); 
+    getStoneMAXUPReset(1000, 348, 380, false, 10000);
     //On path ready to follow line back to gauntlet
     //junction 4 -Y - Stone1 to gauntlet
     while(true){
@@ -166,7 +169,8 @@ void path654R(){
     //at post, lined up
 
     //Collect Stone 2
-    getStoneFromPillar(330, 357, false, 10000); 
+    //getStoneFromPillar(330, 357, false, 10000); 
+     getStoneMAXUPReset(1000, 348, 380, false, 10000);
 
     //On path ready to follow line back to gauntlet
     //line follower to  Y - stone 2 to gaunt
@@ -271,8 +275,8 @@ void path654R(){
     //At post, lined up
 
     //Retrieve stone from post
-    getStoneFromPillar(250, 285, true,10000); //was 225 //228, just barely low
-
+    //getStoneFromPillar(250, 285, true,10000); //was 225 //228, just barely low
+    getStoneMAXUPReset(800, 237, 290, true, 10000);
     //Collected stone, on line
 
     //line follower to  Y - stone 3 to gaunt

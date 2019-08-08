@@ -408,3 +408,31 @@ void jiggle(){
     delay(100);
     
 }
+
+
+void time_turn(bool left, int power, int timeout, int brakepower){
+  //
+    HardwareInterface* HI = HardwareInterface::i(); 
+    int startTime = millis();
+    HI->update();
+    int dir = 0;
+
+    if (left){
+      HI->pushDriveSpeeds(-power, 0);
+    }
+    else{
+      HI->pushDriveSpeeds(0, -power);
+    }
+    while(millis() - startTime < timeout){
+     delay(10); 
+    }
+
+    if (left){
+      HI->pushDriveSpeeds(brakepower, 0);
+    }
+    else{
+      HI->pushDriveSpeeds(0, brakepower);
+    }
+    delay(100);
+     HI->pushDriveSpeeds(0, 0);
+}

@@ -74,8 +74,9 @@ void path561L(){
     //at post now, lined up
 
     //Collect Stone from Post 1
-    getStoneTopDown(345, 342, 357, true, 10000);
-
+    //getStoneTopDown(345, 342, 357, true, 10000);
+    getStoneMAXUPReset(1000, 348, 380, true, 10000);
+    
     //On path ready to follow line back to gauntlet
     //junction 4 -Y - Stone1 to gauntlet
     while(true){
@@ -182,8 +183,9 @@ void path561L(){
     //at post, lined up
 
     //Collect Stone 2
-    getStoneTopDown(345, 342, 357, true, 10000);
-
+    //getStoneTopDown(345, 342, 357, true, 10000);
+    getStoneMAXUPReset(1000, 348, 380, true, 10000);
+    
     //On path ready to follow line back to gauntlet
     //line follower to  Y - stone 2 to gaunt
     while(true){
@@ -289,8 +291,8 @@ void path561L(){
     //At post, lined up
 
     //Retrieve stone from post
-    getStoneTopDown(265, 242, 290, false, 10000);
-
+    //getStoneTopDown(265, 242, 290, false, 10000);
+getStoneMAXUPReset(800, 237, 290, false, 10000);
     //Collected stone, on line
 
     //line follower to  Y - stone 3 to gaunt
@@ -336,7 +338,6 @@ void path561L(){
     HI->pushDriveSpeeds(-33,-33/1.13);
     delay(100);
     HI->pushDriveSpeeds(0,0);
-    
     //Begin to lower intake
     moveIntake(43,18,10000);
     delay(500);

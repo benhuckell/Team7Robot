@@ -8,3 +8,4 @@ void jdubDrive(int direction, int target, int maxpower, int minpower, unsigned i
 void QRDTurn(bool rightTurn, int deadtime, int powerL, int powerR, bool followTapeVar, int followTapeDuration);
 void turn_single_constant(int target, unsigned int timeout, int robotSpeed);
 void jiggle();
+void time_turn(bool left, int power, int timeout, int brakepower);
