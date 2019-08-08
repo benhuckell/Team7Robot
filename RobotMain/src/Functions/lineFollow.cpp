@@ -121,7 +121,7 @@ void lineFollowSetup(){
 void LEdgeTurn(){
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();
-    while(millis()-startTime < 400){
+    while(millis()-startTime < 550){
         followTape(ROBOTSPEED, false, true);//follow left edge
         HI->update();
     }
@@ -130,7 +130,7 @@ void LEdgeTurn(){
 void REdgeTurn(){
     int startTime = millis();
     HardwareInterface* HI = HardwareInterface::i();
-    while(millis()-startTime < 400){
+    while(millis()-startTime < 550){
         followTape(ROBOTSPEED, true, true);//follow right edge
         HI->update();
     }
@@ -181,7 +181,7 @@ void Post3Turn(bool rightStart){
     stopMoving();
     delay(300);
     if(rightStart){
-        turn_single_constant(74, 10000, 38);
+        turn_single_constant(71, 10000, 38);
     }else{//leftStart
         turn_single_constant(-71, 10000, 42);
     }
@@ -200,7 +200,7 @@ void Post4Turn(bool rightStart){
     stopMoving();
     delay(300);
     if(rightStart){
-        turn_single_constant(75, 10000, 38);
+        turn_single_constant(71, 10000, 38);
     }
     else{ //leftStart
         turn_single_constant(-71, 10000, 42);
@@ -217,10 +217,10 @@ void Post5Turn(bool rightStart){
     stopMoving();
     delay(300);
     if(rightStart){
-        turn_single_constant(-86, 10000, 42);
+        turn_single_constant(-85, 10000, 38);
     }
     else{ //leftStart
-        turn_single_constant(84, 10000, 38);
+        turn_single_constant(84, 10000, 42);
     }
     delay(600);
     HI->update();
@@ -237,10 +237,10 @@ void Post6Turn(bool rightStart){
     delay(300);
 
     if(rightStart){
-        turn_single_constant(-78, 10000, 42);
+        turn_single_constant(-78, 10000, 38);
     }
     else{ //leftStart
-        turn_single_constant(78, 10000, 38); //turn to right // wsa 86 (O) //84 (O) //83 O
+        turn_single_constant(78, 10000, 42); //turn to right // wsa 86 (O) //84 (O) //83 O
     }
 
     delay(600);
@@ -252,15 +252,29 @@ void Post6Turn(bool rightStart){
     delay(600);
 }
 
-bool detectJunction(){
+bool detectJunction(float thres){
     HardwareInterface* HI = HardwareInterface::i();
     int count = 0;
     for(int i = 0; i < numSensors; i ++){
-        if (HI->QRD_Vals[i] > 0.8){
+        if (HI->QRD_Vals[i] > thres){
             count++;
         }
     }
     if(count >= 4){
+        return true;
+    }
+    return false;
+}
+
+bool detectBumpInRoad(float thres){
+    HardwareInterface* HI = HardwareInterface::i();
+    int count = 0;
+    for(int i = 0; i < numSensors; i ++){
+        if (HI->QRD_Vals[i] > thres){
+            count++;
+        }
+    }
+    if(count >= 6){
         return true;
     }
     return false;

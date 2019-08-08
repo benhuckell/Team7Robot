@@ -34,10 +34,11 @@ void moveIntake(int abs_target, int speed, int timeout){
     Serial.println("Winch speed: " + String(speed*direction));
     Serial.println("WINCH move relativeTar: " + String(relativeTarget));
     Serial.println("WINCH move start: " + String(startingTicks));
-
+    Serial.println("encdoer cout RAW: " + String(HI->WinchEncoder->getCount()));
     while(( abs(HI->WinchEncoder->getCount() - startingTicks) < abs(relativeTarget))&& (millis() - startTime < timeout)){
         Serial.println("moving");
         delay(10);
+        Serial.println("encdoer cout RAW: " + String(HI->WinchEncoder->getCount()));
     }
 
     Serial.println("Exit loop");

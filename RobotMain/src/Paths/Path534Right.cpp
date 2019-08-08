@@ -7,7 +7,6 @@
 
 void path534R(){
     HardwareInterface* HI = HardwareInterface::i();
-
     
     int robotSpeed = 50;
     int startTime = millis();
@@ -18,9 +17,12 @@ void path534R(){
         if (millis() - startTime < 7000){
             followTape(60, false, false);}
         else{
-           followTape(45, false, false); 
+           followTape(50, false, false); 
         }
-        if(detectJunction()){
+        if (detectBumpInRoad(0.35)){
+            //do nothing
+        }
+        else if(detectJunction(0.85)){
             REdgeTurn();
             break;
         }
@@ -51,7 +53,9 @@ void path534R(){
     //at post, lined up
 
     //go for stone colleting first post
-    getStoneFromPillar(330, 357, false, 10000);
+    //getStoneFromPillar(328, 350, false, 10000);
+    //new
+    getStoneTopDown(372, 348, 372, false, 10000);
 
     //on path ready to follow line
     //junction 4 -Y - Stone1 to gaunt
@@ -67,9 +71,9 @@ void path534R(){
     //junction 5 - Gaunt - stone1 to gaunt
     while(true){
         HI->update();
-        followTape(35, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(true,900, 36, -32, true,600);
+            QRDTurn(true,600, 33, -30, true,500);
             break;
         }
     }
@@ -78,7 +82,7 @@ void path534R(){
     startTime = millis();
     while(millis()-startTime < 1300){
         HI->update();
-        followTape(39, false, false);
+        followTape(35, false, false);
     }
 
     //go to detect guanlet
@@ -89,10 +93,10 @@ void path534R(){
     delay(300);
 
     //Line up with gauntlet hole
-    turn_single_constant(29, 100000, 36);
+    turn_single_constant(27, 100000, 38);
 
     //Lower intake 
-    moveIntake(37,18,10000);
+    moveIntake(37,18,5000);
     delay(500);
 
     //jolt forwards
@@ -119,7 +123,8 @@ void path534R(){
     HI->pushDriveSpeeds(-60, -60/1.13);
     delay(250);
     HI->pushDriveSpeeds(0, 0);
-    QRDTurn(true, 300, 36, -30, false,0);   // more right, less left 
+    delay(300);
+    QRDTurn(true, 200, 33, -29, false,0);   // more right, less left 
 
     //Y junctions - GETTING STONE #2
     //J1
@@ -154,7 +159,8 @@ void path534R(){
     //on post now
 
     //go for stone colleting second post
-    getStoneFromPillar(157, 200, true, 10000);  
+    //getStoneFromPillar(156, 200, true, 10000);  
+    getStoneTopDown(170, 145, 200, true, 10000);
 
     // //line follower to  Y - stone 2 to gaunt
     // startTime = millis();
@@ -185,19 +191,18 @@ void path534R(){
     //line follower to Gaunt. stone 2 to gaunt
     while(true){
         HI->update();
-        followTape(35, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(true,900, 36, -32, true,600);
+            QRDTurn(true,600, 33, -30, true,500);
             break;
         }
     }
 
-    
     startTime = millis();
     //follow line for little more
     while(millis()-startTime < 1300){
         HI->update();
-        followTape(39, false, false);
+        followTape(35, false, false);
         HI->update();
     }
 
@@ -209,10 +214,10 @@ void path534R(){
     delay(800);
     
     //Line up with gauntlet hole
-    turn_single_constant(-29, 100000, 45);//left
+    turn_single_constant(-27, 100000, 45);//left
 
     //Lower intake
-    moveIntake(37,18,10000);//
+    moveIntake(35,18,10000);//
     delay(500);
 
     //Jolt forwards
@@ -241,7 +246,7 @@ void path534R(){
     delay(450);
     HI->pushDriveSpeeds(0, 0);
     delay(300);
-    QRDTurn(true, 300, 36, -30, false,0);    
+    QRDTurn(true, 300, 33, -29, false,0);    
     delay(200);
 
 
@@ -269,10 +274,10 @@ void path534R(){
 
     //Go back a bit more
     HI->pushDriveSpeeds(-33,-33/1.13);
-    delay(150);
+    delay(105);
     HI->pushDriveSpeeds(0,0);
 
-    getStoneFromPillar(250, 285, true,10000);
+    getStoneTopDown(265, 237, 290, true, 10000);
 
     //T - stone 3 to gaunt
     while(true){
@@ -287,9 +292,9 @@ void path534R(){
     //line follower to Gaunt. stone 3 to gaunt
     while(true){
         HI->update();
-        followTape(35, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(true,900, 36, -32, true,600);
+            QRDTurn(true,600, 33, -30, true,500);
             break;
         }
     }
@@ -311,15 +316,20 @@ void path534R(){
     delay(800);
     
     //Line up with gauntlet hole
-    turn_single_constant(-23, 100000, 45);//left
+    turn_single_constant(-17, 100000, 45);//left
+    delay(500);
+
+    HI->pushDriveSpeeds(-33,-33/1.13);
+    delay(100);
+    HI->pushDriveSpeeds(0,0);
 
     //Lower intake
-    moveIntake(37,18,10000);//
+    moveIntake(43,18,10000);//
     delay(500);
 
     //Jolt forwards
-    HI->pushDriveSpeeds(55, 55/1.13);
-    delay(130);
+    HI->pushDriveSpeeds(65, 65/1.13);
+    delay(150);
    
     //Open Claw
     HI->clawMotor->clawSetPos(30);
@@ -330,7 +340,6 @@ void path534R(){
 
     //Stop Moving
     HI->pushDriveSpeeds(0, 0);
-    delay(800); 
 
     delay(100000);
 

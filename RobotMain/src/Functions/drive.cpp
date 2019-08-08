@@ -143,7 +143,7 @@ void drive_stop(int powerL, int powerR, int powerL_dead, int powerR_dead, int de
 
 void stopMoving(){
     HardwareInterface* HI = HardwareInterface::i(); 
-    HI->pushDriveSpeeds(-35, -37/straightLineCorrectionFactor);
+    HI->pushDriveSpeeds(-37, -35/1.16);
     delay(200);
     HI->pushDriveSpeeds(0, 0);
     delay(150);
@@ -223,7 +223,7 @@ void QRDTurn(bool rightTurn, int deadtime,int powerL, int powerR, bool followTap
     if(followTapeVar){
       int startTime = millis();
       while(millis()-startTime < followTapeDuration){
-          followTape(ROBOTSPEED, !rightTurn, true);
+          followTape(30, !rightTurn, true);
           HI->update();
           }
       stopMoving();
@@ -232,19 +232,18 @@ void QRDTurn(bool rightTurn, int deadtime,int powerL, int powerR, bool followTap
 
     int speedL;
     int speedR;
-
   
     speedL = powerL;
     speedR = powerR;
     
-      Serial.println("QRD turn : left case");
+    Serial.println("QRD turn : left case");
     int start_time = millis();
     while(millis() - start_time < deadtime){
         HI->pushDriveSpeeds(speedL, speedR);
-        }
+    }
     HI->update();
-        Serial.println("QRD3i: " + String(HI->QRD_Vals[3]));
-        Serial.println("QRD4i: " + String(HI->QRD_Vals[4]));
+    Serial.println("QRD3i: " + String(HI->QRD_Vals[3]));
+    Serial.println("QRD4i: " + String(HI->QRD_Vals[4]));
     Serial.println("Forced turn end");
     while(HI->QRD_Vals[3] < 0.8 && HI->QRD_Vals[4] < 0.8){
         
@@ -252,13 +251,13 @@ void QRDTurn(bool rightTurn, int deadtime,int powerL, int powerR, bool followTap
          HI->update();
         //Serial.println("QRD3: " + String(HI->QRD_Vals[3]));
         //Serial.println("QRD4: " + String(HI->QRD_Vals[4]));
-        }
-    Serial.println("detected!");
-        HI->pushDriveSpeeds(-speedL/2, -speedR/2);
-        delay(400);
-        HI->pushDriveSpeeds(0, 0);
-        delay(500);
     }
+    Serial.println("detected!");
+    HI->pushDriveSpeeds(-speedL/2, -speedR/2);
+    delay(400);
+    HI->pushDriveSpeeds(0, 0);
+    delay(500);
+}
 
 
 

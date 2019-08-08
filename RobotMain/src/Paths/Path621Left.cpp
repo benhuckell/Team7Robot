@@ -17,9 +17,12 @@ void path621L(){
         if (millis() - startTime < 7000){
             followTape(60, false, false);}
         else{
-            followTape(45, false, false); 
+            followTape(50, false, false); 
         }
-        if(detectJunction()){
+        if (detectBumpInRoad(0.35)){
+            //do nothing
+        }
+        else if(detectJunction(0.85)){
             LEdgeTurn();
             break;
         }
@@ -49,7 +52,7 @@ void path621L(){
     //at post now, lined up
 
     //Collect Stone from Post 1
-    getStoneFromPillar(330, 357, true, 10000); 
+    getStoneTopDown(345, 342, 357, true, 10000);
 
     //On path ready to follow line back to gauntlet
     //junction 4 -Y - Stone1 to gauntlet
@@ -65,10 +68,10 @@ void path621L(){
     //junction 5 - Gaunt - stone1 to gaunt
     while(true){
         HI->update();
-        followTape(35, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
             //Follow Tape, then turn to gauntlet
-            QRDTurn(false,900, -36, 32, true,600);
+            QRDTurn(false,900, -33, 30, true,500);
             break;
         }
     }
@@ -78,7 +81,7 @@ void path621L(){
     //follow line for little more
     while(millis()-startTime < 1300){
         HI->update();
-        followTape(39, false, false);
+        followTape(35, false, false);
     }
 
     //Drive until hit gauntlet
@@ -105,7 +108,7 @@ void path621L(){
 
     //Crawl to hole
     HI->pushDriveSpeeds(32, 32/1.13);
-    delay(800)
+    delay(800);
 
     //Stop moving once stone deposited
     HI->pushDriveSpeeds(0, 0);
@@ -121,7 +124,7 @@ void path621L(){
     HI->pushDriveSpeeds(-60, -60/1.13);
     delay(250);
     HI->pushDriveSpeeds(0, 0);
-    QRDTurn(false, 300, -34, 34, false,0);   // more right, less left 
+    QRDTurn(false, 200, -32, 32, false,0);   // more right, less left 
     delay(500);
 
 
@@ -155,15 +158,10 @@ void path621L(){
         }
     }
 
-    //Go back a bit more
-    HI->pushDriveSpeeds(-33,-33/1.13);
-    delay(150);
-    HI->pushDriveSpeeds(0,0);
-    
     //at post, lined up
 
     //Collect Stone 2
-    getStoneFromPillar(157, 200, false, 10000);
+    getStoneTopDown(170, 150, 200, false, 10000);
 
     //On path ready to follow line back to gauntlet
     //line follower to  Y - stone 2 to gaunt
@@ -188,9 +186,9 @@ void path621L(){
     //line follower to Gaunt. stone 2 to gaunt
     while(true){
         HI->update();
-        followTape(35, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(false,900, -36, 32, true,600);
+            QRDTurn(false,900, -33, 30, true,500);
             break;
         }
     }
@@ -199,7 +197,7 @@ void path621L(){
     //follow line for little more
     while(millis()-startTime < 1300){
         HI->update();
-        followTape(39, false, false);
+        followTape(35, false, false);
         HI->update();
     }
 
@@ -212,10 +210,10 @@ void path621L(){
 
 
     //Turn to line up with hole
-    turn_single_constant(29, 100000, 36);
+    turn_single_constant(28, 100000, 45);
 
     //Begin to lower intake
-    moveIntake(37,18,10000);
+    moveIntake(35,18,10000);
     delay(500);
 
     //Jolt forwards
@@ -245,7 +243,7 @@ void path621L(){
     delay(450);
     HI->pushDriveSpeeds(0, 0);
     delay(300);
-    QRDTurn(false, 450, -34, 34, false,0);    
+    QRDTurn(false, 300, -32, 32, false,0);    
     delay(200);
 
 
@@ -279,7 +277,7 @@ void path621L(){
     //At post, lined up
 
     //Retrieve stone from post
-    getStoneFromPillar(250, 285, false,10000); //was 225 //228, just barely low
+    getStoneTopDown(265,242,290,false,10000);
     
     //Collected stone, on line
 
@@ -296,9 +294,9 @@ void path621L(){
     //line follower to Gaunt. stone 3 to gaunt
     while(true){
         HI->update();
-        followTape(35, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(false,900, -36, 32, true,600);
+            QRDTurn(false,900, -33, 30, true,500);
             break;
         }
     }
@@ -320,16 +318,16 @@ void path621L(){
     delay(300);
 
     //Turn to line up with hole
-    turn_single_constant(-23, 100000, 45);
-
+    turn_single_constant(-17, 100000, 45);
+    delay(500);
 //
     //Begin to lower intake
     moveIntake(43,18,10000);
     delay(500);
 
     //Jolt forwards
-    HI->pushDriveSpeeds(55, 55/1.13);
-    delay(130);
+    HI->pushDriveSpeeds(65, 65/1.13);
+    delay(150);
 
     //Begin to lower claw
     HI->clawMotor->clawSetPos(30);

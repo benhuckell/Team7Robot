@@ -83,10 +83,10 @@ void path654R(){
     //junction 5 - Gaunt - stone1 to gaunt
     while(true){
         HI->update();
-        followTape(35, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
             //Follow Tape, then turn to gauntlet
-            QRDTurn(true,900, 36, -32, true,600);
+            QRDTurn(true,900, 33, -30, true,500);
             break;
         }
     }
@@ -139,7 +139,7 @@ void path654R(){
     HI->pushDriveSpeeds(-60, -60/1.13);
     delay(250);
     HI->pushDriveSpeeds(0, 0);
-    QRDTurn(true, 300, 36, -30, false,0);   // more right, less left 
+    QRDTurn(true, 300, 33, -29, false,0);   // more right, less left 
     delay(500);
 
 
@@ -182,9 +182,9 @@ void path654R(){
     //line follower to Gaunt. stone 2 to gaunt
     while(true){
         HI->update();
-        followTape(35, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(true,900, 36, -32s, true,600);
+            QRDTurn(true,900, 33, -30, true,500);
             break;
         }
     }
@@ -205,10 +205,10 @@ void path654R(){
     delay(800);
 
     //Turn to line up with hole
-    turn_single_constant(-29, 5000, 45);
-
+    turn_single_constant(-28, 5000, 45);
+    delay(500);
     //Begin to lower intake
-    moveIntake(37,18,10000);
+    moveIntake(35,18,10000);
     delay(500);
 
     //Jolt forwards
@@ -238,7 +238,7 @@ void path654R(){
     delay(450);
     HI->pushDriveSpeeds(0, 0);
     delay(300);
-    QRDTurn(true, 450, 36, -30, false,0);    
+    QRDTurn(true, 450, 33, -29, false,0);    
     delay(200);
 
 
@@ -288,9 +288,9 @@ void path654R(){
     //line follower to Gaunt. stone 3 to gaunt
     while(true){
         HI->update();
-        followTape(35, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(true,900, 36, -32, true,600);
+            QRDTurn(true,900, 33, -30, true,500);
             break;
         }
     }
@@ -312,7 +312,7 @@ void path654R(){
     delay(300);
 
     //Turn to line up with hole
-    turn_single_constant(-23, 100000, 45);
+    turn_single_constant(-17, 100000, 45);
 
 //
     //Begin to lower intake

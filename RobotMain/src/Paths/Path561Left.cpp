@@ -30,9 +30,12 @@ void path561L(){
         if (millis() - startTime < 7000){
             followTape(60, false, false);}
         else{
-            followTape(45, false, false); 
+            followTape(50, false, false); 
         }
-        if(detectJunction()){
+        if (detectBumpInRoad(0.35)){
+            //do nothing
+        }
+        else if(detectJunction(0.85)){
             LEdgeTurn();
             break;
         }
@@ -71,7 +74,7 @@ void path561L(){
     //at post now, lined up
 
     //Collect Stone from Post 1
-    getStoneFromPillar(330, 357, true, 10000); 
+    getStoneTopDown(345, 342, 357, true, 10000);
 
     //On path ready to follow line back to gauntlet
     //junction 4 -Y - Stone1 to gauntlet
@@ -96,10 +99,10 @@ void path561L(){
     //junction 5 - Gaunt - stone1 to gaunt
     while(true){
         HI->update();
-        followTape(35, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
             //Follow Tape, then turn to gauntlet
-            QRDTurn(false,900, -36, 32, true,600);
+            QRDTurn(false,900, -33, 30, true,500);
             break;
         }
     }
@@ -109,7 +112,7 @@ void path561L(){
     //follow line for little more
     while(millis()-startTime < 1300){
         HI->update();
-        followTape(39, false, false);
+        followTape(35, false, false);
     }
 
     //Drive until hit gauntlet
@@ -152,7 +155,7 @@ void path561L(){
     HI->pushDriveSpeeds(-60, -60/1.13);
     delay(250);
     HI->pushDriveSpeeds(0, 0);
-    QRDTurn(false, 300, -34, 34, false,0);   // more right, less left 
+    QRDTurn(false, 200, -32, 32, false,0);   // more right, less left 
     delay(500);
 
 
@@ -179,7 +182,7 @@ void path561L(){
     //at post, lined up
 
     //Collect Stone 2
-    getStoneFromPillar(330, 357, true, 10000); 
+    getStoneTopDown(345, 342, 357, true, 10000);
 
     //On path ready to follow line back to gauntlet
     //line follower to  Y - stone 2 to gaunt
@@ -195,9 +198,9 @@ void path561L(){
     //line follower to Gaunt. stone 2 to gaunt
     while(true){
         HI->update();
-        followTape(35, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(false,900, -36, 32, true,600);
+            QRDTurn(false,900, -33, 30, true,500);
             break;
         }
     }
@@ -206,7 +209,7 @@ void path561L(){
     //follow line for little more
     while(millis()-startTime < 1300){
         HI->update();
-        followTape(39, false, false);
+        followTape(35, false, false);
         HI->update();
     }
 
@@ -219,10 +222,10 @@ void path561L(){
 
 
     //Turn to line up with hole
-    turn_single_constant(29, 100000, 36);
-
+    turn_single_constant(28, 100000, 36);
+    delay(500);
     //Begin to lower intake
-    moveIntake(37,18,10000);
+    moveIntake(35,18,10000);
     delay(500);
 
     //Jolt forwards
@@ -252,7 +255,7 @@ void path561L(){
     delay(450);
     HI->pushDriveSpeeds(0, 0);
     delay(300);
-    QRDTurn(false, 450, -34, 34, false,0);    
+    QRDTurn(false, 300, -32, 32, false,0);    
     delay(200);
 
 
@@ -278,10 +281,15 @@ void path561L(){
         }
     }
 
+    //Go back a bit more
+    HI->pushDriveSpeeds(-33,-33/1.13);
+    delay(105);
+    HI->pushDriveSpeeds(0,0);
+
     //At post, lined up
 
     //Retrieve stone from post
-    getStoneFromPillar(250, 285, false,10000); //was 225 //228, just barely low
+    getStoneTopDown(265, 242, 290, false, 10000);
 
     //Collected stone, on line
 
@@ -298,9 +306,9 @@ void path561L(){
     //line follower to Gaunt. stone 3 to gaunt
     while(true){
         HI->update();
-        followTape(robotSpeed, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(false,900, -36, 32, true,600);
+            QRDTurn(false,900, -33, 30, true,500);
             break;
         }
     }
@@ -319,12 +327,16 @@ void path561L(){
 
     //line up to drop stone 3
     jiggle();
-    delay(300);
+    delay(500);
 
     //Turn to line up with hole
-    turn_single_constant(-23, 100000, 45);
-
+    turn_single_constant(-17, 100000, 45);
+    delay(500);
 //
+    HI->pushDriveSpeeds(-33,-33/1.13);
+    delay(100);
+    HI->pushDriveSpeeds(0,0);
+    
     //Begin to lower intake
     moveIntake(43,18,10000);
     delay(500);
