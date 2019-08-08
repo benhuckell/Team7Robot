@@ -17,7 +17,7 @@ void path534R(){
         if (millis() - startTime < 7000){
             followTape(60, false, false);}
         else{
-           followTape(50, false, false); 
+           followTape(40, false, false); 
         }
         if (detectBumpInRoad(0.35)){
             //do nothing
@@ -93,7 +93,8 @@ void path534R(){
     delay(300);
 
     //Line up with gauntlet hole
-    turn_single_constant(27, 100000, 36);
+    //turn_single_constant(27, 100000, 36);
+    time_turn(false, 36, 470, 10);
 
     //Lower intake 
     moveIntake(37,18,5000);
@@ -113,7 +114,7 @@ void path534R(){
     //first STOone Scored!
     //SCORE STONE AND LOWER
     HI->pushDriveSpeeds(0, 0);
-    delay(800);
+    delay(300);
 
     //Tighten slack
     HI->pushWinchSpeed(25);
@@ -215,8 +216,8 @@ void path534R(){
     delay(800);
     
     //Line up with gauntlet hole
-    turn_single_constant(-26, 100000, 45);//left
-
+    //turn_single_constant(-26, 100000, 45);//left
+    time_turn(true, 46, 455, 10);
     //Lower intake
     moveIntake(35,18,10000);//
     delay(500);
@@ -279,7 +280,7 @@ void path534R(){
     HI->pushDriveSpeeds(0,0);
 
     //getStoneTopDown(265, 237, 290, true, 10000);
-    getStoneMAXUPReset(950, 237, 290, true, 10000);
+    getStoneMAXUPReset(1275, 237, 290, true, 10000);
     //T - stone 3 to gaunt
     while(true){
         HI->update();
@@ -317,7 +318,8 @@ void path534R(){
     delay(800);
     
     //Line up with gauntlet hole
-    turn_single_constant(-18, 100000, 45);//left
+    //turn_single_constant(-18, 100000, 45);//left
+    time_turn(true, 45, 410, 10);
     delay(500);
 
     HI->pushDriveSpeeds(-33,-33/1.13);
@@ -325,7 +327,7 @@ void path534R(){
     HI->pushDriveSpeeds(0,0);
 
     //Lower intake
-    moveIntake(43,18,10000);//
+    moveIntake(45,18,10000);//
     delay(500);
 
     //Jolt forwards

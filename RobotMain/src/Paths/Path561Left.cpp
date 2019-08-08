@@ -64,7 +64,7 @@ void path561L(){
     //J2 to Post1
     while(true){
         HI->update();
-        followTape(robotSpeed, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
             Post5Turn(false);
             break;
@@ -75,7 +75,7 @@ void path561L(){
 
     //Collect Stone from Post 1
     //getStoneTopDown(345, 342, 357, true, 10000);
-    getStoneMAXUPReset(1000, 348, 380, true, 10000);
+    getStoneMAXUPReset(1200, 348, 380, true, 10000);
     
     //On path ready to follow line back to gauntlet
     //junction 4 -Y - Stone1 to gauntlet
@@ -125,10 +125,10 @@ void path561L(){
 
     //Drop Stone 1
     //Turn to gauntlet hole angle
-    turn_single_constant(-29, 10000, 45);
-
+    //turn_single_constant(-29, 10000, 45);
+    time_turn(true, 46, 370, 10);
     //Begin to move intake down
-    moveIntake(37,18,5000);
+    moveIntake(45,18,5000);
     delay(500);
 
     //Jolt Forwareds
@@ -140,7 +140,7 @@ void path561L(){
 
     //Crawl to hole
     HI->pushDriveSpeeds(32, 32/1.13);
-    delay(800);
+    delay(200);
 
     //Stop moving once stone deposited
     HI->pushDriveSpeeds(0, 0);
@@ -184,7 +184,7 @@ void path561L(){
 
     //Collect Stone 2
     //getStoneTopDown(345, 342, 357, true, 10000);
-    getStoneMAXUPReset(1000, 348, 380, true, 10000);
+    getStoneMAXUPReset(1600, 348, 380, true, 10000);
     
     //On path ready to follow line back to gauntlet
     //line follower to  Y - stone 2 to gaunt
@@ -224,10 +224,11 @@ void path561L(){
 
 
     //Turn to line up with hole
-    turn_single_constant(28, 100000, 36);
+    //turn_single_constant(28, 100000, 36);
+    time_turn(false, 36, 442, 10);
     delay(500);
     //Begin to lower intake
-    moveIntake(35,18,10000);
+    moveIntake(42,18,10000);
     delay(500);
 
     //Jolt forwards
@@ -292,7 +293,7 @@ void path561L(){
 
     //Retrieve stone from post
     //getStoneTopDown(265, 242, 290, false, 10000);
-getStoneMAXUPReset(800, 237, 290, false, 10000);
+    getStoneMAXUPReset(1300, 237, 290, false, 10000);
     //Collected stone, on line
 
     //line follower to  Y - stone 3 to gaunt
@@ -332,14 +333,15 @@ getStoneMAXUPReset(800, 237, 290, false, 10000);
     delay(500);
 
     //Turn to line up with hole
-    turn_single_constant(-17, 100000, 45);
+    //turn_single_constant(-17, 100000, 45);
+    time_turn(true, 45, 330, 10);
     delay(500);
 //
     HI->pushDriveSpeeds(-33,-33/1.13);
     delay(100);
     HI->pushDriveSpeeds(0,0);
     //Begin to lower intake
-    moveIntake(43,18,10000);
+    moveIntake(46,18,10000);
     delay(500);
 
     //Jolt forwards

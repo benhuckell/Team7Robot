@@ -58,12 +58,12 @@ void setup() {
       display.display();
       
       if(rightStart){
-        //path534R();
-        path654R();
+        path534R();
+        //path654R();
       }
       else{//leftStart
-        //path621L();
-        path561L();
+        path621L();
+        //path561L();
       }
     }
     //HardwareInterface::i()->update();

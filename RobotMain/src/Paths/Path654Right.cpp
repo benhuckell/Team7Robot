@@ -17,9 +17,9 @@ void path654R(){
         if (millis() - startTime < 7500){
             followTape(60, false, false);}
         else{
-            followTape(50, false, false); 
+            followTape(38, false, false); 
         }
-        if (detectBumpInRoad(0.35)){
+        if (detectBumpInRoad(0.3)){
             //do nothing
         }
         else if(detectJunction(0.85)){
@@ -51,7 +51,7 @@ void path654R(){
     //J2 to Post1
     while(true){
         HI->update();
-        followTape(robotSpeed, false, false);
+        followTape(40, false, false);
         if(detectJunction()){
             Post6Turn(true);
             break;
@@ -111,10 +111,10 @@ void path654R(){
 
     //Drop Stone 1
     //Turn to gauntlet hole angle
-    turn_single_constant(29, 5000, 36);
-
+    //turn_single_constant(29, 5000, 36);
+    time_turn(false, 36, 470, 10);
     //Begin to move intake down
-    moveIntake(37,18,10000);
+    moveIntake(42,18,10000);
     delay(500);
 
     //Jolt Forwareds
@@ -126,7 +126,7 @@ void path654R(){
 
     //Crawl to hole
     HI->pushDriveSpeeds(32, 32/1.13);
-    delay(800);
+    delay(150); //was 300 NEW
 
     //Stop moving once stone deposited
     HI->pushDriveSpeeds(0, 0);
@@ -170,7 +170,7 @@ void path654R(){
 
     //Collect Stone 2
     //getStoneFromPillar(330, 357, false, 10000); 
-     getStoneMAXUPReset(1000, 348, 380, false, 10000);
+     getStoneMAXUPReset(1500, 348, 380, false, 10000);
 
     //On path ready to follow line back to gauntlet
     //line follower to  Y - stone 2 to gaunt
@@ -209,7 +209,8 @@ void path654R(){
     delay(800);
 
     //Turn to line up with hole
-    turn_single_constant(-28, 5000, 45);
+    //turn_single_constant(-28, 5000, 45);
+    time_turn(true, 46, 450, 10);
     delay(500);
     //Begin to lower intake
     moveIntake(35,18,10000);
@@ -242,7 +243,7 @@ void path654R(){
     delay(450);
     HI->pushDriveSpeeds(0, 0);
     delay(300);
-    QRDTurn(true, 450, 33, -29, false,0);    
+    QRDTurn(true, 375, 33, -29, false,0);    
     delay(200);
 
 
@@ -262,7 +263,7 @@ void path654R(){
         HI->update();
         followTape(robotSpeed, false, false);
         if(detectJunction()){
-            Post4Turn(false);
+            Post4Turn(true);
             break;
         }
     }
@@ -276,7 +277,7 @@ void path654R(){
 
     //Retrieve stone from post
     //getStoneFromPillar(250, 285, true,10000); //was 225 //228, just barely low
-    getStoneMAXUPReset(800, 237, 290, true, 10000);
+    getStoneMAXUPReset(1000, 237, 290, true, 10000);
     //Collected stone, on line
 
     //line follower to  Y - stone 3 to gaunt
@@ -316,11 +317,12 @@ void path654R(){
     delay(300);
 
     //Turn to line up with hole
-    turn_single_constant(-17, 100000, 45);
+    //turn_single_constant(-17, 100000, 45);
+    time_turn(true, 45, 355, 10);
 
 //
     //Begin to lower intake
-    moveIntake(43,18,10000);
+    moveIntake(47,18,10000);
     delay(500);
 
     //Jolt forwards

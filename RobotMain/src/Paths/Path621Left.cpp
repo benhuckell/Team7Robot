@@ -93,8 +93,8 @@ void path621L(){
 
     //Drop Stone 1
     //Turn to gauntlet hole angle
-    turn_single_constant(-27, 100000, 45);
-
+    //turn_single_constant(-27, 100000, 45);
+    time_turn(true, 46, 370, 10); 
     //Begin to move intake down
     moveIntake(37,18,5000);
     delay(500);
@@ -162,7 +162,7 @@ void path621L(){
 
     //Collect Stone 2
     //getStoneTopDown(172, 151, 200, false, 10000);
-    getStoneMAXUPReset(450, 151, 200, false, 10000);
+    getStoneMAXUPReset(550, 151, 200, false, 10000);
     //On path ready to follow line back to gauntlet
     //line follower to  Y - stone 2 to gaunt
     while(true){
@@ -210,10 +210,11 @@ void path621L(){
 
 
     //Turn to line up with hole
-    turn_single_constant(27, 100000, 45);
+    //turn_single_constant(27, 100000, 45);
+    time_turn(false, 36, 442, 10);
 
     //Begin to lower intake
-    moveIntake(35,18,10000);
+    moveIntake(37,18,10000);
     delay(500);
 
     //Jolt forwards
@@ -243,7 +244,7 @@ void path621L(){
     delay(450);
     HI->pushDriveSpeeds(0, 0);
     delay(300);
-    QRDTurn(false, 300, -34, 32, false,0);    
+    QRDTurn(false, 450, -34, 32, false,0);    
     delay(200);
 
 
@@ -278,7 +279,7 @@ void path621L(){
 
     //Retrieve stone from post
     //getStoneTopDown(268, 237, 290, false, 10000);
-    getStoneMAXUPReset(800, 237, 290, false, 10000);
+    getStoneMAXUPReset(1300, 237, 290, false, 10000);
     
     //Collected stone, on line
 
@@ -319,7 +320,8 @@ void path621L(){
     delay(300);
 
     //Turn to line up with hole
-    turn_single_constant(-19, 100000, 45);
+    time_turn(true, 45, 330, 10);
+    //turn_single_constant(-19, 100000, 45);
     delay(500);
 //   
     HI->pushDriveSpeeds(-33,-33/1.13);

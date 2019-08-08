@@ -91,7 +91,7 @@ void getStoneMAXUPReset(int timeup, int resetTarget, int winchTargetUp, bool rig
        HI->clawMotor->clawSetPos(182);
        delay(400);
        HI->pushWinchSpeed(-15);
-       delay(700);
+       delay(620); //was 700
         HI->pushWinchSpeed(25);
         HI->clawMotor->clawSetPos(210);
         delay(1200);
