@@ -73,7 +73,7 @@ void path534R(){
         HI->update();
         followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(true,600, 33, -30, true,500);
+            QRDTurn(true,730, 33, -30, true,500);
             break;
         }
     }
@@ -193,7 +193,7 @@ void path534R(){
         HI->update();
         followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(true,600, 33, -30, true,500);
+            QRDTurn(true,730, 33, -30, true,500);
             break;
         }
     }
@@ -294,7 +294,7 @@ void path534R(){
         HI->update();
         followTape(40, false, false);
         if(detectJunction()){
-            QRDTurn(true,600, 33, -30, true,500);
+            QRDTurn(true,730, 33, -30, true,500);
             break;
         }
     }

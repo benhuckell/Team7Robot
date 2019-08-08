@@ -145,7 +145,7 @@ void Post1Turn(bool rightStart){
         turn_single_constant(92, 10000, 38);
     }
     else{ //leftStart
-        turn_single_constant(-89, 10000, 42);
+        turn_single_constant(-88, 10000, 42);
     }
     delay(600);
     HI->update();
@@ -217,7 +217,7 @@ void Post5Turn(bool rightStart){
     stopMoving();
     delay(300);
     if(rightStart){
-        turn_single_constant(-85, 10000, 38);
+        turn_single_constant(-84, 10000, 38);
     }
     else{ //leftStart
         turn_single_constant(84, 10000, 42);
@@ -240,7 +240,7 @@ void Post6Turn(bool rightStart){
         turn_single_constant(-78, 10000, 38);
     }
     else{ //leftStart
-        turn_single_constant(78, 10000, 42); //turn to right // wsa 86 (O) //84 (O) //83 O
+        turn_single_constant(74, 10000, 42); //turn to right // wsa 86 (O) //84 (O) //83 O
     }
 
     delay(600);

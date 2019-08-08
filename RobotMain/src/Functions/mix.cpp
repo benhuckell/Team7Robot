@@ -66,10 +66,10 @@ void getStoneTopDown(int tickTargetWinch, int tickTargetWinch_2, int tickTargetW
         Serial.println("QRD turn Hardware init");
         
         if(rightTurnReturn){
-                QRDTurn(rightTurnReturn, 500, 33, -30, false, 0); //was 45, -35
+                QRDTurn(rightTurnReturn, 500, 34, -30, false, 0); //was 45, -35
         }
         else{
-                QRDTurn(rightTurnReturn, 500, -33, 30, false, 0); // was -45, 30
+                QRDTurn(rightTurnReturn, 500, -34, 30, false, 0); // was -45, 30
         }
         Serial.println("end turn ");
         delay(150);
